@@ -3,7 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.minlog.Log;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.PacketManager;
 import game.dylandevalia.royal_game_of_ur.utility.ServerInformation;
 
@@ -14,11 +14,13 @@ public class ClientProgram {
 	private boolean messageReceived = false;
 	
 	public void run(String ip, int port) throws Exception {
+		Log.info("Client", "Initialising client");
 		// Start client
 		client = new Client();
 		// Register packet object
 		client.getKryo().register(PacketManager.class);
 		
+		Log.info("Client", "Starting client");
 		// Start client
 		client.start();
 		
@@ -29,7 +31,7 @@ public class ClientProgram {
 			// Called when client is connected
 			@Override
 			public void connected(Connection c) {
-				System.out.println("Received connection from " + c.getRemoteAddressTCP().getHostString());
+				Log.info("Client", "Received connection from " + c.getRemoteAddressTCP().getHostString());
 			}
 			
 			// Called when packet is received
@@ -39,23 +41,23 @@ public class ClientProgram {
 					PacketManager packet = (PacketManager) p;
 					messageReceived = true;
 					
-					System.out.println("Received message: " + packet.message);
+					Log.info("Client", "Received message: " + packet.message);
 				}
 			}
 			
 			// Called when client disconnects
 			@Override
 			public void disconnected(Connection c) {
-				System.out.println("Connection lost");
+				Log.info("Client", "Connection lost");
 			}
 		});
 		
 		// Waits for message
 		while (!messageReceived) {
-			System.out.println("Message not received");
+			Log.info("Client", "Message not received");
 			Thread.sleep(1000);
 		}
 		
-		System.out.println("Client closing");
+		Log.info("Client", "Client closing");
 	}
 }
