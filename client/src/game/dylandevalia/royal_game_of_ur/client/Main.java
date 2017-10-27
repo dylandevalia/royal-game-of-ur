@@ -11,10 +11,11 @@ public class Main {
 					try {
 						new ClientProgram().run(ServerInformation.LOCALHOST, ServerInformation.TCP_PORT);
 					} catch (Exception e) {
-					
+
 					}
 				}
 			}.start();
 		}
+	
 	}
 }
