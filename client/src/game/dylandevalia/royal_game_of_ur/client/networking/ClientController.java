@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.client;
+package game.dylandevalia.royal_game_of_ur.client.networking;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -7,7 +7,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.PacketManager;
 import game.dylandevalia.royal_game_of_ur.utility.ServerInformation;
 
-public class ClientProgram {
+public class ClientController {
 	// Client object
 	private Client client;
 
@@ -24,7 +24,7 @@ public class ClientProgram {
 		// Start client
 		client.start();
 		
-		// Connect to the server - wait 5000ms before failing
+		// Connect to the networking - wait 5000ms before failing
 		client.connect(5000, ip, ServerInformation.TCP_PORT, ServerInformation.UDP_PORT);
 		
 		client.addListener(new Listener() {
@@ -42,6 +42,12 @@ public class ClientProgram {
 					messageReceived = true;
 					
 					Log.info("Client", "Received message: " + packet.message);
+					
+					if (packet.message.contains("player one")) {
+						Log.debug("Client Game", "I am player one");
+					} else if (packet.message.contains("player two")) {
+						Log.debug("Client Game", "I am player two");
+					}
 				}
 			}
 			
@@ -54,7 +60,6 @@ public class ClientProgram {
 		
 		// Waits for message
 		while (!messageReceived) {
-			Log.info("Client", "Message not received");
 			Thread.sleep(1000);
 		}
 		

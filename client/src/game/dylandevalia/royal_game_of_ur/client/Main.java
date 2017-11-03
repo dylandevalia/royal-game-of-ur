@@ -1,21 +1,29 @@
 package game.dylandevalia.royal_game_of_ur.client;
 
-import game.dylandevalia.royal_game_of_ur.utility.ServerInformation;
+import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+
+import javax.swing.*;
 
 public class Main {
 	public static void main(String[] args) {
-		for (int i = 0; i < 5; i++) {
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						new ClientProgram().run(ServerInformation.LOCALHOST, ServerInformation.TCP_PORT);
-					} catch (Exception e) {
-
-					}
-				}
-			}.start();
-		}
-	
+//		for (int i = 0; i < 3; i++) {
+//			new Thread() {
+//				@Override
+//				public void run() {
+//					try {
+//						new ClientController().run(ServerInformation.LOCALHOST, ServerInformation.TCP_PORT);
+//					} catch (Exception e) {
+//
+//					}
+//				}
+//			}.start();
+//		}
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new Window();
+			}
+		});
 	}
 }
