@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.server.game;
+package game.dylandevalia.royal_game_of_ur.server;
 
 public class Counter {
 	public enum Colour {
