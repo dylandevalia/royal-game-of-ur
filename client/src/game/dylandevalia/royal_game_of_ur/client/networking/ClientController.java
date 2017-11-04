@@ -5,14 +5,22 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.PacketManager;
-import game.dylandevalia.royal_game_of_ur.utility.ServerInformation;
 
+/**
+ * Creates a network client and connects to the server
+ */
 public class ClientController {
 	// Client object
 	private Client client;
-
+	// See if message has been received from listener
 	private boolean messageReceived = false;
 	
+	/**
+	 * Runs the initialisation of the network client and creates the listeners
+	 * @param ip    The IP address of the server to connect to
+	 * @param port  The port of server
+	 * @throws Exception    IOException if the client fails to connect
+	 */
 	public void run(String ip, int port) throws Exception {
 		Log.info("Client", "Initialising client");
 		// Start client
@@ -25,7 +33,7 @@ public class ClientController {
 		client.start();
 		
 		// Connect to the networking - wait 5000ms before failing
-		client.connect(5000, ip, ServerInformation.TCP_PORT, ServerInformation.UDP_PORT);
+		client.connect(5000, ip, port, port);
 		
 		client.addListener(new Listener() {
 			// Called when client is connected

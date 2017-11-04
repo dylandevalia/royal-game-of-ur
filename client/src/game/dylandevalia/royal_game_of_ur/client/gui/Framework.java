@@ -1,11 +1,16 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
-import game.dylandevalia.royal_game_of_ur.client.Game;
 import game.dylandevalia.royal_game_of_ur.client.states.StateManager;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
+/**
+ * The main logic of the window, implementing the game loop and calls
+ * for the updates and draws which are passed onto the state manager
+ */
 public class Framework extends Canvas {
 	public static int frameWidth, frameHeight;
 	
@@ -27,28 +32,31 @@ public class Framework extends Canvas {
 	// Maximum number of updates before forced render
 	// Set to `1` for perfect rendering
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
-	// (ie. deltaTime) Used to calculate positions for rendering
+	//  Used to calculate positions for rendering (ie. deltaTime)
 	private double interpolate;
 	
-	private Game game = new Game();
+//	private Game game = new Game();
+	StateManager stateManager = new StateManager();
 	
 	public Framework() {
 		super();
 		
-		game.stateManager.initState(StateManager.GameState.MAIN_MENU);
-		game.stateManager.setState(StateManager.GameState.MAIN_MENU);
+		// Creates the main menu state and sets it to the active state
+		stateManager.initState(StateManager.GameState.MAIN_MENU);
+		stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
+		// Stats the game loop in its own thread
 		new Thread() {
 			@Override
 			public void run() {
 				gameLoop();
 			}
 		}.start();
-		
-//		Window window = (Window) SwingUtilities.getWindowAncestor(this);
-//		window.fullscreen = true;
 	}
 	
+	/**
+	 * Runs the main game loop. The loop tries to keep
+	 */
 	private void gameLoop() {
 		int fps = 60;
 		int frameCount = 0;
@@ -86,15 +94,18 @@ public class Framework extends Canvas {
 			interpolate = Math.min(1.0, (now - lastUpdateTime) / TIME_BETWEEN_UPDATES);
 			repaint();
 			lastRenderTime = now;
+			frameCount++;
 			
 			// Update frame
 			int curSecond = (int) (lastUpdateTime / NS_A_SEC);
 			if (curSecond > lastSecondTime) {
+				Log.trace("game loop", "FPS: " + fps);
 				fps = frameCount;
 				frameCount = 0;
 				lastSecondTime = curSecond;
 			}
 			
+			// Yield CPU time so that we don't take up all the processing time
 			while (now - lastRenderTime < TARGET_TIME_BETWEEN_RENDERS
 					&& now - lastUpdateTime < TIME_BETWEEN_UPDATES)
 			{
@@ -104,16 +115,37 @@ public class Framework extends Canvas {
 		}
 	}
 	
+	/**
+	 * Update state
+	 */
 	public void update() {
-		game.stateManager.update();
+		stateManager.update();
+	}
+	
+	/**
+	 * Draw state
+	 * Passes in interpolate value as well to allow smooth motion
+	 * @param g2d   The graphics2d object to draw onto
+	 */
+	@Override
+	public void draw(Graphics2D g2d) {
+		stateManager.draw(g2d, interpolate);
 	}
 	
 	@Override
-	public void draw(Graphics2D g2d) {
-		game.stateManager.draw(g2d, interpolate);
+	public void keyPressedFramework(KeyEvent e) {
+		stateManager.keyPressed(e);
 	}
-	
+	@Override
 	public void keyReleasedFramework(KeyEvent e) {
-		game.stateManager.keyReleased(e);
+		stateManager.keyReleased(e);
+	}
+	@Override
+	public void mousePressedFramework(MouseEvent e) {
+		stateManager.mousePressed(e);
+	}
+	@Override
+	public void mouseReleasedFramework(MouseEvent e) {
+		stateManager.mouseReleased(e);
 	}
 }

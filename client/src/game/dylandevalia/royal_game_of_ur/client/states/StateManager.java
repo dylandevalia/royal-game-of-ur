@@ -4,9 +4,23 @@ import game.dylandevalia.royal_game_of_ur.utility.Log;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
+/**
+ * Controls the creation, initialising, activating/swapping and destroying of states.
+ * Passes functions onto the currently active state.
+ * State objects are implemented from the 'State' interface
+ * {@link State}
+ */
 public class StateManager {
+	// Static to give all states a new id in array
 	private static int stateIndexCounter = 0;
+	
+	/**
+	 * Enum used to store states. Takes the state class in constructor and
+	 * generates its own id from the static 'stateIndexCounter' to be used
+	 * in the array of states 'loadedStates'
+	 */
 	public enum GameState {
 		MAIN_MENU(MainMenu.class), PLAY(Play.class), PAUSE(Pause.class);
 		
@@ -24,9 +38,15 @@ public class StateManager {
 		}
 	}
 	
+	// Array of loaded states
 	private final State[] loadedStates = new State[GameState.values().length];
+	// The currently active state
 	private State currentState;
 	
+	/**
+	 * Creates the state in the array and calls the state's initialise function
+	 * @param state The states to be initialise
+	 */
 	public void initState(GameState state) {
 		try {
 			int index = state.getIndex();
@@ -37,6 +57,10 @@ public class StateManager {
 		}
 	}
 	
+	/**
+	 * Sets the given state as the active state
+	 * @param state The state to become active
+	 */
 	public void setState(GameState state) {
 		if (loadedStates[state.getIndex()] == null) {
 			Log.error("State manager", "State not loaded!");
@@ -45,16 +69,26 @@ public class StateManager {
 		currentState = loadedStates[state.getIndex()];
 	}
 	
+	/**
+	 * Unloads the state from memory
+	 * @param state The state to be deleted
+	 */
 	public void unloadState(GameState state) {
 		loadedStates[state.getIndex()] = null;
 	}
 	
+	/**
+	 * Checks to see if the given states is loaded
+	 * @param state The state to check if it's loaded
+	 * @return  Boolean if the state is loaded
+	 */
 	public boolean isLoaded(GameState state) {
 		return loadedStates[state.getIndex()] != null;
 	}
 	
 	
-	
+	/*              Passers             */
+	/* Calls the currently active state */
 	
 	public void initialise() {
 		currentState.initialise();
@@ -68,7 +102,16 @@ public class StateManager {
 		currentState.draw(g2d, interpolate);
 	}
 	
-	public void keyReleased(KeyEvent event) {
-		currentState.keyReleased(event);
+	public void keyPressed(KeyEvent e) {
+		currentState.keyPressed(e);
+	}
+	public void keyReleased(KeyEvent e) {
+		currentState.keyReleased(e);
+	}
+	public void mousePressed(MouseEvent e) {
+		currentState.mousePressed(e);
+	}
+	public void mouseReleased(MouseEvent e) {
+		currentState.mouseReleased(e);
 	}
 }

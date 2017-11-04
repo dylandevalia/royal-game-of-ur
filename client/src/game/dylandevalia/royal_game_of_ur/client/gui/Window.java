@@ -2,8 +2,12 @@ package game.dylandevalia.royal_game_of_ur.client.gui;
 
 import javax.swing.*;
 
+/**
+ * The main window of the program
+ */
 public class Window extends JFrame {
-	public boolean fullscreen = false;
+	// Should the window run is fullscreen or windowed
+	private final boolean fullscreen = false;
 	
 	public Window() {
 		this.setTitle("The Royal Game of Ur");

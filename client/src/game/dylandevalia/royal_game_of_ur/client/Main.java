@@ -19,6 +19,7 @@ public class Main {
 //			}.start();
 //		}
 		
+		// Start running the gui in its own thread
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
