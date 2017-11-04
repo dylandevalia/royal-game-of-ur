@@ -56,14 +56,12 @@ public class Log {
 			case 4: builder.append("\u001B[33m" + " WARN:"); break;
 			case 3: builder.append("\u001B[37m" + " INFO:"); break;
 			case 2: builder.append("\u001B[34m" + "DEBUG:"); break;
-			case 1: builder.append("\u001B[36m" + "TRACE:"); break;
-			default: builder.append("     :"); break;
+			case 1: builder.append("\u001B[35m" + "TRACE:"); break;
+			default: builder.append(" NONE:"); break;
 		}
-		builder.append(' ');
-		builder.append('[');
+		builder.append(" [");
 		builder.append(category.toUpperCase());
-		builder.append(']');
-		builder.append(' ');
+		builder.append("] ");
 		builder.append(message);
 		if (ex != null) {
 			builder.append("\u001B[31m");
