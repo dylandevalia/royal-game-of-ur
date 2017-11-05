@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-import game.dylandevalia.royal_game_of_ur.utility.PacketManager;
+import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 /**
  * Creates a network client and connects to the server

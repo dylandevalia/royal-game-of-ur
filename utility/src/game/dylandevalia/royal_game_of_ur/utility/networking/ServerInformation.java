@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.utility;
+package game.dylandevalia.royal_game_of_ur.utility.networking;
 
 public class ServerInformation {
 	public static int TCP_PORT = 9001;

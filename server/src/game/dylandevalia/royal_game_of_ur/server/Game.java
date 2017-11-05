@@ -2,7 +2,7 @@ package game.dylandevalia.royal_game_of_ur.server;
 
 import com.esotericsoftware.kryonet.Connection;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-import game.dylandevalia.royal_game_of_ur.utility.PacketManager;
+import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 public class Game {
 	private final Connection[] players = new Connection[2];

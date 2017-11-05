@@ -2,7 +2,7 @@ package game.dylandevalia.royal_game_of_ur.server;
 
 import game.dylandevalia.royal_game_of_ur.server.networking.ServerController;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-import game.dylandevalia.royal_game_of_ur.utility.ServerInformation;
+import game.dylandevalia.royal_game_of_ur.utility.networking.ServerInformation;
 
 import java.io.IOException;
 
