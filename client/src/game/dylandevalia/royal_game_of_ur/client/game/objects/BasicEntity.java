@@ -6,9 +6,9 @@ import java.awt.*;
 
 public class BasicEntity {
     protected Vector2D pos = new Vector2D();
-    protected Vector2D lastPos = new Vector2D();
+    private Vector2D lastPos = new Vector2D();
     protected Vector2D drawPos = new Vector2D();
-
+    
     protected void update() {
         this.lastPos = this.pos;
     }
