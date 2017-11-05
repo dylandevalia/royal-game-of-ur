@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.utility.networking;
 
 public class ServerInformation {
-	public static int TCP_PORT = 9001;
-	public static int UDP_PORT = 9001;
-	public static String LOCALHOST = "localhost";
+	public static final int TCP_PORT = 9001;
+	public static final int UDP_PORT = 9001;
+	public static final String LOCALHOST = "localhost";
 }
