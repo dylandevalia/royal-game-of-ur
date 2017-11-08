@@ -10,6 +10,13 @@ public class Vector2D {
 		this(0, 0);
 	}
 	
+	public static final Vector2D ZERO = new Vector2D(0, 0);
+	public static final Vector2D UNIT = new Vector2D(1, 1);
+	public static final Vector2D UP = new Vector2D(0, -1);
+	public static final Vector2D DOWN = new Vector2D(0, 1);
+	public static final Vector2D LEFT = new Vector2D(-1, 0);
+	public static final Vector2D RIGHT = new Vector2D(1, 0);
+	
 	@Override
 	public String toString() {
 		return "x: " + this.x + ", y: " + this.y;
