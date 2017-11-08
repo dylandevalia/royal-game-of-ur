@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 
 /**
  * Abstract class which implements both the keyboard and mouse listeners as itself
@@ -13,8 +14,6 @@ import java.awt.event.MouseListener;
  */
 public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
 	// Array of key/mouse buttons and whether they are active or not
-	private static boolean[] keyboardState = new boolean[525];
-	private static boolean[] mouseState = new boolean[3];
 	
 	public Canvas() {
 		setDoubleBuffered(true);
@@ -25,13 +24,14 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 		addMouseListener(this);
 	}
 	
-	public abstract void draw(Graphics2D graphics2D);
+	public abstract void draw(Graphics2D g2d);
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		super.paintComponent(g2d);
 		
+		g2d.setBackground(Color.GREEN);
 		// Calls method overridden by child
 		draw(g2d);
 	}
@@ -39,25 +39,27 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* ----------------- */
 	/* Keyboard listener */
 	/* ----------------- */
+//	private static boolean[] keyboardState = new boolean[525];
+	private static HashMap<Character, Boolean> keyboardStates = new HashMap<>();
 	
 	/**
 	 * Checks if a given key is being held down
 	 * @param key   The keycode of the key to check
 	 * @return  Whether the given key is held down
 	 */
-	public static boolean keyboardKeyState(int key) {
-		return keyboardState[key];
+	public static boolean keyboardKeyState(char key) {
+		return keyboardStates.get(key);
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		keyboardState[e.getKeyCode()] = true;
+		keyboardStates.put(e.getKeyChar(), true);
 		keyPressedFramework(e);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keyboardState[e.getKeyCode()] = false;
+		keyboardStates.put(e.getKeyChar(), false);
 		keyReleasedFramework(e);
 	}
 	
@@ -70,6 +72,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* -------------- */
 	/* Mouse listener */
 	/* -------------- */
+	private static boolean[] mouseState = new boolean[3];
 	
 	public static boolean mouseButtonState(int button) {
 		return mouseState[button - 1];
