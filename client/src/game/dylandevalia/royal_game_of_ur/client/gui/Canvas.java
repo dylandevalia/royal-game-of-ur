@@ -39,7 +39,6 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* ----------------- */
 	/* Keyboard listener */
 	/* ----------------- */
-//	private static boolean[] keyboardState = new boolean[525];
 	private static HashMap<Character, Boolean> keyboardStates = new HashMap<>();
 	
 	/**
@@ -72,22 +71,22 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* -------------- */
 	/* Mouse listener */
 	/* -------------- */
-	private static boolean[] mouseState = new boolean[3];
+	private static boolean[] mouseStates = new boolean[3];
 	
 	public static boolean mouseButtonState(int button) {
-		return mouseState[button - 1];
+		return mouseStates[button - 1];
 	}
 	
 	private void mouseKeyStatus(MouseEvent e, boolean status) {
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
-				mouseState[0] = status;
+				mouseStates[0] = status;
 				break;
 			case MouseEvent.BUTTON2:
-				mouseState[1] = status;
+				mouseStates[1] = status;
 				break;
 			case MouseEvent.BUTTON3:
-				mouseState[2] = status;
+				mouseStates[2] = status;
 				break;
 		}
 	}
