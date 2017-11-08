@@ -6,6 +6,9 @@ import javax.swing.*;
  * The main window of the program
  */
 public class Window extends JFrame {
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	
 	// Should the window run is fullscreen or windowed
 	private final boolean fullscreen = false;
 	

@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 
 import java.awt.*;
@@ -43,6 +44,13 @@ public class StateManager {
 	// The currently active state
 	private State currentState;
 	
+	// Game object
+	private Game game;
+	
+	public StateManager(Game game) {
+		this.game = game;
+	}
+	
 	/**
 	 * Creates the state in the array and calls the state's initialise function
 	 * @param state The states to be initialise
@@ -51,7 +59,7 @@ public class StateManager {
 		try {
 			int index = state.getIndex();
 			loadedStates[index] = (State) state.getObj().newInstance();
-			loadedStates[index].initialise();
+			loadedStates[index].initialise(game);
 		} catch (Exception e) {
 			Log.error("State manager", "Error trying to create new instance of state", e);
 		}
@@ -91,7 +99,7 @@ public class StateManager {
 	/* Calls the currently active state */
 	
 	public void initialise() {
-		currentState.initialise();
+		currentState.initialise(game);
 	}
 	
 	public void update() {

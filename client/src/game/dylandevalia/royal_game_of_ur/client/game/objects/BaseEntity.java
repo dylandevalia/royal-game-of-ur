@@ -4,7 +4,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 import java.awt.*;
 
-public class BasicEntity {
+public class BaseEntity {
     protected Vector2D pos = new Vector2D();
     private Vector2D lastPos = new Vector2D();
     protected Vector2D drawPos = new Vector2D();

@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.states.StateManager;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 
@@ -35,15 +36,18 @@ public class Framework extends Canvas {
 	//  Used to calculate positions for rendering (ie. deltaTime)
 	private double interpolate;
 	
-//	private Game game = new Game();
-	StateManager stateManager = new StateManager();
+	private Game game = new Game();
+//	StateManager stateManager = new StateManager();
 	
 	public Framework() {
 		super();
 		
 		// Creates the main menu state and sets it to the active state
-		stateManager.initState(StateManager.GameState.MAIN_MENU);
-		stateManager.setState(StateManager.GameState.MAIN_MENU);
+		game.stateManager.initState(StateManager.GameState.MAIN_MENU);
+		game.stateManager.initState(StateManager.GameState.PLAY);
+		game.stateManager.initState(StateManager.GameState.PAUSE);
+		
+		game.stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
 		// Stats the game loop in its own thread
 		new Thread() {
@@ -119,7 +123,7 @@ public class Framework extends Canvas {
 	 * Update state
 	 */
 	public void update() {
-		stateManager.update();
+		game.stateManager.update();
 	}
 	
 	/**
@@ -129,23 +133,23 @@ public class Framework extends Canvas {
 	 */
 	@Override
 	public void draw(Graphics2D g2d) {
-		stateManager.draw(g2d, interpolate);
+		game.stateManager.draw(g2d, interpolate);
 	}
 	
 	@Override
 	public void keyPressedFramework(KeyEvent e) {
-		stateManager.keyPressed(e);
+		game.stateManager.keyPressed(e);
 	}
 	@Override
 	public void keyReleasedFramework(KeyEvent e) {
-		stateManager.keyReleased(e);
+		game.stateManager.keyReleased(e);
 	}
 	@Override
 	public void mousePressedFramework(MouseEvent e) {
-		stateManager.mousePressed(e);
+		game.stateManager.mousePressed(e);
 	}
 	@Override
 	public void mouseReleasedFramework(MouseEvent e) {
-		stateManager.mouseReleased(e);
+		game.stateManager.mouseReleased(e);
 	}
 }
