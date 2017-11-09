@@ -2,6 +2,7 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,6 +25,10 @@ public class Play implements State {
 	public void draw(Graphics2D g2d, double interpolate) {
 		g2d.setColor(Color.GREEN);
 		g2d.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+	}
+	
+	public void packetReceived(PacketManager packet) {
+	
 	}
 	
 	@Override

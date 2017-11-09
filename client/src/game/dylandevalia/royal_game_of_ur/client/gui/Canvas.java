@@ -46,8 +46,12 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	 * @param key   The keycode of the key to check
 	 * @return  Whether the given key is held down
 	 */
-	public static boolean keyboardKeyState(char key) {
-		return keyboardStates.get(key);
+	public static boolean getKeyState(char key) {
+		try {
+			return keyboardStates.get(key);
+		} catch (NullPointerException e) {
+			return false;
+		}
 	}
 	
 	@Override

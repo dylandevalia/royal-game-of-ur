@@ -2,6 +2,7 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -94,22 +95,24 @@ public class StateManager {
 		return loadedStates[state.getIndex()] != null;
 	}
 	
+	/* Networking */
+	
+	public void packetReceived(PacketManager packet) {
+		currentState.packetReceived(packet);
+	}
 	
 	/*              Passers             */
 	/* Calls the currently active state */
 	
-	public void initialise() {
+	public void reinitialise() {
 		currentState.initialise(game);
 	}
-	
 	public void update() {
 		currentState.update();
 	}
-	
 	public void draw(Graphics2D g2d, double interpolate) {
 		currentState.draw(g2d, interpolate);
 	}
-	
 	public void keyPressed(KeyEvent e) {
 		currentState.keyPressed(e);
 	}

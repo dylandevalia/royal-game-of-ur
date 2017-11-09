@@ -2,7 +2,10 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
+import game.dylandevalia.royal_game_of_ur.client.gui.Canvas;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -28,8 +31,12 @@ public class MainMenu implements State {
 		box.draw(g2d, interpolate);
 	}
 	
-	public void keyPressed(KeyEvent e) {
+	public void packetReceived(PacketManager packet) {
 	
+	}
+	
+	public void keyPressed(KeyEvent e) {
+//		Log.debug("asdf", "char: '" + e.getKeyChar() + "'");
 	}
 	
 	public void keyReleased(KeyEvent e) {
@@ -48,19 +55,34 @@ public class MainMenu implements State {
 		
 		Box(int x, int y) {
 			this.pos.set(x, y);
+			this.width = 20;
+			this.height = 20;
 		}
 		
 		@Override
 		public void update() {
 			super.update();
 			
-			pos.add(5, 5);
+			int speed = 10;
+			Vector2D vel = new Vector2D();
+			if (Canvas.getKeyState('a')) {
+				vel.add(Vector2D.LEFT()/*.mult(speed)*/);
+			}
+			if (Canvas.getKeyState('d')) {
+				vel.add(Vector2D.RIGHT()/*.mult(speed)*/);
+			}
+			if (Canvas.getKeyState('w')) {
+				vel.add(Vector2D.UP()/*.mult(speed)*/);
+			}
+			if (Canvas.getKeyState('s')) {
+				vel.add(Vector2D.DOWN()/*.mult(speed)*/);
+			}
+			pos.add(vel.setMag(speed));
 		}
 		
 		@Override
 		public void draw(Graphics2D g2d, double interpolate) {
 			super.draw(g2d, interpolate);
-			
 			g2d.setColor(Color.MAGENTA);
 			g2d.fillRect((int) drawPos.x, (int) drawPos.y, 20, 20);
 		}
