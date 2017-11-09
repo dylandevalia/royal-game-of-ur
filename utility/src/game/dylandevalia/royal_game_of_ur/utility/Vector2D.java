@@ -10,12 +10,19 @@ public class Vector2D {
 		this(0, 0);
 	}
 	
-	public static final Vector2D ZERO = new Vector2D(0, 0);
-	public static final Vector2D UNIT = new Vector2D(1, 1);
-	public static final Vector2D UP = new Vector2D(0, -1);
-	public static final Vector2D DOWN = new Vector2D(0, 1);
-	public static final Vector2D LEFT = new Vector2D(-1, 0);
-	public static final Vector2D RIGHT = new Vector2D(1, 0);
+	private static final Vector2D ZERO = new Vector2D(0, 0);
+	private static final Vector2D UNIT = new Vector2D(1, 1);
+	private static final Vector2D UP = new Vector2D(0, -1);
+	private static final Vector2D DOWN = new Vector2D(0, 1);
+	private static final Vector2D LEFT = new Vector2D(-1, 0);
+	private static final Vector2D RIGHT = new Vector2D(1, 0);
+	
+	public static Vector2D ZERO() { return ZERO.copy(); }
+	public static Vector2D UNIT() { return UNIT.copy(); }
+	public static Vector2D UP() { return UP.copy(); }
+	public static Vector2D DOWN() { return DOWN.copy(); }
+	public static Vector2D LEFT() { return LEFT.copy(); }
+	public static Vector2D RIGHT() { return RIGHT.copy(); }
 	
 	@Override
 	public String toString() {
