@@ -66,16 +66,16 @@ public class MainMenu implements State {
 			int speed = 10;
 			Vector2D vel = new Vector2D();
 			if (Canvas.getKeyState('a')) {
-				vel.add(Vector2D.LEFT()/*.mult(speed)*/);
+				vel.add(Vector2D.LEFT());
 			}
 			if (Canvas.getKeyState('d')) {
-				vel.add(Vector2D.RIGHT()/*.mult(speed)*/);
+				vel.add(Vector2D.RIGHT());
 			}
 			if (Canvas.getKeyState('w')) {
-				vel.add(Vector2D.UP()/*.mult(speed)*/);
+				vel.add(Vector2D.UP());
 			}
 			if (Canvas.getKeyState('s')) {
-				vel.add(Vector2D.DOWN()/*.mult(speed)*/);
+				vel.add(Vector2D.DOWN());
 			}
 			pos.add(vel.setMag(speed));
 		}
