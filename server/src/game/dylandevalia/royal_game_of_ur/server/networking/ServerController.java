@@ -3,7 +3,7 @@ package game.dylandevalia.royal_game_of_ur.server.networking;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import game.dylandevalia.royal_game_of_ur.server.Game;
+import game.dylandevalia.royal_game_of_ur.server.game.Game;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 

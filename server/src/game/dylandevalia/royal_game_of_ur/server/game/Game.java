@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.server;
+package game.dylandevalia.royal_game_of_ur.server.game;
 
 import com.esotericsoftware.kryonet.Connection;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
