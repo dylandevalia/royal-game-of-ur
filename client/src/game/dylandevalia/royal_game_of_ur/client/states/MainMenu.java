@@ -83,8 +83,9 @@ public class MainMenu implements State {
 		@Override
 		public void draw(Graphics2D g2d, double interpolate) {
 			super.draw(g2d, interpolate);
+			if (!onScreen) { return; }
 			g2d.setColor(Color.MAGENTA);
-			g2d.fillRect((int) drawPos.x, (int) drawPos.y, 20, 20);
+			g2d.fillRect((int) drawPos.x, (int) drawPos.y, (int) width, (int) height);
 		}
 	}
 }
