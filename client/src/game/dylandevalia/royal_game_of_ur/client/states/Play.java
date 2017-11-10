@@ -5,7 +5,6 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
@@ -56,8 +55,13 @@ public class Play implements State {
 			playerTwoRoute[i + 12] = tiles[i + 18];
 		}
 		
-		counterOne = new Counter((int)playerOneRoute[0].getPos().x, 100, true);
-		counterTwo = new Counter((int)playerTwoRoute[0].getPos().x, Window.HEIGHT-100, false);
+		int[] rosetteSquares = { 3, 7, 11, 17, 19 };
+		for (int r : rosetteSquares) {
+			tiles[r].setRosette(true);
+		}
+		
+		counterOne = new Counter((int)playerOneRoute[0].getPos().x, Window.HEIGHT-100, true);
+		counterTwo = new Counter((int)playerTwoRoute[0].getPos().x, 100, false);
 	}
 	
 	private int curIndexOne = 0;
@@ -69,7 +73,6 @@ public class Play implements State {
 		}
 		
 		if (counterOne.getPos().dist(playerOneRoute[curIndexOne].getMidPos(counterOne)) < 5) {
-			Log.debug("counter", "one set new");
 			curIndexOne = (++curIndexOne % playerOneRoute.length);
 		}
 		counterOne.update(playerOneRoute[curIndexOne].getMidPos(counterOne));
