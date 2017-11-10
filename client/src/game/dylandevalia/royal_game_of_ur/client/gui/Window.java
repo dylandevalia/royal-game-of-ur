@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * The main window of the program
@@ -20,7 +21,11 @@ public class Window extends JFrame {
 			setUndecorated(true);
 			setExtendedState(MAXIMIZED_BOTH);
 		} else {
-			setSize(1280, 720);
+			// TODO: Fix this issue of screen being the wrong size
+			// Added tmp fix by hardcoding values
+			Insets insets = getInsets();
+			setSize(1280 + insets.left + insets.right + 6,
+					720 + insets.top + insets.bottom + 35);
 			setLocationRelativeTo(null);
 			setResizable(false);
 		}

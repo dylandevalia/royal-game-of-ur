@@ -132,8 +132,8 @@ public class Framework extends Canvas {
 	 * @param g2d   The graphics2d object to draw onto
 	 */
 	@Override
-	public void draw(Graphics2D g2d) {
-		game.stateManager.draw(g2d, interpolate);
+	public void draw(Graphics2D g) {
+		game.stateManager.draw(g, interpolate);
 	}
 	
 	@Override

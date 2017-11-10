@@ -4,6 +4,7 @@ import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.gui.Canvas;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -36,7 +37,7 @@ public class MainMenu implements State {
 	}
 	
 	public void keyPressed(KeyEvent e) {
-//		Log.debug("asdf", "char: '" + e.getKeyChar() + "'");
+		Log.debug("asdf", "char: '" + e.getKeyChar() + "'");
 	}
 	
 	public void keyReleased(KeyEvent e) {
@@ -54,9 +55,7 @@ public class MainMenu implements State {
 	private class Box extends BaseEntity {
 		
 		Box(int x, int y) {
-			this.pos.set(x, y);
-			this.width = 20;
-			this.height = 20;
+			super(x, y, 20,20);
 		}
 		
 		@Override
@@ -81,11 +80,11 @@ public class MainMenu implements State {
 		}
 		
 		@Override
-		public void draw(Graphics2D g2d, double interpolate) {
-			super.draw(g2d, interpolate);
+		public void draw(Graphics2D g, double interpolate) {
+			super.draw(g, interpolate);
 			if (!onScreen) { return; }
-			g2d.setColor(Color.MAGENTA);
-			g2d.fillRect((int) drawPos.x, (int) drawPos.y, (int) width, (int) height);
+			g.setColor(Color.MAGENTA);
+			g.fillRect((int) drawPos.x, (int) drawPos.y, (int) width, (int) height);
 		}
 	}
 }

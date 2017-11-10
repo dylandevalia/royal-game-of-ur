@@ -13,7 +13,6 @@ import java.util.HashMap;
  * Calls the child's draw function
  */
 public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
-	// Array of key/mouse buttons and whether they are active or not
 	
 	public Canvas() {
 		setDoubleBuffered(true);
@@ -24,7 +23,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 		addMouseListener(this);
 	}
 	
-	public abstract void draw(Graphics2D g2d);
+	public abstract void draw(Graphics2D g);
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -43,6 +42,8 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	
 	/**
 	 * Checks if a given key is being held down
+	 * Returns false on NullPointerException as key hasn't been pressed yet
+	 * so there's no value for it in the map
 	 * @param key   The keycode of the key to check
 	 * @return  Whether the given key is held down
 	 */
@@ -77,6 +78,14 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* -------------- */
 	private static boolean[] mouseStates = new boolean[3];
 	
+	/**
+	 * Returns if the mouse button given is being pressed down
+	 *   1 - Left click
+	 *   2 - Middle click (scroll wheel)
+	 *   3 - Right click
+	 * @param button    Value of the button to check
+	 * @return  Boolean if the mouse button is held down
+	 */
 	public static boolean mouseButtonState(int button) {
 		return mouseStates[button - 1];
 	}

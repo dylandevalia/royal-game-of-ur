@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 public interface State {
 	void initialise(Game game);
 	void update();
-	void draw(Graphics2D g2d, double interpolate);
+	void draw(Graphics2D g, double interpolate);
 	
 	void packetReceived(PacketManager packet);
 	

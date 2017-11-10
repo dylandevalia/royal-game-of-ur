@@ -110,8 +110,8 @@ public class StateManager {
 	public void update() {
 		currentState.update();
 	}
-	public void draw(Graphics2D g2d, double interpolate) {
-		currentState.draw(g2d, interpolate);
+	public void draw(Graphics2D g, double interpolate) {
+		currentState.draw(g, interpolate);
 	}
 	public void keyPressed(KeyEvent e) {
 		currentState.keyPressed(e);
