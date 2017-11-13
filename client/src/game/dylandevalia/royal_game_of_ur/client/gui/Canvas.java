@@ -38,7 +38,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* ----------------- */
 	/* Keyboard listener */
 	/* ----------------- */
-	private static HashMap<Character, Boolean> keyboardStates = new HashMap<>();
+	private static HashMap<String, Boolean> keyboardStates = new HashMap<>();
 	
 	/**
 	 * Checks if a given key is being held down
@@ -47,7 +47,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	 * @param key   The keycode of the key to check
 	 * @return  Whether the given key is held down
 	 */
-	public static boolean getKeyState(char key) {
+	public static boolean getKeyState(String key) {
 		try {
 			return keyboardStates.get(key);
 		} catch (NullPointerException e) {
@@ -57,13 +57,13 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		keyboardStates.put(e.getKeyChar(), true);
+		keyboardStates.put(keyLookup(e), true);
 		keyPressedFramework(e);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keyboardStates.put(e.getKeyChar(), false);
+		keyboardStates.put(keyLookup(e), false);
 		keyReleasedFramework(e);
 	}
 	
@@ -72,7 +72,39 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 
 	public abstract void keyPressedFramework(KeyEvent e);
 	public abstract void keyReleasedFramework(KeyEvent e);
-	
+
+	public static String keyLookup(KeyEvent e) {
+		int code = e.getKeyCode();
+		switch (code) {
+			case 8:
+				return "backspace";
+			case 10:
+				return "return";
+			case 16:
+				return "shift";
+			case 17:
+				return "control";
+			case 18:
+				return "alt";
+			case 27:
+				return "escape";
+			case 37:
+				return "left";
+			case 38:
+				return "up";
+			case 39:
+				return "right";
+			case 40:
+				return "down";
+			case 524:
+				return "super";
+			case 65406:
+				return "alt_gr";
+			default:
+				return "" + e.getKeyChar();
+		}
+	}
+
 	/* -------------- */
 	/* Mouse listener */
 	/* -------------- */

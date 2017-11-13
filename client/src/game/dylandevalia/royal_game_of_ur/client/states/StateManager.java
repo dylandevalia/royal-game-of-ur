@@ -56,7 +56,7 @@ public class StateManager {
 	 * Creates the state in the array and calls the state's initialise function
 	 * @param state The states to be initialise
 	 */
-	public void initState(GameState state) {
+	public void loadState(GameState state) {
 		try {
 			int index = state.getIndex();
 			loadedStates[index] = (State) state.getObj().newInstance();

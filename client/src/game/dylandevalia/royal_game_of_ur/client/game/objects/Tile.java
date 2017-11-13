@@ -7,7 +7,6 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.*;
 
 public class Tile extends BaseEntity {
-	private int boarderWidth = 5;
 	private boolean rosette = false;
 	
 	public Tile(int x, int y) {
@@ -34,7 +33,8 @@ public class Tile extends BaseEntity {
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
-		
+		final int boarderWidth = 2;
+
 		g.setColor(ColorMaterial.GREY[7]);
 		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		

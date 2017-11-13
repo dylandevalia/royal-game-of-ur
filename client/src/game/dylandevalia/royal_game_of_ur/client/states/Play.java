@@ -55,31 +55,32 @@ public class Play implements State {
 			playerTwoRoute[i + 12] = tiles[i + 18];
 		}
 		
-		int[] rosetteSquares = { 3, 7, 11, 17, 19 };
+		int[] rosetteSquares = {3, 7, 11, 17, 19};
 		for (int r : rosetteSquares) {
 			tiles[r].setRosette(true);
 		}
 		
-		counterOne = new Counter((int)playerOneRoute[0].getPos().x, Window.HEIGHT-100, true);
-		counterTwo = new Counter((int)playerTwoRoute[0].getPos().x, 100, false);
+		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100, true);
+		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
 	}
 	
 	private int curIndexOne = 0;
 	private int curIndexTwo = 0;
+	
 	@Override
 	public void update() {
 		for (Tile tile : tiles) {
 			tile.update();
 		}
 		
-		if (counterOne.getPos().dist(playerOneRoute[curIndexOne].getMidPos(counterOne)) < 5) {
-			curIndexOne = (++curIndexOne % playerOneRoute.length);
-		}
+//		if (counterOne.getPos().dist(playerOneRoute[curIndexOne].getMidPos(counterOne)) < 5) {
+//			curIndexOne = (++curIndexOne % playerOneRoute.length);
+//		}
 		counterOne.update(playerOneRoute[curIndexOne].getMidPos(counterOne));
 		
-		if (counterTwo.getPos().dist(playerTwoRoute[curIndexTwo].getMidPos(counterTwo)) < 5) {
-			curIndexTwo = (++curIndexTwo % playerTwoRoute.length);
-		}
+//		if (counterTwo.getPos().dist(playerTwoRoute[curIndexTwo].getMidPos(counterTwo)) < 5) {
+//			curIndexTwo = (++curIndexTwo % playerTwoRoute.length);
+//		}
 		counterTwo.update(playerTwoRoute[curIndexTwo].getMidPos(counterTwo));
 	}
 	
@@ -102,7 +103,10 @@ public class Play implements State {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-	
+		if (e.getKeyChar() == ' ') {
+			curIndexOne = (++curIndexOne % playerOneRoute.length);
+			curIndexTwo = (++curIndexTwo % playerTwoRoute.length);
+		}
 	}
 	
 	@Override

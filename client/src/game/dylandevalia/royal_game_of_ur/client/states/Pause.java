@@ -48,6 +48,7 @@ public class Pause implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		game.stateManager.unloadState(StateManager.GameState.PLAY);
 		game.stateManager.setState(StateManager.GameState.MAIN_MENU);
 	}
 }

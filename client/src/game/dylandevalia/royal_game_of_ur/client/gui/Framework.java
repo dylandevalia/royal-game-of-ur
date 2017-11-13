@@ -43,9 +43,9 @@ public class Framework extends Canvas {
 		super();
 		
 		// Creates the main menu state and sets it to the active state
-		game.stateManager.initState(StateManager.GameState.MAIN_MENU);
-		game.stateManager.initState(StateManager.GameState.PLAY);
-		game.stateManager.initState(StateManager.GameState.PAUSE);
+		game.stateManager.loadState(StateManager.GameState.MAIN_MENU);
+		game.stateManager.loadState(StateManager.GameState.PLAY);
+		game.stateManager.loadState(StateManager.GameState.PAUSE);
 		
 		game.stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
@@ -129,7 +129,7 @@ public class Framework extends Canvas {
 	/**
 	 * Draw state
 	 * Passes in interpolate value as well to allow smooth motion
-	 * @param g2d   The graphics2d object to draw onto
+	 * @param g	The graphics2d object to draw onto
 	 */
 	@Override
 	public void draw(Graphics2D g) {

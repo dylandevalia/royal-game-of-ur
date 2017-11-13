@@ -37,7 +37,7 @@ public class MainMenu implements State {
 	}
 	
 	public void keyPressed(KeyEvent e) {
-		Log.debug("asdf", "char: '" + e.getKeyChar() + "'");
+//		Log.debug("main menu/key press", "char: '" + e.getKeyCode() + "'");
 	}
 	
 	public void keyReleased(KeyEvent e) {
@@ -49,6 +49,9 @@ public class MainMenu implements State {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
+		if (!game.stateManager.isLoaded(StateManager.GameState.PLAY)) {
+		    game.stateManager.loadState(StateManager.GameState.PLAY);
+        }
 		game.stateManager.setState(StateManager.GameState.PLAY);
 	}
 	
@@ -62,18 +65,19 @@ public class MainMenu implements State {
 		public void update() {
 			super.update();
 			
-			int speed = 10;
+			int speed = Canvas.getKeyState("shift") ? 10 : 5;
+
 			Vector2D vel = new Vector2D();
-			if (Canvas.getKeyState('a')) {
+			if (Canvas.getKeyState("a")) {
 				vel.add(Vector2D.LEFT());
 			}
-			if (Canvas.getKeyState('d')) {
+			if (Canvas.getKeyState("d")) {
 				vel.add(Vector2D.RIGHT());
 			}
-			if (Canvas.getKeyState('w')) {
+			if (Canvas.getKeyState("w")) {
 				vel.add(Vector2D.UP());
 			}
-			if (Canvas.getKeyState('s')) {
+			if (Canvas.getKeyState("s")) {
 				vel.add(Vector2D.DOWN());
 			}
 			pos.add(vel.setMag(speed));
