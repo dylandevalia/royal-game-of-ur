@@ -7,17 +7,19 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.*;
 
 public class Tile extends BaseEntity {
-	public static int WIDTH = Window.WIDTH / 10;
-	public static int HEIGHT = Window.WIDTH / 10;
+	public static final int WIDTH = Window.WIDTH / 10;
 	
 	private boolean rosette = false;
 	
 	public Tile(int x, int y) {
-		super(x, y, WIDTH, HEIGHT);
+		super(x, y, WIDTH, WIDTH);
 	}
 	
 	public Vector2D getMidPos() {
-		return new Vector2D(pos.x + width / 2 - Counter.WIDTH / 2, pos.y + height / 2 - Counter.HEIGHT / 2);
+		return new Vector2D(
+				pos.x + width / 2 - Counter.WIDTH / 2,
+				pos.y + height / 2 - Counter.WIDTH / 2
+		);
 	}
 	
 	public boolean isRosette() {

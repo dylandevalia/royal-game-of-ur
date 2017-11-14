@@ -7,14 +7,13 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.*;
 
 public class Counter extends BaseEntity {
-	public static int WIDTH = Window.WIDTH / 20;
-	public static int HEIGHT = Window.WIDTH / 20;
+	public static final int WIDTH = Window.WIDTH / 20;
 	
 	private boolean playerOne;
 	private Vector2D target;
 	
 	public Counter(int x, int y, boolean playerOne) {
-		super(x, y, WIDTH, HEIGHT);
+		super(x, y, WIDTH, WIDTH);
 		target = pos;
 		this.playerOne = playerOne;
 	}

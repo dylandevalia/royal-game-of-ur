@@ -13,9 +13,10 @@ import java.awt.event.MouseEvent;
 
 public class Play implements State {
 	private Game game;
-	private Tile[] tiles = new Tile[20];
-	private Tile[] playerOneRoute = new Tile[14];
-	private Tile[] playerTwoRoute = new Tile[14];
+	private int startingTilesLen = 4, middleTilesLen = 8, endTileLen = 2;
+	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTileLen)];
+	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
+	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
 	private Counter counterOne, counterTwo;
 	
 	@Override
@@ -29,30 +30,34 @@ public class Play implements State {
 		
 		// Create tiles for board
 		// Player one start
-		for (int i = 0; i < 4; i++) {
-			tiles[i] = new Tile(Tile.WIDTH * (4 - i), rowBot);
+		for (int i = 0; i < startingTilesLen; i++) {
+			tiles[i] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowBot);
 			playerOneRoute[i] = tiles[i];
 		}
+		int aggregate = startingTilesLen;
 		// Player two start
-		for (int i = 0; i < 4; i++) {
-			tiles[i + 4] = new Tile(Tile.WIDTH * (4 - i), rowTop);
-			playerTwoRoute[i] = tiles[i + 4];
+		for (int i = 0; i < startingTilesLen; i++) {
+			tiles[i + aggregate] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowTop);
+			playerTwoRoute[i] = tiles[i + aggregate];
 		}
+		aggregate += startingTilesLen;
 		// Middle
-		for (int i = 0; i < 8; i++) {
-			tiles[i + 8] = new Tile(Tile.WIDTH * (i + 1), rowMid);
-			playerOneRoute[i + 4] = tiles[i + 8];
-			playerTwoRoute[i + 4] = tiles[i + 8];
+		for (int i = 0; i < middleTilesLen; i++) {
+			tiles[i + aggregate] = new Tile(Tile.WIDTH * (i + 1), rowMid);
+			playerOneRoute[i + startingTilesLen] = tiles[i + aggregate];
+			playerTwoRoute[i + startingTilesLen] = tiles[i + aggregate];
 		}
+		aggregate += middleTilesLen;
 		// Player one end
-		for (int i = 0; i < 2; i++) {
-			tiles[i + 16] = new Tile(Tile.WIDTH * (8 - i), rowBot);
-			playerOneRoute[i + 12] = tiles[i + 16];
+		for (int i = 0; i < endTileLen; i++) {
+			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowBot);
+			playerOneRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
+		aggregate += endTileLen;
 		// Player two end
-		for (int i = 0; i < 2; i++) {
-			tiles[i + 18] = new Tile(Tile.WIDTH * (8 - i), rowTop);
-			playerTwoRoute[i + 12] = tiles[i + 18];
+		for (int i = 0; i < endTileLen; i++) {
+			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowTop);
+			playerTwoRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
 		
 		int[] rosetteSquares = {3, 7, 11, 17, 19};
