@@ -5,12 +5,15 @@ import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 public class Counter extends BaseEntity {
 	public static final int WIDTH = Window.WIDTH / 20;
 	
 	private boolean playerOne;
+	private LinkedList<Vector2D> targets = new LinkedList<>();
 	private Vector2D target;
+	private int currentRouteIndex = -1;
 	
 	public Counter(int x, int y, boolean playerOne) {
 		super(x, y, WIDTH, WIDTH);
@@ -19,22 +22,41 @@ public class Counter extends BaseEntity {
 	}
 	
 	public void setTarget(Vector2D target) {
-		this.target = target;
+		targets.add(target);
+	}
+	
+	public int getCurrentRouteIndex() {
+		return currentRouteIndex;
+	}
+	public void incrementCurrentRouteIndex() {
+		currentRouteIndex++;
 	}
 	
 	public void update() {
 		super.update();
 		
-		if (pos == target) return;
+		if (atTarget() && targets.isEmpty()) return;
 		
 		int speed = 5;
 		double dist = Vector2D.dist(pos, target);
 		
 		if (dist > speed) {
-			pos.add(target.copy().sub(pos).setMag(speed));
-		} else {
+			pos.add(Vector2D.sub(target, pos).setMag(speed));
+		} else {    // At target
 			pos.set(target);
+			if (!targets.isEmpty()) {
+				target = targets.getFirst();
+				targets.removeFirst();
+			}
 		}
+	}
+	
+	/**
+	 * If the counter is at the current target
+	 * @return  Boolean if at the current target position
+	 */
+	public boolean atTarget() {
+		return pos == target;
 	}
 	
 	@Override

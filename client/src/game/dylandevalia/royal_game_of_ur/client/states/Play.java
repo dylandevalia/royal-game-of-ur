@@ -6,6 +6,7 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
@@ -19,12 +20,12 @@ public class Play implements State {
 	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
 	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
 	private Counter counterOne, counterTwo;
-	private Circle circle;
+	private MouseCircle mouseCircle;
 	
 	@Override
 	public void initialise(Game game) {
 		this.game = game;
-		
+
 //		Tile temp = new Tile(0, 0);
 		int rowTop = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 1.5));
 		int rowMid = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 0.5));
@@ -71,7 +72,7 @@ public class Play implements State {
 		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
 		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
 		
-		circle = new Circle();
+		mouseCircle = new MouseCircle();
 	}
 	
 	@Override
@@ -79,7 +80,7 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.update();
 		counterOne.update();
 		counterTwo.update();
-		circle.update();
+		mouseCircle.update();
 	}
 	
 	@Override
@@ -90,28 +91,54 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.draw(g, interpolate);
 		counterOne.draw(g, interpolate);
 		counterTwo.draw(g, interpolate);
-		circle.draw(g, interpolate);
+		mouseCircle.draw(g, interpolate);
 	}
 	
 	public void packetReceived(PacketManager packet) {
 	
 	}
 	
-	private int curIndexOne = -1;
-	private int curIndexTwo = -1;
-	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ') {
-			counterOne.setTarget(
-					playerOneRoute[(++curIndexOne % playerOneRoute.length)]
-					.getMidPos()
-			);
-			counterTwo.setTarget(
-					playerTwoRoute[(++curIndexTwo % playerTwoRoute.length)]
-					.getMidPos()
-			);
+			moveCounter(playerOneRoute, counterOne, 2);
+			moveCounter(playerTwoRoute, counterTwo, 1);
 		}
+	}
+	
+	private void moveCounter(Tile[] route, Counter counter, int spaces) {
+//		if (spaces > 0) {
+//			counter.setTarget(counterInTilePosition(getNextTile(route, counter)));
+//			moveCounter(route, counter, --spaces);
+//		}
+		for (int i = 0; i < spaces; i++) {
+			counter.setTarget(counterInTilePosition(getNextTile(route, counter)));
+		}
+	}
+	
+	/**
+	 * Gets the next tile in the route
+	 *
+	 * @param route     The route the tile travels
+	 * @param counter   The counter to move
+	 * @return  The tile to move to
+	 */
+	private Tile getNextTile(Tile[] route, Counter counter) {
+		counter.incrementCurrentRouteIndex();
+		return route[(counter.getCurrentRouteIndex() % route.length)];
+	}
+	
+	/**
+	 * Gets the position vector of the middle of the given tile where a counter should sit
+	 *
+	 * @param tile The tile which the counter should sit in
+	 * @return The position vector of the counter
+	 */
+	private Vector2D counterInTilePosition(Tile tile) {
+		return new Vector2D(
+				tile.getPos().x + (Tile.WIDTH / 2) - (Counter.WIDTH / 2),
+				tile.getPos().y + (Tile.WIDTH / 2) - (Counter.WIDTH / 2)
+		);
 	}
 	
 	@Override
@@ -129,9 +156,9 @@ public class Play implements State {
 //		game.stateManager.setState(StateManager.GameState.PAUSE);
 	}
 	
-	private class Circle extends BaseEntity {
-		Circle() {
-			super (0, 0, 10, 10);
+	private class MouseCircle extends BaseEntity {
+		MouseCircle() {
+			super(0, 0, 10, 10);
 		}
 		
 		@Override
@@ -144,7 +171,7 @@ public class Play implements State {
 		protected void draw(Graphics2D g, double interpolate) {
 			super.draw(g, interpolate);
 			g.setColor(ColorMaterial.deepPurple);
-			g.drawOval((int)drawPos.x, (int)drawPos.y, width, height);
+			g.drawOval((int) drawPos.x, (int) drawPos.y, width, height);
 		}
 	}
 }
