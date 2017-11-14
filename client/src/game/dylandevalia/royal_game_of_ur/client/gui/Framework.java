@@ -24,11 +24,11 @@ public class Framework extends Canvas {
 	// Should the game loop run
 	private boolean runGame = true;
 	// How often the game should update a second
-	private static final double GAME_HRETZ = 30.0;
+	private static final double GAME_HERTZ = 30.0;
 	// How many times the game should render a second
 	private static final double TARGET_FPS = 60.0;
 	// How many nanoseconds it should take to reach the target speed
-	private static final double TIME_BETWEEN_UPDATES = NS_A_SEC / GAME_HRETZ;
+	private static final double TIME_BETWEEN_UPDATES = NS_A_SEC / GAME_HERTZ;
 	// How many nanoseconds it should take to render our target FPS
 	private static final double TARGET_TIME_BETWEEN_RENDERS = NS_A_SEC / TARGET_FPS;
 	// Maximum number of updates before forced render
@@ -122,13 +122,18 @@ public class Framework extends Canvas {
 	
 	/**
 	 * Update state and mouse position
+	 * Try catch used as location on screen might not have been instantiated yet
 	 */
 	public void update() {
 		Point mouse = MouseInfo.getPointerInfo().getLocation();
-		mousePos.set(
-				mouse.x - game.framework.getLocationOnScreen().x,
-				mouse.y - game.framework.getLocationOnScreen().y
-		);
+		try {
+			mousePos.set(
+					mouse.x - getLocationOnScreen().x,
+					mouse.y - getLocationOnScreen().y
+			);
+		} catch (IllegalComponentStateException e) {
+			Log.error("Framework", "Couldn't get mouse position", e);
+		}
 		game.stateManager.update();
 	}
 	
