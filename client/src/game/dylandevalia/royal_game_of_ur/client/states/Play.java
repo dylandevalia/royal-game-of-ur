@@ -22,36 +22,36 @@ public class Play implements State {
 	public void initialise(Game game) {
 		this.game = game;
 		
-		Tile temp = new Tile(0, 0);
-		int rowTop = (int) Math.floor((Window.HEIGHT / 2) - (temp.getWidth() * 1.5));
-		int rowMid = (int) Math.floor((Window.HEIGHT / 2) - (temp.getWidth() * 0.5));
-		int rowBot = (int) Math.floor((Window.HEIGHT / 2) + (temp.getWidth() * 0.5));
+//		Tile temp = new Tile(0, 0);
+		int rowTop = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 1.5));
+		int rowMid = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 0.5));
+		int rowBot = (int) Math.floor((Window.HEIGHT / 2) + (Tile.WIDTH * 0.5));
 		
 		// Create tiles for board
 		// Player one start
 		for (int i = 0; i < 4; i++) {
-			tiles[i] = new Tile(temp.getWidth() * (4 - i), rowBot);
+			tiles[i] = new Tile(Tile.WIDTH * (4 - i), rowBot);
 			playerOneRoute[i] = tiles[i];
 		}
 		// Player two start
 		for (int i = 0; i < 4; i++) {
-			tiles[i + 4] = new Tile(temp.getWidth() * (4 - i), rowTop);
+			tiles[i + 4] = new Tile(Tile.WIDTH * (4 - i), rowTop);
 			playerTwoRoute[i] = tiles[i + 4];
 		}
 		// Middle
 		for (int i = 0; i < 8; i++) {
-			tiles[i + 8] = new Tile(temp.getWidth() * (i + 1), rowMid);
+			tiles[i + 8] = new Tile(Tile.WIDTH * (i + 1), rowMid);
 			playerOneRoute[i + 4] = tiles[i + 8];
 			playerTwoRoute[i + 4] = tiles[i + 8];
 		}
 		// Player one end
 		for (int i = 0; i < 2; i++) {
-			tiles[i + 16] = new Tile(temp.getWidth() * (8 - i), rowBot);
+			tiles[i + 16] = new Tile(Tile.WIDTH * (8 - i), rowBot);
 			playerOneRoute[i + 12] = tiles[i + 16];
 		}
 		// Player two end
 		for (int i = 0; i < 2; i++) {
-			tiles[i + 18] = new Tile(temp.getWidth() * (8 - i), rowTop);
+			tiles[i + 18] = new Tile(Tile.WIDTH * (8 - i), rowTop);
 			playerTwoRoute[i + 12] = tiles[i + 18];
 		}
 		
@@ -64,24 +64,11 @@ public class Play implements State {
 		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
 	}
 	
-	private int curIndexOne = 0;
-	private int curIndexTwo = 0;
-	
 	@Override
 	public void update() {
-		for (Tile tile : tiles) {
-			tile.update();
-		}
-		
-//		if (counterOne.getPos().dist(playerOneRoute[curIndexOne].getMidPos(counterOne)) < 5) {
-//			curIndexOne = (++curIndexOne % playerOneRoute.length);
-//		}
-		counterOne.update(playerOneRoute[curIndexOne].getMidPos(counterOne));
-		
-//		if (counterTwo.getPos().dist(playerTwoRoute[curIndexTwo].getMidPos(counterTwo)) < 5) {
-//			curIndexTwo = (++curIndexTwo % playerTwoRoute.length);
-//		}
-		counterTwo.update(playerTwoRoute[curIndexTwo].getMidPos(counterTwo));
+		for (Tile tile : tiles) tile.update();
+		counterOne.update();
+		counterTwo.update();
 	}
 	
 	@Override
@@ -89,10 +76,7 @@ public class Play implements State {
 		g.setColor(ColorMaterial.GREY[2]);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
-		for (Tile tile : tiles) {
-			tile.draw(g, interpolate);
-		}
-		
+		for (Tile tile : tiles) tile.draw(g, interpolate);
 		counterOne.draw(g, interpolate);
 		counterTwo.draw(g, interpolate);
 	}
@@ -101,11 +85,20 @@ public class Play implements State {
 	
 	}
 	
+	private int curIndexOne = -1;
+	private int curIndexTwo = -1;
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ') {
-			curIndexOne = (++curIndexOne % playerOneRoute.length);
-			curIndexTwo = (++curIndexTwo % playerTwoRoute.length);
+			counterOne.setTarget(
+					playerOneRoute[(++curIndexOne % playerOneRoute.length)]
+					.getMidPos()
+			);
+			counterTwo.setTarget(
+					playerTwoRoute[(++curIndexTwo % playerTwoRoute.length)]
+					.getMidPos()
+			);
 		}
 	}
 	

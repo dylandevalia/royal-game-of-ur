@@ -101,7 +101,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 			case 65406:
 				return "alt_gr";
 			default:
-				return "" + e.getKeyChar();
+				return ("" + e.getKeyChar()).toLowerCase();
 		}
 	}
 

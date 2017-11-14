@@ -7,17 +7,27 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.*;
 
 public class Counter extends BaseEntity {
+	public static int WIDTH = Window.WIDTH / 20;
+	public static int HEIGHT = Window.WIDTH / 20;
+	
 	private boolean playerOne;
+	private Vector2D target;
 	
 	public Counter(int x, int y, boolean playerOne) {
-		super(x, y, Window.WIDTH / 20, Window.WIDTH / 20);
+		super(x, y, WIDTH, HEIGHT);
+		target = pos;
 		this.playerOne = playerOne;
 	}
 	
-	public void update(Vector2D target) {
+	public void setTarget(Vector2D target) {
+		this.target = target;
+	}
+	
+	public void update() {
 		super.update();
 		
-		Vector2D vel = new Vector2D();
+		if (pos == target) return;
+		
 		int speed = 5;
 		double dist = Vector2D.dist(pos, target);
 		
@@ -32,11 +42,7 @@ public class Counter extends BaseEntity {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
-		if (playerOne) {
-			g.setColor(ColorMaterial.purple);
-		} else {
-			g.setColor(ColorMaterial.cyan);
-		}
+		g.setColor(playerOne ? ColorMaterial.purple : ColorMaterial.green);
 		g.fillOval((int)drawPos.x, (int)drawPos.y, width, height);
 	}
 }

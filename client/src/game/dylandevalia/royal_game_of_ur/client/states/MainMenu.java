@@ -4,7 +4,6 @@ import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.gui.Canvas;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -37,7 +36,7 @@ public class MainMenu implements State {
 	}
 	
 	public void keyPressed(KeyEvent e) {
-//		Log.debug("main menu/key press", "char: '" + e.getKeyCode() + "'");
+//		Log.debug("main menu/key press", "char: '" + e.getKeyChar() + "'");
 	}
 	
 	public void keyReleased(KeyEvent e) {
@@ -68,7 +67,7 @@ public class MainMenu implements State {
 			int speed = Canvas.getKeyState("shift") ? 10 : 5;
 
 			Vector2D vel = new Vector2D();
-			if (Canvas.getKeyState("a")) {
+			if (Canvas.getKeyState("a") || Canvas.getKeyState("A")) {
 				vel.add(Vector2D.LEFT());
 			}
 			if (Canvas.getKeyState("d")) {
@@ -88,7 +87,7 @@ public class MainMenu implements State {
 			super.draw(g, interpolate);
 			if (!onScreen) { return; }
 			g.setColor(Color.MAGENTA);
-			g.fillRect((int) drawPos.x, (int) drawPos.y, (int) width, (int) height);
+			g.fillRect((int)drawPos.x, (int)drawPos.y, width, height);
 		}
 	}
 }
