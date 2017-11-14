@@ -55,7 +55,7 @@ public class Counter extends BaseEntity {
 	 * If the counter is at the current target
 	 * @return  Boolean if at the current target position
 	 */
-	public boolean atTarget() {
+	private boolean atTarget() {
 		return pos == target;
 	}
 	

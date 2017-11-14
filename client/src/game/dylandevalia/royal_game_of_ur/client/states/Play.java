@@ -94,23 +94,26 @@ public class Play implements State {
 		mouseCircle.draw(g, interpolate);
 	}
 	
-	public void packetReceived(PacketManager packet) {
-	
-	}
+	public void packetReceived(PacketManager packet) { }
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ') {
-			moveCounter(playerOneRoute, counterOne, 2);
+			moveCounter(playerOneRoute, counterOne, 1);
 			moveCounter(playerTwoRoute, counterTwo, 1);
 		}
 	}
 	
+	/**
+	 * Moves a counter a certain amount of spaces through the given route. Adds
+	 * all the moves along the way so that the counter will still move through
+	 * the route rather than move directly to the last target
+	 *
+	 * @param route     The route the counter will travel through
+	 * @param counter   The counter to move
+	 * @param spaces    The amount of spaces to move the counter along the route
+	 */
 	private void moveCounter(Tile[] route, Counter counter, int spaces) {
-//		if (spaces > 0) {
-//			counter.setTarget(counterInTilePosition(getNextTile(route, counter)));
-//			moveCounter(route, counter, --spaces);
-//		}
 		for (int i = 0; i < spaces; i++) {
 			counter.setTarget(counterInTilePosition(getNextTile(route, counter)));
 		}
@@ -119,9 +122,9 @@ public class Play implements State {
 	/**
 	 * Gets the next tile in the route
 	 *
-	 * @param route     The route the tile travels
-	 * @param counter   The counter to move
-	 * @return  The tile to move to
+	 * @param route   The route the tile travels
+	 * @param counter The counter to move
+	 * @return The tile to move to
 	 */
 	private Tile getNextTile(Tile[] route, Counter counter) {
 		counter.incrementCurrentRouteIndex();
@@ -156,6 +159,8 @@ public class Play implements State {
 //		game.stateManager.setState(StateManager.GameState.PAUSE);
 	}
 	
+	// Add a small circle around the mouse
+	// temporary testing to see if mouse position was available
 	private class MouseCircle extends BaseEntity {
 		MouseCircle() {
 			super(0, 0, 10, 10);
