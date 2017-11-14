@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Game;
+import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
@@ -18,6 +19,7 @@ public class Play implements State {
 	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
 	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
 	private Counter counterOne, counterTwo;
+	private Circle circle;
 	
 	@Override
 	public void initialise(Game game) {
@@ -29,12 +31,13 @@ public class Play implements State {
 		int rowBot = (int) Math.floor((Window.HEIGHT / 2) + (Tile.WIDTH * 0.5));
 		
 		// Create tiles for board
+		int aggregate = 0;
 		// Player one start
 		for (int i = 0; i < startingTilesLen; i++) {
 			tiles[i] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowBot);
 			playerOneRoute[i] = tiles[i];
 		}
-		int aggregate = startingTilesLen;
+		aggregate += startingTilesLen;
 		// Player two start
 		for (int i = 0; i < startingTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowTop);
@@ -65,8 +68,10 @@ public class Play implements State {
 			tiles[r].setRosette(true);
 		}
 		
-		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100, true);
+		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
 		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
+		
+		circle = new Circle();
 	}
 	
 	@Override
@@ -74,6 +79,7 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.update();
 		counterOne.update();
 		counterTwo.update();
+		circle.update();
 	}
 	
 	@Override
@@ -84,6 +90,7 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.draw(g, interpolate);
 		counterOne.draw(g, interpolate);
 		counterTwo.draw(g, interpolate);
+		circle.draw(g, interpolate);
 	}
 	
 	public void packetReceived(PacketManager packet) {
@@ -119,6 +126,25 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		game.stateManager.setState(StateManager.GameState.PAUSE);
+//		game.stateManager.setState(StateManager.GameState.PAUSE);
+	}
+	
+	private class Circle extends BaseEntity {
+		Circle() {
+			super (0, 0, 10, 10);
+		}
+		
+		@Override
+		protected void update() {
+			super.update();
+			this.pos.set(game.framework.mousePos.copy().sub(width / 2, height / 2));
+		}
+		
+		@Override
+		protected void draw(Graphics2D g, double interpolate) {
+			super.draw(g, interpolate);
+			g.setColor(ColorMaterial.deepPurple);
+			g.drawOval((int)drawPos.x, (int)drawPos.y, width, height);
+		}
 	}
 }

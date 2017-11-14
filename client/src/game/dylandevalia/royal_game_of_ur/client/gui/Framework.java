@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client.gui;
 import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.states.StateManager;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -13,7 +14,7 @@ import java.awt.event.MouseEvent;
  * for the updates and draws which are passed onto the state manager
  */
 public class Framework extends Canvas {
-	public static int frameWidth, frameHeight;
+	public Vector2D mousePos = new Vector2D();
 	
 	/* Constants */
 	private static final long NS_A_SEC = 1000000000;
@@ -36,7 +37,7 @@ public class Framework extends Canvas {
 	//  Used to calculate positions for rendering (ie. deltaTime)
 	private double interpolate;
 	
-	private Game game = new Game();
+	private Game game = new Game(this);
 //	StateManager stateManager = new StateManager();
 	
 	public Framework() {
@@ -120,9 +121,14 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Update state
+	 * Update state and mouse position
 	 */
 	public void update() {
+		Point mouse = MouseInfo.getPointerInfo().getLocation();
+		mousePos.set(
+				mouse.x - game.framework.getLocationOnScreen().x,
+				mouse.y - game.framework.getLocationOnScreen().y
+		);
 		game.stateManager.update();
 	}
 	
