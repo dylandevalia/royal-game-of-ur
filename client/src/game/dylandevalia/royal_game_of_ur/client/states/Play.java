@@ -6,8 +6,8 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.Dice;
-import game.dylandevalia.royal_game_of_ur.utility.Die;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -17,14 +17,19 @@ import java.awt.event.MouseEvent;
 
 public class Play implements State {
 	private Game game;
+	/* Game board */
 	private int startingTilesLen = 4, middleTilesLen = 8, endTilesLen = 2;
 	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
 	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
+	/* Counters */
 	private Counter counterOne, counterTwo;
+	private int numberOfCounters = 6;
+	private Counter[] playerOneCounters = new Counter[numberOfCounters];
+	private Counter[] playerTwoCounters = new Counter[numberOfCounters];
 	private MouseCircle mouseCircle;
-	private Dice dice = new Dice(4, 2);
+	private UrDice dice = new UrDice();
 	
 	@Override
 	public void initialise(Game game) {
@@ -85,12 +90,17 @@ public class Play implements State {
 		}
 	}
 	
+	private void generateCounters() {
+	
+	}
+	
 	@Override
 	public void update() {
 		for (Tile tile : tiles) tile.update();
 		counterOne.update();
 		counterTwo.update();
 		mouseCircle.update();
+		Log.debug("Dice", "" + dice.roll());
 	}
 	
 	@Override
@@ -109,7 +119,7 @@ public class Play implements State {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyChar() == ' ') {
-			moveCounter(playerOneRoute, counterOne, 1);
+			moveCounter(playerOneRoute, counterOne, -1);
 			moveCounter(playerTwoRoute, counterTwo, 1);
 		}
 	}
@@ -124,8 +134,8 @@ public class Play implements State {
 	 * @param spaces    The amount of spaces to move the counter along the route
 	 */
 	private void moveCounter(Tile[] route, Counter counter, int spaces) {
-		for (int i = 0; i < spaces; i++) {
-			counter.setTarget(counterInTilePosition(getNextTile(route, counter)));
+		for (int i = 0; i < Math.abs(spaces); i++) {
+			counter.setTarget(counterInTilePosition(getNextTile(route, counter, spaces > 0)));
 		}
 	}
 	
@@ -136,9 +146,12 @@ public class Play implements State {
 	 * @param counter The counter to move
 	 * @return The tile to move to
 	 */
-	private Tile getNextTile(Tile[] route, Counter counter) {
-		counter.incrementCurrentRouteIndex();
-		return route[(counter.getCurrentRouteIndex() % route.length)];
+	private Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
+		counter.currentRouteIndex += forward ? 1 : -1;
+		if (counter.currentRouteIndex < 0) {
+		
+		}
+		return route[counter.currentRouteIndex];
 	}
 	
 	/**
