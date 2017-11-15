@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +15,6 @@ public class Log {
 	private static final int LEVEL_NONE = 6;
 	
 	private static int level = LEVEL_ALL;
-	private static File file;
 	
 	public static void SET_ALL() {
 		level = LEVEL_ALL;
@@ -95,28 +95,6 @@ public class Log {
 		// Print string if high enough level
 		if (level >= Log.level) {
 			System.out.print(builder);
-		}
-		
-		// Append to file
-		// If file doesn't exist create it
-		if (file == null) {
-			String path = System.getProperty("user.home") + File.separator;
-			String name = new SimpleDateFormat("yyyy-mm-dd_HH-mm-ss").format(date);
-			file = new File(path + name + ".log");
-			if (!file.exists() && !file.isDirectory()) {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		try {
-			FileWriter fw = new FileWriter(file, true);
-			fw.write(builder.toString());
-			fw.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
 		}
 	}
 	
