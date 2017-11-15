@@ -13,7 +13,7 @@ public class Counter extends BaseEntity {
 	private boolean playerOne;
 	private LinkedList<Vector2D> targets = new LinkedList<>();
 	private Vector2D target;
-	private int currentRouteIndex = -1;
+	public int currentRouteIndex = -1;
 	
 	public Counter(int x, int y, boolean playerOne) {
 		super(x, y, WIDTH, WIDTH);
