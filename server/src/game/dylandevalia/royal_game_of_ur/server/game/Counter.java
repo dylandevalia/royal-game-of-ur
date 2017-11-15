@@ -6,6 +6,7 @@ public class Counter {
 		WHITE,
 		BLACK
 	}
+	
 	protected Counter.Colour colour;
 	
 }

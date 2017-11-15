@@ -6,6 +6,7 @@ public class Vector2D {
 	public Vector2D(double x, double y) {
 		set(x, y);
 	}
+	
 	public Vector2D() {
 		this(0, 0);
 	}
@@ -17,12 +18,29 @@ public class Vector2D {
 	private static final Vector2D LEFT = new Vector2D(-1, 0);
 	private static final Vector2D RIGHT = new Vector2D(1, 0);
 	
-	public static Vector2D ZERO() { return ZERO.copy(); }
-	public static Vector2D UNIT() { return UNIT.copy(); }
-	public static Vector2D UP() { return UP.copy(); }
-	public static Vector2D DOWN() { return DOWN.copy(); }
-	public static Vector2D LEFT() { return LEFT.copy(); }
-	public static Vector2D RIGHT() { return RIGHT.copy(); }
+	public static Vector2D ZERO() {
+		return ZERO.copy();
+	}
+	
+	public static Vector2D UNIT() {
+		return UNIT.copy();
+	}
+	
+	public static Vector2D UP() {
+		return UP.copy();
+	}
+	
+	public static Vector2D DOWN() {
+		return DOWN.copy();
+	}
+	
+	public static Vector2D LEFT() {
+		return LEFT.copy();
+	}
+	
+	public static Vector2D RIGHT() {
+		return RIGHT.copy();
+	}
 	
 	@Override
 	public String toString() {
@@ -34,6 +52,7 @@ public class Vector2D {
 		this.y = y;
 		return this;
 	}
+	
 	public Vector2D set(Vector2D other) {
 		return set(other.x, other.y);
 	}
@@ -45,9 +64,11 @@ public class Vector2D {
 	public boolean equals(double x, double y) {
 		return (this.x == x) && (this.y == y);
 	}
+	
 	public boolean equals(Vector2D other) {
 		return equals(other.x, other.y);
 	}
+	
 	public static boolean equals(Vector2D a, Vector2D b) {
 		return a.equals(b);
 	}
@@ -57,9 +78,11 @@ public class Vector2D {
 		this.y += y;
 		return this;
 	}
+	
 	public Vector2D add(Vector2D other) {
 		return add(other.x, other.y);
 	}
+	
 	public static Vector2D add(Vector2D a, Vector2D b) {
 		return a.copy().add(b);
 	}
@@ -69,9 +92,11 @@ public class Vector2D {
 		this.y -= y;
 		return this;
 	}
+	
 	public Vector2D sub(Vector2D other) {
 		return sub(other.x, other.y);
 	}
+	
 	public static Vector2D sub(Vector2D a, Vector2D b) {
 		return a.copy().sub(b);
 	}
@@ -91,6 +116,7 @@ public class Vector2D {
 	public double magSquared() {
 		return (this.x * this.x + this.y * this.y);
 	}
+	
 	public double mag() {
 		return Math.sqrt(magSquared());
 	}
@@ -98,9 +124,11 @@ public class Vector2D {
 	public double dot(double x, double y) {
 		return (this.x * x) + (this.y * y);
 	}
+	
 	public double dot(Vector2D other) {
 		return dot(other.x, other.y);
 	}
+	
 	public static double dot(Vector2D a, Vector2D b) {
 		return a.copy().dot(b);
 	}
@@ -108,6 +136,7 @@ public class Vector2D {
 	public double dist(Vector2D other) {
 		return other.copy().sub(this).mag();
 	}
+	
 	public static double dist(Vector2D a, Vector2D b) {
 		return a.dist(b);
 	}
@@ -118,7 +147,7 @@ public class Vector2D {
 	}
 	
 	public Vector2D limit(double max) {
-		if (this.magSquared() > max*max) {
+		if (this.magSquared() > max * max) {
 			this.normalise();
 			this.mult(max);
 		}
@@ -146,6 +175,7 @@ public class Vector2D {
 		this.y += (y - this.y) * amount;
 		return this;
 	}
+	
 	public Vector2D lerp(Vector2D other, double amount) {
 		return lerp(other.x, other.y, amount);
 	}

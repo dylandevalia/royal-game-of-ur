@@ -44,8 +44,9 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	 * Checks if a given key is being held down
 	 * Returns false on NullPointerException as key hasn't been pressed yet
 	 * so there's no value for it in the map
-	 * @param key   The keycode of the key to check
-	 * @return  Whether the given key is held down
+	 *
+	 * @param key The keycode of the key to check
+	 * @return Whether the given key is held down
 	 */
 	public static boolean getKeyState(String key) {
 		try {
@@ -68,11 +69,13 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	}
 	
 	@Override
-	public void keyTyped(KeyEvent e) { }
-
+	public void keyTyped(KeyEvent e) {
+	}
+	
 	public abstract void keyPressedFramework(KeyEvent e);
+	
 	public abstract void keyReleasedFramework(KeyEvent e);
-
+	
 	public static String keyLookup(KeyEvent e) {
 		int code = e.getKeyCode();
 		switch (code) {
@@ -104,7 +107,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 				return ("" + e.getKeyChar()).toLowerCase();
 		}
 	}
-
+	
 	/* -------------- */
 	/* Mouse listener */
 	/* -------------- */
@@ -112,11 +115,12 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	
 	/**
 	 * Returns if the mouse button given is being pressed down
-	 *   1 - Left click
-	 *   2 - Middle click (scroll wheel)
-	 *   3 - Right click
-	 * @param button    Value of the button to check
-	 * @return  Boolean if the mouse button is held down
+	 * 1 - Left click
+	 * 2 - Middle click (scroll wheel)
+	 * 3 - Right click
+	 *
+	 * @param button Value of the button to check
+	 * @return Boolean if the mouse button is held down
 	 */
 	public static boolean mouseButtonState(int button) {
 		return mouseStates[button - 1];
@@ -149,15 +153,19 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) { }
+	public void mouseClicked(MouseEvent e) {
+	}
 	
 	@Override
-	public void mouseEntered(MouseEvent e) { }
+	public void mouseEntered(MouseEvent e) {
+	}
 	
 	@Override
-	public void mouseExited(MouseEvent e) { }
+	public void mouseExited(MouseEvent e) {
+	}
 	
 	public abstract void mousePressedFramework(MouseEvent e);
+	
 	public abstract void mouseReleasedFramework(MouseEvent e);
 	
 	

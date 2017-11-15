@@ -28,13 +28,16 @@ public class StateManager {
 		
 		private int index;
 		private Class obj;
+		
 		GameState(Class obj) {
 			this.index = stateIndexCounter++;
 			this.obj = obj;
 		}
+		
 		int getIndex() {
 			return index;
 		}
+		
 		Class getObj() {
 			return obj;
 		}
@@ -54,6 +57,7 @@ public class StateManager {
 	
 	/**
 	 * Creates the state in the array and calls the state's initialise function
+	 *
 	 * @param state The states to be initialise
 	 */
 	public void loadState(GameState state) {
@@ -68,6 +72,7 @@ public class StateManager {
 	
 	/**
 	 * Sets the given state as the active state
+	 *
 	 * @param state The state to become active
 	 */
 	public void setState(GameState state) {
@@ -80,6 +85,7 @@ public class StateManager {
 	
 	/**
 	 * Unloads the state from memory
+	 *
 	 * @param state The state to be deleted
 	 */
 	public void unloadState(GameState state) {
@@ -88,8 +94,9 @@ public class StateManager {
 	
 	/**
 	 * Checks to see if the given states is loaded
+	 *
 	 * @param state The state to check if it's loaded
-	 * @return  Boolean if the state is loaded
+	 * @return Boolean if the state is loaded
 	 */
 	public boolean isLoaded(GameState state) {
 		return loadedStates[state.getIndex()] != null;
@@ -107,21 +114,27 @@ public class StateManager {
 	public void reinitialise() {
 		currentState.initialise(game);
 	}
+	
 	public void update() {
 		currentState.update();
 	}
+	
 	public void draw(Graphics2D g, double interpolate) {
 		currentState.draw(g, interpolate);
 	}
+	
 	public void keyPressed(KeyEvent e) {
 		currentState.keyPressed(e);
 	}
+	
 	public void keyReleased(KeyEvent e) {
 		currentState.keyReleased(e);
 	}
+	
 	public void mousePressed(MouseEvent e) {
 		currentState.mousePressed(e);
 	}
+	
 	public void mouseReleased(MouseEvent e) {
 		currentState.mouseReleased(e);
 	}

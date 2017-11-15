@@ -24,7 +24,7 @@ public class UrDice {
 		/**
 		 * Rolls all the dice and returns the sum of the random numbers
 		 *
-		 * @return  The sum of the all random rolls
+		 * @return The sum of the all random rolls
 		 */
 		int sum() {
 			int sum = 0;

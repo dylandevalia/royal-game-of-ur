@@ -49,15 +49,15 @@ public class MainMenu implements State {
 	
 	public void mouseReleased(MouseEvent e) {
 		if (!game.stateManager.isLoaded(StateManager.GameState.PLAY)) {
-		    game.stateManager.loadState(StateManager.GameState.PLAY);
-        }
+			game.stateManager.loadState(StateManager.GameState.PLAY);
+		}
 		game.stateManager.setState(StateManager.GameState.PLAY);
 	}
 	
 	private class Box extends BaseEntity {
 		
 		Box(int x, int y) {
-			super(x, y, 20,20);
+			super(x, y, 20, 20);
 		}
 		
 		@Override
@@ -65,7 +65,7 @@ public class MainMenu implements State {
 			super.update();
 			
 			int speed = Canvas.getKeyState("shift") ? 10 : 5;
-
+			
 			Vector2D vel = new Vector2D();
 			if (Canvas.getKeyState("a") || Canvas.getKeyState("A")) {
 				vel.add(Vector2D.LEFT());
@@ -85,9 +85,11 @@ public class MainMenu implements State {
 		@Override
 		public void draw(Graphics2D g, double interpolate) {
 			super.draw(g, interpolate);
-			if (!onScreen) { return; }
+			if (!onScreen) {
+				return;
+			}
 			g.setColor(Color.MAGENTA);
-			g.fillRect((int)drawPos.x, (int)drawPos.y, width, height);
+			g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		}
 	}
 }

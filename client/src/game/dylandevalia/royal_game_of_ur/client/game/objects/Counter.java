@@ -28,6 +28,7 @@ public class Counter extends BaseEntity {
 	public int getCurrentRouteIndex() {
 		return currentRouteIndex;
 	}
+	
 	public void incrementCurrentRouteIndex() {
 		currentRouteIndex++;
 	}
@@ -53,7 +54,8 @@ public class Counter extends BaseEntity {
 	
 	/**
 	 * If the counter is at the current target
-	 * @return  Boolean if at the current target position
+	 *
+	 * @return Boolean if at the current target position
 	 */
 	private boolean atTarget() {
 		return pos == target;
@@ -64,6 +66,6 @@ public class Counter extends BaseEntity {
 		super.draw(g, interpolate);
 		
 		g.setColor(playerOne ? ColorMaterial.purple : ColorMaterial.green);
-		g.fillOval((int)drawPos.x, (int)drawPos.y, width, height);
+		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 }

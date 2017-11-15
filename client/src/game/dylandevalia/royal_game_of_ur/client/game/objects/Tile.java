@@ -17,6 +17,7 @@ public class Tile extends BaseEntity {
 	public boolean isRosette() {
 		return rosette;
 	}
+	
 	public void setRosette(boolean rosette) {
 		this.rosette = rosette;
 	}
@@ -30,7 +31,7 @@ public class Tile extends BaseEntity {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		final int boarderWidth = 2;
-
+		
 		g.setColor(ColorMaterial.GREY[7]);
 		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		

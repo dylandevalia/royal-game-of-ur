@@ -6,7 +6,6 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
@@ -34,7 +33,7 @@ public class Play implements State {
 	@Override
 	public void initialise(Game game) {
 		this.game = game;
-
+		
 		generateBoard();
 		
 		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
@@ -114,7 +113,8 @@ public class Play implements State {
 		mouseCircle.draw(g, interpolate);
 	}
 	
-	public void packetReceived(PacketManager packet) { }
+	public void packetReceived(PacketManager packet) {
+	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -129,9 +129,9 @@ public class Play implements State {
 	 * all the moves along the way so that the counter will still move through
 	 * the route rather than move directly to the last target
 	 *
-	 * @param route     The route the counter will travel through
-	 * @param counter   The counter to move
-	 * @param spaces    The amount of spaces to move the counter along the route
+	 * @param route   The route the counter will travel through
+	 * @param counter The counter to move
+	 * @param spaces  The amount of spaces to move the counter along the route
 	 */
 	private void moveCounter(Tile[] route, Counter counter, int spaces) {
 		for (int i = 0; i < Math.abs(spaces); i++) {
@@ -149,7 +149,8 @@ public class Play implements State {
 	private Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
 		counter.currentRouteIndex += forward ? 1 : -1;
 		if (counter.currentRouteIndex < 0) {
-		
+			int y = Window.WIDTH;
+			return route[0];
 		}
 		return route[counter.currentRouteIndex];
 	}

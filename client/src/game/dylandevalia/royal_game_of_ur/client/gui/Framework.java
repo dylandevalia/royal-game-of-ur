@@ -72,7 +72,7 @@ public class Framework extends Canvas {
 		
 		// Simple way to find fps
 		int lastSecondTime = (int) (lastUpdateTime / NS_A_SEC);
-		
+
 //		setup();
 		
 		while (runGame) {
@@ -112,8 +112,7 @@ public class Framework extends Canvas {
 			
 			// Yield CPU time so that we don't take up all the processing time
 			while (now - lastRenderTime < TARGET_TIME_BETWEEN_RENDERS
-					&& now - lastUpdateTime < TIME_BETWEEN_UPDATES)
-			{
+					&& now - lastUpdateTime < TIME_BETWEEN_UPDATES) {
 				Thread.yield();
 				now = System.nanoTime();
 			}
@@ -140,7 +139,8 @@ public class Framework extends Canvas {
 	/**
 	 * Draw state
 	 * Passes in interpolate value as well to allow smooth motion
-	 * @param g	The graphics2d object to draw onto
+	 *
+	 * @param g The graphics2d object to draw onto
 	 */
 	@Override
 	public void draw(Graphics2D g) {
@@ -151,14 +151,17 @@ public class Framework extends Canvas {
 	public void keyPressedFramework(KeyEvent e) {
 		game.stateManager.keyPressed(e);
 	}
+	
 	@Override
 	public void keyReleasedFramework(KeyEvent e) {
 		game.stateManager.keyReleased(e);
 	}
+	
 	@Override
 	public void mousePressedFramework(MouseEvent e) {
 		game.stateManager.mousePressed(e);
 	}
+	
 	@Override
 	public void mouseReleasedFramework(MouseEvent e) {
 		game.stateManager.mouseReleased(e);

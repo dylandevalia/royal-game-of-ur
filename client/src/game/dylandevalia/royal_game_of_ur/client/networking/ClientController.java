@@ -16,9 +16,10 @@ public class ClientController {
 	
 	/**
 	 * Runs the initialisation of the network client and creates the listeners
-	 * @param ip    The IP address of the server to connect to
-	 * @param port  The port of server
-	 * @throws Exception    IOException if the client fails to connect
+	 *
+	 * @param ip   The IP address of the server to connect to
+	 * @param port The port of server
+	 * @throws Exception IOException if the client fails to connect
 	 */
 	public void run(String ip, int port, final Game game) throws Exception {
 		Log.info("Client", "Initialising client");
