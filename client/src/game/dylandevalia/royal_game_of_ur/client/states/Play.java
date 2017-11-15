@@ -6,6 +6,8 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.Dice;
+import game.dylandevalia.royal_game_of_ur.utility.Die;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -15,18 +17,32 @@ import java.awt.event.MouseEvent;
 
 public class Play implements State {
 	private Game game;
-	private int startingTilesLen = 4, middleTilesLen = 8, endTileLen = 2;
-	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTileLen)];
-	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
-	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTileLen];
+	private int startingTilesLen = 4, middleTilesLen = 8, endTilesLen = 2;
+	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
+	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	private Counter counterOne, counterTwo;
 	private MouseCircle mouseCircle;
+	private Dice dice = new Dice(4, 2);
 	
 	@Override
 	public void initialise(Game game) {
 		this.game = game;
 
-//		Tile temp = new Tile(0, 0);
+		generateBoard();
+		
+		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
+		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
+		
+		mouseCircle = new MouseCircle();
+	}
+	
+	/**
+	 * Generates the board of tiles using startingTilesLen, middleTilesLen
+	 * and endTilesLen as well as rosetteSquares
+	 */
+	private void generateBoard() {
 		int rowTop = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 1.5));
 		int rowMid = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 0.5));
 		int rowBot = (int) Math.floor((Window.HEIGHT / 2) + (Tile.WIDTH * 0.5));
@@ -53,26 +69,20 @@ public class Play implements State {
 		}
 		aggregate += middleTilesLen;
 		// Player one end
-		for (int i = 0; i < endTileLen; i++) {
+		for (int i = 0; i < endTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowBot);
 			playerOneRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
-		aggregate += endTileLen;
+		aggregate += endTilesLen;
 		// Player two end
-		for (int i = 0; i < endTileLen; i++) {
+		for (int i = 0; i < endTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowTop);
 			playerTwoRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
 		
-		int[] rosetteSquares = {3, 7, 11, 17, 19};
 		for (int r : rosetteSquares) {
 			tiles[r].setRosette(true);
 		}
-		
-		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
-		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
-		
-		mouseCircle = new MouseCircle();
 	}
 	
 	@Override

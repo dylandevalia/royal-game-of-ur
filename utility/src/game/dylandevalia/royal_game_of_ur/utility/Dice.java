@@ -1,18 +1,18 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
-import java.util.Random;
+import game.dylandevalia.royal_game_of_ur.utility.Die;
 
 public class Dice {
-	private int noSides;
-	private Random random;
+	Die[] dice;
 	
-	public Dice(int noSides) {
-		this.noSides = noSides;
-		random = new Random(System.currentTimeMillis());
+	public Dice(int noDice, int sides) {
+		dice = new Die[noDice];
+		for (Die die : dice) die = new Die(sides);
 	}
 	
-	public int roll() {
-		// Get a number from 1 to noSides
-		return (random.nextInt(noSides) + 1);
+	public int sum() {
+		int sum = 0;
+		for (Die die : dice) sum += die.roll();
+		return sum;
 	}
 }
