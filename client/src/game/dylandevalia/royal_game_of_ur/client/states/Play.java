@@ -100,7 +100,7 @@ public class Play implements State {
 		counterOne.update();
 		counterTwo.update();
 		mouseCircle.update();
-		Log.debug("Dice", "" + dice.roll());
+//		Log.debug("Dice", "" + dice.roll());
 	}
 	
 	@Override
