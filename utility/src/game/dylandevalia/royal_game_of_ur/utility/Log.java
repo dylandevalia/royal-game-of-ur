@@ -5,6 +5,9 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Static class used to organise the console log
+ */
 public class Log {
 	private static final int LEVEL_ALL = 0;
 	private static final int LEVEL_TRACE = 1;
