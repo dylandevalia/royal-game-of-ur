@@ -5,6 +5,10 @@ import java.util.Random;
 public class UrDice {
 	private Dice dice = new Dice(4, 2);
 	
+	public void setNoDice(int noDice) {
+		dice = new Dice(noDice, 2);
+	}
+	
 	public int roll() {
 		return dice.sum();
 	}
