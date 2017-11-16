@@ -8,12 +8,13 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class Counter extends BaseEntity {
-	public static final int WIDTH = Window.WIDTH / 20;
+	public static final int WIDTH = Window.WIDTH / 15;
 	
+	public int currentRouteIndex = -1;
 	private boolean playerOne;
 	private LinkedList<Vector2D> targets = new LinkedList<>();
 	private Vector2D target;
-	public int currentRouteIndex = -1;
+	private boolean mouseHovering = false;
 	
 	public Counter(int x, int y, boolean playerOne) {
 		super(x, y, WIDTH, WIDTH);
@@ -25,20 +26,14 @@ public class Counter extends BaseEntity {
 		targets.add(target);
 	}
 	
-	public int getCurrentRouteIndex() {
-		return currentRouteIndex;
-	}
-	
-	public void incrementCurrentRouteIndex() {
-		currentRouteIndex++;
-	}
-	
-	public void update() {
+	public void update(Vector2D mousePos) {
 		super.update();
+		
+		mouseHovering = isColliding(mousePos);
 		
 		if (atTarget() && targets.isEmpty()) return;
 		
-		int speed = 5;
+		int speed = 8;
 		double dist = Vector2D.dist(pos, target);
 		
 		if (dist > speed) {
@@ -61,11 +56,21 @@ public class Counter extends BaseEntity {
 		return pos == target;
 	}
 	
+	/**
+	 * Checks if the given position vector is intersecting with the counter
+	 *
+	 * @param other The other position
+	 * @return If the vector is within the counter
+	 */
+	public boolean isColliding(Vector2D other) {
+		return (Vector2D.dist(pos.copy().add(WIDTH / 2, WIDTH / 2), other) < WIDTH / 2);
+	}
+	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
-		g.setColor(playerOne ? ColorMaterial.purple : ColorMaterial.green);
+		g.setColor(mouseHovering ? ColorMaterial.amber : (playerOne ? ColorMaterial.purple : ColorMaterial.green));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 }

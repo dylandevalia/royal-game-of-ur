@@ -6,6 +6,7 @@ import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
@@ -24,9 +25,12 @@ public class Play implements State {
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	/* Counters */
 	private Counter counterOne, counterTwo;
-	private int numberOfCounters = 6;
-	private Counter[] playerOneCounters = new Counter[numberOfCounters];
-	private Counter[] playerTwoCounters = new Counter[numberOfCounters];
+	private int noCounters = 5;
+	private Counter[] playerOneCounters = new Counter[noCounters];
+	private Counter[] playerTwoCounters = new Counter[noCounters];
+	private Vector2D[] playerOneCounterStartPositions = new Vector2D[noCounters];
+	private Vector2D[] playerTwoCounterStartPositions = new Vector2D[noCounters];
+	/* Misc */
 	private MouseCircle mouseCircle;
 	private UrDice dice = new UrDice();
 	
@@ -35,6 +39,8 @@ public class Play implements State {
 		this.game = game;
 		
 		generateBoard();
+		generateCounters();
+		Log.info("Play", "Generation completed");
 		
 		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
 		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
@@ -47,6 +53,7 @@ public class Play implements State {
 	 * and endTilesLen as well as rosetteSquares
 	 */
 	private void generateBoard() {
+		Tile.WIDTH = Window.WIDTH / (middleTilesLen + 2);
 		int rowTop = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 1.5));
 		int rowMid = (int) Math.floor((Window.HEIGHT / 2) - (Tile.WIDTH * 0.5));
 		int rowBot = (int) Math.floor((Window.HEIGHT / 2) + (Tile.WIDTH * 0.5));
@@ -89,15 +96,32 @@ public class Play implements State {
 		}
 	}
 	
+	/**
+	 * Generates the counters and their starting positions
+	 */
 	private void generateCounters() {
-	
+		Tile tmpTile = new Tile(
+				Tile.WIDTH * startingTilesLen,
+				(int) ((Window.HEIGHT / 2) * 2.5)
+		);
+		int x = (int) counterInTilePosition(tmpTile).x;
+		int yTop = (Window.HEIGHT / 2) - (Tile.WIDTH * 2) - Counter.WIDTH;
+		int yBot = (Window.HEIGHT / 2) + (Tile.WIDTH * 2);
+		for (int i = 0; i < noCounters; i++) {
+			playerOneCounterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yBot);
+			playerTwoCounterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yTop);
+			playerOneCounters[i] = new Counter((int) playerOneCounterStartPositions[i].x, (int) playerOneCounterStartPositions[i].y, true);
+			playerTwoCounters[i] = new Counter((int) playerTwoCounterStartPositions[i].x, (int) playerTwoCounterStartPositions[i].y, false);
+		}
 	}
 	
 	@Override
 	public void update() {
 		for (Tile tile : tiles) tile.update();
-		counterOne.update();
-		counterTwo.update();
+		for (Counter counter : playerOneCounters) counter.update(game.framework.mousePos);
+		for (Counter counter : playerTwoCounters) counter.update(game.framework.mousePos);
+		counterOne.update(game.framework.mousePos);
+		counterTwo.update(game.framework.mousePos);
 		mouseCircle.update();
 //		Log.debug("Dice", "" + dice.roll());
 	}
@@ -108,9 +132,15 @@ public class Play implements State {
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
 		for (Tile tile : tiles) tile.draw(g, interpolate);
+		for (Counter counter : playerOneCounters) counter.draw(g, interpolate);
+		for (Counter counter : playerTwoCounters) counter.draw(g, interpolate);
 		counterOne.draw(g, interpolate);
 		counterTwo.draw(g, interpolate);
 		mouseCircle.draw(g, interpolate);
+		
+		g.setColor(ColorMaterial.GREY[9]);
+		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
+		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
 	}
 	
 	public void packetReceived(PacketManager packet) {
@@ -149,8 +179,9 @@ public class Play implements State {
 	private Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
 		counter.currentRouteIndex += forward ? 1 : -1;
 		if (counter.currentRouteIndex < 0) {
-			int y = Window.WIDTH;
 			return route[0];
+		} else if (counter.currentRouteIndex >= route.length) {
+			return route[route.length - 1];
 		}
 		return route[counter.currentRouteIndex];
 	}
@@ -170,7 +201,9 @@ public class Play implements State {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-	
+		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+			game.stateManager.setState(StateManager.GameState.PAUSE);
+		}
 	}
 	
 	@Override
@@ -180,7 +213,18 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-//		game.stateManager.setState(StateManager.GameState.PAUSE);
+		for (Counter counter : playerOneCounters) {
+			if (counter.isColliding(new Vector2D(e.getX(), e.getY()))) {
+				moveCounter(playerOneRoute, counter, 1);
+				return;
+			}
+		}
+		for (Counter counter : playerTwoCounters) {
+			if (counter.isColliding(new Vector2D(e.getX(), e.getY()))) {
+				moveCounter(playerTwoRoute, counter, 1);
+				return;
+			}
+		}
 	}
 	
 	// Add a small circle around the mouse

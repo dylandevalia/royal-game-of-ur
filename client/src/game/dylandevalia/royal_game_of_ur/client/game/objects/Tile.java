@@ -6,7 +6,7 @@ import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import java.awt.*;
 
 public class Tile extends BaseEntity {
-	public static final int WIDTH = Window.WIDTH / 10;
+	public static int WIDTH = Window.WIDTH / 10;
 	
 	private boolean rosette = false;
 	
