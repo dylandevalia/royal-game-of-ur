@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
 import java.awt.*;
@@ -11,7 +10,7 @@ import java.awt.event.MouseEvent;
  * Interface used to create a state for the state manager
  */
 public interface State {
-	void initialise(Game game);
+	void initialise(StateManager stateManager);
 	
 	void update();
 	

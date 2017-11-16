@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -9,11 +8,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class Pause implements State {
-	private Game game;
+	private StateManager stateManager;
 	
 	@Override
-	public void initialise(Game game) {
-		this.game = game;
+	public void initialise(StateManager stateManager) {
+		this.stateManager = stateManager;
 	}
 	
 	@Override
@@ -34,8 +33,8 @@ public class Pause implements State {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			game.stateManager.unloadState(StateManager.GameState.PLAY);
-			game.stateManager.setState(StateManager.GameState.MAIN_MENU);
+			stateManager.unloadState(StateManager.GameState.PLAY);
+			stateManager.setState(StateManager.GameState.MAIN_MENU);
 		}
 	}
 	

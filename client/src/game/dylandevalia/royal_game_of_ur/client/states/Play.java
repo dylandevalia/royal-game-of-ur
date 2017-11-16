@@ -1,10 +1,10 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
+import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class Play implements State {
-	private Game game;
+	private StateManager stateManager;
 	/* Game board */
 	private int startingTilesLen = 4, middleTilesLen = 8, endTilesLen = 2;
 	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
@@ -35,8 +35,8 @@ public class Play implements State {
 	private UrDice dice = new UrDice();
 	
 	@Override
-	public void initialise(Game game) {
-		this.game = game;
+	public void initialise(StateManager stateManager) {
+		this.stateManager = stateManager;
 		
 		generateBoard();
 		generateCounters();
@@ -118,10 +118,10 @@ public class Play implements State {
 	@Override
 	public void update() {
 		for (Tile tile : tiles) tile.update();
-		for (Counter counter : playerOneCounters) counter.update(game.framework.mousePos);
-		for (Counter counter : playerTwoCounters) counter.update(game.framework.mousePos);
-		counterOne.update(game.framework.mousePos);
-		counterTwo.update(game.framework.mousePos);
+		for (Counter counter : playerOneCounters) counter.update(Framework.getMousePos());
+		for (Counter counter : playerTwoCounters) counter.update(Framework.getMousePos());
+		counterOne.update(Framework.getMousePos());
+		counterTwo.update(Framework.getMousePos());
 		mouseCircle.update();
 //		Log.debug("Dice", "" + dice.roll());
 	}
@@ -202,7 +202,7 @@ public class Play implements State {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-			game.stateManager.setState(StateManager.GameState.PAUSE);
+			stateManager.setState(StateManager.GameState.PAUSE);
 		}
 	}
 	
@@ -237,7 +237,7 @@ public class Play implements State {
 		@Override
 		protected void update() {
 			super.update();
-			this.pos.set(game.framework.mousePos.copy().sub(width / 2, height / 2));
+			this.pos.set(Framework.getMousePos().sub(width / 2, height / 2));
 		}
 		
 		@Override

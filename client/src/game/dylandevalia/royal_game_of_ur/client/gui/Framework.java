@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.states.StateManager;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -14,15 +13,9 @@ import java.awt.event.MouseEvent;
  * for the updates and draws which are passed onto the state manager
  */
 public class Framework extends Canvas {
-	public Vector2D mousePos = new Vector2D();
-	
 	/* Constants */
 	private static final long NS_A_SEC = 1000000000;
 	private static final long MS_A_SEC = 1000000;
-	
-	/* Game updates */
-	// Should the game loop run
-	private boolean runGame = true;
 	// How often the game should update a second
 	private static final double GAME_HERTZ = 30.0;
 	// How many times the game should render a second
@@ -34,21 +27,24 @@ public class Framework extends Canvas {
 	// Maximum number of updates before forced render
 	// Set to `1` for perfect rendering
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
+	private static Vector2D mousePos = new Vector2D();
+	//	private Game game = new Game(this);
+	StateManager stateManager = new StateManager();
+	/* Game updates */
+	// Should the game loop run
+	private boolean runGame = true;
 	//  Used to calculate positions for rendering (ie. deltaTime)
 	private double interpolate;
-	
-	private Game game = new Game(this);
-//	StateManager stateManager = new StateManager();
 	
 	public Framework() {
 		super();
 		
 		// Creates the main menu state and sets it to the active state
-		game.stateManager.loadState(StateManager.GameState.MAIN_MENU);
-		game.stateManager.loadState(StateManager.GameState.PLAY);
-		game.stateManager.loadState(StateManager.GameState.PAUSE);
+		stateManager.loadState(StateManager.GameState.MAIN_MENU);
+		stateManager.loadState(StateManager.GameState.PLAY);
+		stateManager.loadState(StateManager.GameState.PAUSE);
 		
-		game.stateManager.setState(StateManager.GameState.MAIN_MENU);
+		stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
 		// Stats the game loop in its own thread
 		new Thread() {
@@ -57,6 +53,16 @@ public class Framework extends Canvas {
 				gameLoop();
 			}
 		}.start();
+	}
+	
+	/**
+	 * Simple getter to return the mouse position which is calculated in update.
+	 * Returns a copy so functions don't accidentally change the value
+	 *
+	 * @return The mouse position
+	 */
+	public static Vector2D getMousePos() {
+		return mousePos.copy();
 	}
 	
 	/**
@@ -133,7 +139,7 @@ public class Framework extends Canvas {
 		} catch (IllegalComponentStateException e) {
 			Log.error("Framework", "Couldn't get mouse position"/*, e*/);
 		}
-		game.stateManager.update();
+		stateManager.update();
 	}
 	
 	/**
@@ -144,26 +150,26 @@ public class Framework extends Canvas {
 	 */
 	@Override
 	public void draw(Graphics2D g) {
-		game.stateManager.draw(g, interpolate);
+		stateManager.draw(g, interpolate);
 	}
 	
 	@Override
 	public void keyPressedFramework(KeyEvent e) {
-		game.stateManager.keyPressed(e);
+		stateManager.keyPressed(e);
 	}
 	
 	@Override
 	public void keyReleasedFramework(KeyEvent e) {
-		game.stateManager.keyReleased(e);
+		stateManager.keyReleased(e);
 	}
 	
 	@Override
 	public void mousePressedFramework(MouseEvent e) {
-		game.stateManager.mousePressed(e);
+		stateManager.mousePressed(e);
 	}
 	
 	@Override
 	public void mouseReleasedFramework(MouseEvent e) {
-		game.stateManager.mouseReleased(e);
+		stateManager.mouseReleased(e);
 	}
 }

@@ -3,7 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client.networking;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
+import game.dylandevalia.royal_game_of_ur.client.states.StateManager;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 
@@ -21,7 +21,7 @@ public class ClientController {
 	 * @param port The port of server
 	 * @throws Exception IOException if the client fails to connect
 	 */
-	public void run(String ip, int port, final Game game) throws Exception {
+	public void run(String ip, int port, StateManager stateManager) throws Exception {
 		Log.info("Client", "Initialising client");
 		// Start client
 		Client client = new Client();
@@ -40,7 +40,7 @@ public class ClientController {
 			@Override
 			public void connected(Connection c) {
 				Log.info("Client", "Received connection from " + c.getRemoteAddressTCP().getHostString());
-				game.clientConnected(c);
+				stateManager.clientConnected(c);
 			}
 			
 			// Called when packet is received
@@ -60,7 +60,7 @@ public class ClientController {
 //					}
 					
 					PacketManager packet = (PacketManager) p;
-					game.packetReceived(c, packet);
+					stateManager.packetReceived(c, packet);
 				}
 			}
 			
@@ -68,7 +68,7 @@ public class ClientController {
 			@Override
 			public void disconnected(Connection c) {
 				Log.info("Client", "Connection lost");
-				game.clientDisconnected(c);
+				stateManager.clientDisconnected(c);
 			}
 		});
 		

@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.objects.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.gui.Canvas;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
@@ -12,11 +11,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MainMenu implements State {
-	private Game game;
+	private StateManager stateManager;
 	private Box box;
 	
-	public void initialise(Game game) {
-		this.game = game;
+	public void initialise(StateManager stateManager) {
+		this.stateManager = stateManager;
 		this.box = new Box(20, 20);
 	}
 	
@@ -48,10 +47,10 @@ public class MainMenu implements State {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-		if (!game.stateManager.isLoaded(StateManager.GameState.PLAY)) {
-			game.stateManager.loadState(StateManager.GameState.PLAY);
+		if (!stateManager.isLoaded(StateManager.GameState.PLAY)) {
+			stateManager.loadState(StateManager.GameState.PLAY);
 		}
-		game.stateManager.setState(StateManager.GameState.PLAY);
+		stateManager.setState(StateManager.GameState.PLAY);
 	}
 	
 	private class Box extends BaseEntity {
