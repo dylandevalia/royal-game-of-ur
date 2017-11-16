@@ -124,8 +124,8 @@ public class Framework extends Canvas {
 	 * Try catch used as location on screen might not have been instantiated yet
 	 */
 	public void update() {
-		Point mouse = MouseInfo.getPointerInfo().getLocation();
 		try {
+			Point mouse = MouseInfo.getPointerInfo().getLocation();
 			mousePos.set(
 					mouse.x - getLocationOnScreen().x,
 					mouse.y - getLocationOnScreen().y

@@ -64,19 +64,19 @@ public class MainMenu implements State {
 		public void update() {
 			super.update();
 			
-			int speed = Canvas.getKeyState("shift") ? 10 : 5;
+			int speed = Canvas.getKeyState(KeyEvent.VK_SHIFT) ? 10 : 5;
 			
 			Vector2D vel = new Vector2D();
-			if (Canvas.getKeyState("a") || Canvas.getKeyState("A")) {
+			if (Canvas.getKeyState(KeyEvent.VK_A)) {
 				vel.add(Vector2D.LEFT());
 			}
-			if (Canvas.getKeyState("d")) {
+			if (Canvas.getKeyState(KeyEvent.VK_D)) {
 				vel.add(Vector2D.RIGHT());
 			}
-			if (Canvas.getKeyState("w")) {
+			if (Canvas.getKeyState(KeyEvent.VK_W)) {
 				vel.add(Vector2D.UP());
 			}
-			if (Canvas.getKeyState("s")) {
+			if (Canvas.getKeyState(KeyEvent.VK_S)) {
 				vel.add(Vector2D.DOWN());
 			}
 			pos.add(vel.setMag(speed));
