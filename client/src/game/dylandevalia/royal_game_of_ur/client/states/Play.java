@@ -24,7 +24,6 @@ public class Play implements State {
 	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	/* Counters */
-	private Counter counterOne, counterTwo;
 	private int noCounters = 5;
 	private Counter[] playerOneCounters = new Counter[noCounters];
 	private Counter[] playerTwoCounters = new Counter[noCounters];
@@ -41,9 +40,6 @@ public class Play implements State {
 		generateBoard();
 		generateCounters();
 		Log.info("Play", "Generation completed");
-		
-		counterOne = new Counter((int) playerOneRoute[0].getPos().x, Window.HEIGHT - 100 - Counter.WIDTH, true);
-		counterTwo = new Counter((int) playerTwoRoute[0].getPos().x, 100, false);
 		
 		mouseCircle = new MouseCircle();
 	}
@@ -120,8 +116,6 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.update();
 		for (Counter counter : playerOneCounters) counter.update(Framework.getMousePos());
 		for (Counter counter : playerTwoCounters) counter.update(Framework.getMousePos());
-		counterOne.update(Framework.getMousePos());
-		counterTwo.update(Framework.getMousePos());
 		mouseCircle.update();
 //		Log.debug("Dice", "" + dice.roll());
 	}
@@ -134,13 +128,11 @@ public class Play implements State {
 		for (Tile tile : tiles) tile.draw(g, interpolate);
 		for (Counter counter : playerOneCounters) counter.draw(g, interpolate);
 		for (Counter counter : playerTwoCounters) counter.draw(g, interpolate);
-		counterOne.draw(g, interpolate);
-		counterTwo.draw(g, interpolate);
 		mouseCircle.draw(g, interpolate);
-		
-		g.setColor(ColorMaterial.GREY[9]);
-		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
-		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
+
+//		g.setColor(ColorMaterial.GREY[9]);
+//		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
+//		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
 	}
 	
 	public void packetReceived(PacketManager packet) {
@@ -148,10 +140,7 @@ public class Play implements State {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyChar() == ' ') {
-			moveCounter(playerOneRoute, counterOne, -1);
-			moveCounter(playerTwoRoute, counterTwo, 1);
-		}
+	
 	}
 	
 	/**
