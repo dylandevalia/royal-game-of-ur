@@ -16,18 +16,29 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class Play implements State {
+	// Reference to the state manager
 	private StateManager stateManager;
 	/* Game board */
+	// The length of each segment on the board
 	private int startingTilesLen = 4, middleTilesLen = 8, endTilesLen = 2;
+	// Full array of all tiles in the board
 	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
+	// The array of tiles that player one will traverse
 	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	// The array of tiles that player two will traverse
 	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	// Indexes of 'tiles' which should be rosette squares
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	/* Counters */
-	private int noCounters = 5;
+	// The number of counters each player should have
+	private int noCounters = 6;
+	// Player one's counters
 	private Counter[] playerOneCounters = new Counter[noCounters];
+	// Player two's counters
 	private Counter[] playerTwoCounters = new Counter[noCounters];
+	// Array of the starting positions of player one's counters
 	private Vector2D[] playerOneCounterStartPositions = new Vector2D[noCounters];
+	// Array of the starting positions of player two's counters
 	private Vector2D[] playerTwoCounterStartPositions = new Vector2D[noCounters];
 	/* Misc */
 	private MouseCircle mouseCircle;

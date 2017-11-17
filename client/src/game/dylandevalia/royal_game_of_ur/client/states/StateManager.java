@@ -116,8 +116,11 @@ public class StateManager {
 	
 	/**
 	 * Enum used to store states. Takes the state class in constructor and
-	 * generates its own id from the static 'stateIndexCounter' to be used
-	 * in the array of states 'loadedStates'
+	 * generates its own id from the static {@code stateIndexCounter} to be used
+	 * in the array of states {@code loadedStates}
+	 *
+	 * @see #stateIndexCounter
+	 * @see State
 	 */
 	public enum GameState {
 		MAIN_MENU(MainMenu.class), PLAY(Play.class), PAUSE(Pause.class);

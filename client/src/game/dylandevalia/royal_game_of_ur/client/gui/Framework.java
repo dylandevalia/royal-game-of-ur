@@ -16,6 +16,7 @@ public class Framework extends Canvas {
 	/* Constants */
 	private static final long NS_A_SEC = 1000000000;
 	private static final long MS_A_SEC = 1000000;
+	
 	// How often the game should update a second
 	private static final double GAME_HERTZ = 30.0;
 	// How many times the game should render a second
@@ -30,6 +31,7 @@ public class Framework extends Canvas {
 	private static Vector2D mousePos = new Vector2D();
 	//	private Game game = new Game(this);
 	StateManager stateManager = new StateManager();
+	
 	/* Game updates */
 	// Should the game loop run
 	private boolean runGame = true;
@@ -69,7 +71,7 @@ public class Framework extends Canvas {
 	 * Runs the main game loop. The loop tries to keep
 	 */
 	private void gameLoop() {
-		int fps = 60;
+		int fps = 0;
 		int frameCount = 0;
 		
 		// Last time the game was updated/rendered
@@ -129,7 +131,7 @@ public class Framework extends Canvas {
 	 * Update state and mouse position
 	 * Try catch used as location on screen might not have been instantiated yet
 	 */
-	public void update() {
+	private void update() {
 		try {
 			Point mouse = MouseInfo.getPointerInfo().getLocation();
 			mousePos.set(
