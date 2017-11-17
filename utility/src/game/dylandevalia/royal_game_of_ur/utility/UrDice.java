@@ -10,7 +10,9 @@ public class UrDice {
 	}
 	
 	public int roll() {
-		return dice.sum();
+		int roll = dice.sum();
+		Log.info("Dice", "" + roll);
+		return roll;
 	}
 	
 	private class Dice {

@@ -24,22 +24,27 @@ public class Play implements State {
 	// Full array of all tiles in the board
 	private Tile[] tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
 	// The array of tiles that player one will traverse
-	private Tile[] playerOneRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	private Tile[] one_route = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	// The array of tiles that player two will traverse
-	private Tile[] playerTwoRoute = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
+	private Tile[] two_route = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	// Indexes of 'tiles' which should be rosette squares
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	/* Counters */
 	// The number of counters each player should have
 	private int noCounters = 6;
 	// Player one's counters
-	private Counter[] playerOneCounters = new Counter[noCounters];
+	private Counter[] one_counters = new Counter[noCounters];
 	// Player two's counters
-	private Counter[] playerTwoCounters = new Counter[noCounters];
+	private Counter[] two_counters = new Counter[noCounters];
 	// Array of the starting positions of player one's counters
-	private Vector2D[] playerOneCounterStartPositions = new Vector2D[noCounters];
+	private Vector2D[] one_counterStartPositions = new Vector2D[noCounters];
 	// Array of the starting positions of player two's counters
-	private Vector2D[] playerTwoCounterStartPositions = new Vector2D[noCounters];
+	private Vector2D[] two_counterStartPositions = new Vector2D[noCounters];
+	/* Game logic */
+	// Keeps track of who's turn it is
+	private boolean playerOnesTurn;
+	// The current roll of the dice
+	private int currentRoll;
 	/* Misc */
 	private MouseCircle mouseCircle;
 	private UrDice dice = new UrDice();
@@ -52,6 +57,10 @@ public class Play implements State {
 		generateCounters();
 		Log.info("Play", "Generation completed");
 		
+		playerOnesTurn = true;
+		do {
+			currentRoll = dice.roll();
+		} while (currentRoll == 0);
 		mouseCircle = new MouseCircle();
 	}
 	
@@ -70,32 +79,32 @@ public class Play implements State {
 		// Player one start
 		for (int i = 0; i < startingTilesLen; i++) {
 			tiles[i] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowBot);
-			playerOneRoute[i] = tiles[i];
+			one_route[i] = tiles[i];
 		}
 		aggregate += startingTilesLen;
 		// Player two start
 		for (int i = 0; i < startingTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (startingTilesLen - i), rowTop);
-			playerTwoRoute[i] = tiles[i + aggregate];
+			two_route[i] = tiles[i + aggregate];
 		}
 		aggregate += startingTilesLen;
 		// Middle
 		for (int i = 0; i < middleTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (i + 1), rowMid);
-			playerOneRoute[i + startingTilesLen] = tiles[i + aggregate];
-			playerTwoRoute[i + startingTilesLen] = tiles[i + aggregate];
+			one_route[i + startingTilesLen] = tiles[i + aggregate];
+			two_route[i + startingTilesLen] = tiles[i + aggregate];
 		}
 		aggregate += middleTilesLen;
 		// Player one end
 		for (int i = 0; i < endTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowBot);
-			playerOneRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
+			one_route[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
 		aggregate += endTilesLen;
 		// Player two end
 		for (int i = 0; i < endTilesLen; i++) {
 			tiles[i + aggregate] = new Tile(Tile.WIDTH * (middleTilesLen - i), rowTop);
-			playerTwoRoute[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
+			two_route[i + (startingTilesLen + middleTilesLen)] = tiles[i + aggregate];
 		}
 		
 		for (int r : rosetteSquares) {
@@ -115,20 +124,25 @@ public class Play implements State {
 		int yTop = (Window.HEIGHT / 2) - (Tile.WIDTH * 2) - Counter.WIDTH;
 		int yBot = (Window.HEIGHT / 2) + (Tile.WIDTH * 2);
 		for (int i = 0; i < noCounters; i++) {
-			playerOneCounterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yBot);
-			playerTwoCounterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yTop);
-			playerOneCounters[i] = new Counter((int) playerOneCounterStartPositions[i].x, (int) playerOneCounterStartPositions[i].y, true);
-			playerTwoCounters[i] = new Counter((int) playerTwoCounterStartPositions[i].x, (int) playerTwoCounterStartPositions[i].y, false);
+			one_counterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yBot);
+			two_counterStartPositions[i] = new Vector2D(x - (Counter.WIDTH * i), yTop);
+			one_counters[i] = new Counter((int) one_counterStartPositions[i].x, (int) one_counterStartPositions[i].y, true);
+			two_counters[i] = new Counter((int) two_counterStartPositions[i].x, (int) two_counterStartPositions[i].y, false);
 		}
 	}
 	
 	@Override
 	public void update() {
 		for (Tile tile : tiles) tile.update();
-		for (Counter counter : playerOneCounters) counter.update(Framework.getMousePos());
-		for (Counter counter : playerTwoCounters) counter.update(Framework.getMousePos());
+		for (Counter counter : one_counters) counter.update(Framework.getMousePos());
+		for (Counter counter : two_counters) counter.update(Framework.getMousePos());
 		mouseCircle.update();
-//		Log.debug("Dice", "" + dice.roll());
+		
+		if (currentRoll == 0) {
+			Log.debug("Dice", "Rolled a 0 - swapping players");
+			currentRoll = dice.roll();
+			playerOnesTurn = !playerOnesTurn;
+		}
 	}
 	
 	@Override
@@ -137,10 +151,15 @@ public class Play implements State {
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
 		for (Tile tile : tiles) tile.draw(g, interpolate);
-		for (Counter counter : playerOneCounters) counter.draw(g, interpolate);
-		for (Counter counter : playerTwoCounters) counter.draw(g, interpolate);
+		for (Counter counter : one_counters) counter.draw(g, interpolate);
+		for (Counter counter : two_counters) counter.draw(g, interpolate);
 		mouseCircle.draw(g, interpolate);
-
+		
+		g.setFont(new Font("TimesRoman", Font.BOLD, 18));
+		String turn = playerOnesTurn ? "1" : "2";
+		g.drawString("Player: " + turn,Window.WIDTH - 150, 50);
+		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 150, Window.HEIGHT - 50);
+		
 //		g.setColor(ColorMaterial.GREY[9]);
 //		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
 //		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
@@ -163,10 +182,19 @@ public class Play implements State {
 	 * @param counter The counter to move
 	 * @param spaces  The amount of spaces to move the counter along the route
 	 */
-	private void moveCounter(Tile[] route, Counter counter, int spaces) {
+	private Tile moveCounter(Tile[] route, Counter counter, int spaces) {
+		if (counter.currentRouteIndex >= 0 && counter.currentRouteIndex < route.length) {
+			route[counter.currentRouteIndex].setHasCounter(false);
+//			Log.debug("next tile", "index: " + counter.currentRouteIndex + " set: " + route[counter.currentRouteIndex].hasCounter());
+		}
+		
 		for (int i = 0; i < Math.abs(spaces); i++) {
 			counter.setTarget(counterInTilePosition(getNextTile(route, counter, spaces > 0)));
 		}
+		
+		route[counter.currentRouteIndex].setHasCounter(true);
+//		Log.debug("next tile", "index: " + counter.currentRouteIndex + " set: " + route[counter.currentRouteIndex].hasCounter());
+		return route[counter.currentRouteIndex];
 	}
 	
 	/**
@@ -199,6 +227,14 @@ public class Play implements State {
 		);
 	}
 	
+	private boolean checkMove(Tile[] route, Counter counter, int spaces) {
+		if (counter.currentRouteIndex + spaces < 0 || counter.currentRouteIndex + spaces > route.length) {
+			// Outside of route
+			return false;
+		}
+		return !route[counter.currentRouteIndex + spaces].hasCounter();
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
@@ -213,16 +249,31 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		for (Counter counter : playerOneCounters) {
-			if (counter.isColliding(new Vector2D(e.getX(), e.getY()))) {
-				moveCounter(playerOneRoute, counter, 1);
-				return;
+		if (playerOnesTurn) {
+			for (Counter counter : one_counters) {
+				if (counter.isColliding(new Vector2D(e.getX(), e.getY()))
+						&& checkMove(one_route, counter, currentRoll)
+				) {
+					Tile newTile = moveCounter(one_route, counter, currentRoll);
+					if (!newTile.isRosette()) {
+						playerOnesTurn = false;
+					}
+					currentRoll = dice.roll();
+					return;
+				}
 			}
-		}
-		for (Counter counter : playerTwoCounters) {
-			if (counter.isColliding(new Vector2D(e.getX(), e.getY()))) {
-				moveCounter(playerTwoRoute, counter, 1);
-				return;
+		} else {
+			for (Counter counter : two_counters) {
+				if (counter.isColliding(new Vector2D(e.getX(), e.getY()))
+						&& checkMove(two_route, counter, currentRoll)
+				) {
+					Tile newTile = moveCounter(two_route, counter, currentRoll);
+					if (!newTile.isRosette()) {
+						playerOnesTurn = true;
+					}
+					currentRoll = dice.roll();
+					return;
+				}
 			}
 		}
 	}
