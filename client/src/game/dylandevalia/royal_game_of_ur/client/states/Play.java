@@ -1,7 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.CounterCluster;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
@@ -49,7 +48,6 @@ public class Play implements State {
 	// The current roll of the dice
 	private int currentRoll;
 	/* Misc */
-	private MouseCircle mouseCircle;
 	private UrDice dice = new UrDice();
 
 	@Override
@@ -64,7 +62,6 @@ public class Play implements State {
 		do {
 			currentRoll = dice.roll();
 		} while (currentRoll == 0);
-		mouseCircle = new MouseCircle();
 	}
 
 	/**
@@ -153,7 +150,6 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.update(Framework.getMousePos());
 		}
-		mouseCircle.update();
 
 		if (currentRoll == 0) {
 			Log.debug("Dice", "Rolled a 0 - swapping players");
@@ -176,7 +172,6 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.draw(g, interpolate);
 		}
-		mouseCircle.draw(g, interpolate);
 
 		g.setFont(new Font("TimesRoman", Font.BOLD, 18));
 		String turn = playerOnesTurn ? "1" : "2";
@@ -315,28 +310,6 @@ public class Play implements State {
 					return;
 				}
 			}
-		}
-	}
-
-	// Add a small circle around the mouse
-	// temporary testing to see if mouse position was available
-	private class MouseCircle extends BaseEntity {
-
-		MouseCircle() {
-			super(0, 0, 10, 10);
-		}
-
-		@Override
-		protected void update() {
-			super.update();
-			this.pos.set(Framework.getMousePos().sub(width / 2, height / 2));
-		}
-
-		@Override
-		protected void draw(Graphics2D g, double interpolate) {
-			super.draw(g, interpolate);
-			g.setColor(ColorMaterial.deepPurple);
-			g.drawOval((int) drawPos.x, (int) drawPos.y, width, height);
 		}
 	}
 }
