@@ -1,45 +1,47 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import javax.swing.JPanel;
 
 /**
  * Abstract class which implements both the keyboard and mouse listeners as itself
  * Calls the child's draw function
  */
 public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
-	
+
 	public Canvas() {
 		setDoubleBuffered(true);
 		setFocusable(true);
 		setBackground(Color.BLACK);
-		
+
 		addKeyListener(this);
 		addMouseListener(this);
 	}
-	
+
 	public abstract void draw(Graphics2D g);
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		g2d.setBackground(Color.GREEN);
 		// Calls method overridden by child
 		draw(g2d);
 	}
-	
+
 	/* ----------------- */
 	/* Keyboard listener */
 	/* ----------------- */
 	private static HashMap<Integer, Boolean> keyboardStates = new HashMap<>();
-	
+
 	/**
 	 * Checks if a given key is being held down
 	 * Returns false on NullPointerException as key hasn't been pressed yet
@@ -55,32 +57,32 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		keyboardStates.put(e.getKeyCode(), true);
 		keyPressedFramework(e);
 	}
-	
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 		keyboardStates.put(e.getKeyCode(), false);
 		keyReleasedFramework(e);
 	}
-	
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
-	
+
 	public abstract void keyPressedFramework(KeyEvent e);
-	
+
 	public abstract void keyReleasedFramework(KeyEvent e);
-	
+
 	/* -------------- */
 	/* Mouse listener */
 	/* -------------- */
 	private static boolean[] mouseStates = new boolean[3];
-	
+
 	/**
 	 * Returns if the mouse button given is being pressed down
 	 * 1 - Left click
@@ -93,7 +95,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	public static boolean mouseButtonState(int button) {
 		return mouseStates[button - 1];
 	}
-	
+
 	private void mouseKeyStatus(MouseEvent e, boolean status) {
 		switch (e.getButton()) {
 			case MouseEvent.BUTTON1:
@@ -107,34 +109,34 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 				break;
 		}
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		mouseKeyStatus(e, true);
 		mousePressedFramework(e);
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		mouseKeyStatus(e, false);
 		mouseReleasedFramework(e);
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
-	
+
 	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
-	
+
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
-	
+
 	public abstract void mousePressedFramework(MouseEvent e);
-	
+
 	public abstract void mouseReleasedFramework(MouseEvent e);
-	
-	
+
+
 }

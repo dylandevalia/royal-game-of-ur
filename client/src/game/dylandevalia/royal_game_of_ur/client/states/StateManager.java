@@ -3,8 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 import com.esotericsoftware.kryonet.Connection;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -15,13 +14,14 @@ import java.awt.event.MouseEvent;
  * {@link State}
  */
 public class StateManager {
+
 	// Static to give all states a new id in array
 	private static int stateIndexCounter = 0;
 	// Array of loaded states
 	private final State[] loadedStates = new State[GameState.values().length];
 	// The currently active state
 	private State currentState;
-	
+
 	/**
 	 * Creates the state in the array and calls the state's initialise function
 	 *
@@ -36,7 +36,7 @@ public class StateManager {
 			Log.error("State manager", "Error trying to create new instance of state", e);
 		}
 	}
-	
+
 	/**
 	 * Sets the given state as the active state
 	 *
@@ -49,7 +49,7 @@ public class StateManager {
 		}
 		currentState = loadedStates[state.getIndex()];
 	}
-	
+
 	/**
 	 * Unloads the state from memory
 	 *
@@ -58,7 +58,7 @@ public class StateManager {
 	public void unloadState(GameState state) {
 		loadedStates[state.getIndex()] = null;
 	}
-	
+
 	/**
 	 * Checks to see if the given states is loaded
 	 *
@@ -70,50 +70,50 @@ public class StateManager {
 	}
 	
 	/* Networking */
-	
+
 	public void clientConnected(Connection c) {
-	
+
 	}
-	
+
 	public void packetReceived(Connection c, PacketManager packet) {
 		currentState.packetReceived(packet);
 	}
-	
+
 	public void clientDisconnected(Connection c) {
-	
+
 	}
-	
+
 	public void reinitialise() {
 		currentState.initialise(this);
 	}
 	
 	/*              Passers             */
 	/* Calls the currently active state */
-	
+
 	public void update() {
 		currentState.update();
 	}
-	
+
 	public void draw(Graphics2D g, double interpolate) {
 		currentState.draw(g, interpolate);
 	}
-	
+
 	public void keyPressed(KeyEvent e) {
 		currentState.keyPressed(e);
 	}
-	
+
 	public void keyReleased(KeyEvent e) {
 		currentState.keyReleased(e);
 	}
-	
+
 	public void mousePressed(MouseEvent e) {
 		currentState.mousePressed(e);
 	}
-	
+
 	public void mouseReleased(MouseEvent e) {
 		currentState.mouseReleased(e);
 	}
-	
+
 	/**
 	 * Enum used to store states. Takes the state class in constructor and
 	 * generates its own id from the static {@code stateIndexCounter} to be used
@@ -124,19 +124,19 @@ public class StateManager {
 	 */
 	public enum GameState {
 		MAIN_MENU(MainMenu.class), PLAY(Play.class), PAUSE(Pause.class);
-		
+
 		private int index;
 		private Class obj;
-		
+
 		GameState(Class obj) {
 			this.index = stateIndexCounter++;
 			this.obj = obj;
 		}
-		
+
 		int getIndex() {
 			return index;
 		}
-		
+
 		Class getObj() {
 			return obj;
 		}

@@ -1,6 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.gui;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class ColorMaterial {
 	public static final Color[] RED = {
@@ -16,7 +16,7 @@ public class ColorMaterial {
 			new Color(183, 28, 28)
 	};
 	public static final Color red = RED[5];
-	
+
 	public static final Color[] PINK = {
 			new Color(252, 228, 236),
 			new Color(248, 187, 208),
@@ -30,7 +30,7 @@ public class ColorMaterial {
 			new Color(136, 14, 79)
 	};
 	public static final Color pink = PINK[5];
-	
+
 	public static final Color[] PURPLE = {
 			new Color(243, 229, 245),
 			new Color(225, 190, 231),
@@ -44,7 +44,7 @@ public class ColorMaterial {
 			new Color(74, 20, 140)
 	};
 	public static final Color purple = PURPLE[5];
-	
+
 	public static final Color[] DEEP_PURPLE = {
 			new Color(237, 231, 246),
 			new Color(209, 196, 233),
@@ -58,7 +58,7 @@ public class ColorMaterial {
 			new Color(49, 27, 146)
 	};
 	public static final Color deepPurple = DEEP_PURPLE[5];
-	
+
 	public static final Color[] INDIGO = {
 			new Color(232, 234, 246),
 			new Color(197, 202, 233),
@@ -72,7 +72,7 @@ public class ColorMaterial {
 			new Color(26, 35, 126)
 	};
 	public static final Color indigo = INDIGO[5];
-	
+
 	public static final Color[] BLUE = {
 			new Color(227, 242, 253),
 			new Color(187, 222, 251),
@@ -86,7 +86,7 @@ public class ColorMaterial {
 			new Color(13, 71, 161)
 	};
 	public static final Color blue = BLUE[5];
-	
+
 	public static final Color[] LIGHT_BLUE = {
 			new Color(225, 245, 254),
 			new Color(179, 229, 252),
@@ -100,7 +100,7 @@ public class ColorMaterial {
 			new Color(1, 87, 155)
 	};
 	public static final Color lightBlue = LIGHT_BLUE[5];
-	
+
 	public static final Color[] CYAN = {
 			new Color(224, 247, 250),
 			new Color(178, 235, 242),
@@ -114,7 +114,7 @@ public class ColorMaterial {
 			new Color(0, 96, 100)
 	};
 	public static final Color cyan = CYAN[5];
-	
+
 	public static final Color[] TEAL = {
 			new Color(224, 242, 241),
 			new Color(178, 223, 219),
@@ -128,7 +128,7 @@ public class ColorMaterial {
 			new Color(0, 77, 64)
 	};
 	public static final Color teal = TEAL[5];
-	
+
 	public static final Color[] GREEN = {
 			new Color(232, 245, 233),
 			new Color(200, 230, 201),
@@ -142,7 +142,7 @@ public class ColorMaterial {
 			new Color(27, 94, 32)
 	};
 	public static final Color green = GREEN[5];
-	
+
 	public static final Color[] LIGHT_GREEN = {
 			new Color(241, 248, 233),
 			new Color(220, 237, 200),
@@ -156,7 +156,7 @@ public class ColorMaterial {
 			new Color(51, 105, 30)
 	};
 	public static final Color lightGreen = LIGHT_GREEN[5];
-	
+
 	public static final Color[] LIME = {
 			new Color(249, 251, 231),
 			new Color(240, 244, 195),
@@ -170,7 +170,7 @@ public class ColorMaterial {
 			new Color(130, 119, 23)
 	};
 	public static final Color lime = LIME[5];
-	
+
 	public static final Color[] YELLOW = {
 			new Color(255, 253, 231),
 			new Color(255, 249, 196),
@@ -184,7 +184,7 @@ public class ColorMaterial {
 			new Color(245, 127, 23)
 	};
 	public static final Color yellow = YELLOW[5];
-	
+
 	public static final Color[] AMBER = {
 			new Color(255, 248, 225),
 			new Color(255, 236, 179),
@@ -198,7 +198,7 @@ public class ColorMaterial {
 			new Color(255, 111, 0)
 	};
 	public static final Color amber = AMBER[5];
-	
+
 	public static final Color[] ORANGE = {
 			new Color(255, 243, 224),
 			new Color(255, 224, 178),
@@ -211,7 +211,7 @@ public class ColorMaterial {
 			new Color(239, 108, 0),
 			new Color(230, 81, 0)
 	};
-	
+
 	public static final Color[] DEEP_ORANGE = {
 			new Color(251, 233, 231),
 			new Color(255, 204, 188),
@@ -225,7 +225,7 @@ public class ColorMaterial {
 			new Color(191, 54, 12)
 	};
 	public static final Color deepOrange = DEEP_ORANGE[5];
-	
+
 	public static final Color[] BROWN = {
 			new Color(239, 235, 233),
 			new Color(215, 204, 200),
@@ -239,7 +239,7 @@ public class ColorMaterial {
 			new Color(62, 39, 35)
 	};
 	public static final Color brown = BROWN[5];
-	
+
 	public static final Color[] GREY = {
 			new Color(250, 250, 250),
 			new Color(245, 245, 245),
@@ -253,7 +253,7 @@ public class ColorMaterial {
 			new Color(33, 33, 33)
 	};
 	public static final Color grey = GREY[5];
-	
+
 	public static final Color[] BLUE_GREY = {
 			new Color(236, 239, 241),
 			new Color(207, 216, 220),

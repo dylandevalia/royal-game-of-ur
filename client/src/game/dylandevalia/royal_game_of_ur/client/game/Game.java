@@ -5,4 +5,10 @@ package game.dylandevalia.royal_game_of_ur.client.game;
  */
 public class Game {
 
+	public enum Players {
+		NONE, WHITE, BLACK
+	}
+
+	public Players currentPlayer = Players.NONE;
+
 }

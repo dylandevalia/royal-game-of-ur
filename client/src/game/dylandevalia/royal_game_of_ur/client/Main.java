@@ -2,10 +2,10 @@ package game.dylandevalia.royal_game_of_ur.client;
 
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Main {
+
 	public static void main(String[] args) {
 //		for (int i = 0; i < 3; i++) {
 //			new Thread() {
@@ -19,9 +19,9 @@ public class Main {
 //				}
 //			}.start();
 //		}
-		
+
 		Log.SET_DEBUG();
-		
+
 		// Start running the gui in its own thread
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
