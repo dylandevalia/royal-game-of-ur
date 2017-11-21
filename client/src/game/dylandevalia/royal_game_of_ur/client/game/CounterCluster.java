@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Keeps an array-list of counters and position vectors for those counters
  */
 public class CounterCluster {
-
+	
 	/**
 	 * The array-list of counters
 	 */
@@ -18,7 +18,7 @@ public class CounterCluster {
 	 * The array-list of starting positions
 	 */
 	private ArrayList<Vector2D> startPos = new ArrayList<>();
-
+	
 	/**
 	 * The initial position where the counters should be displayed
 	 */
@@ -27,7 +27,7 @@ public class CounterCluster {
 	 * Whether the stack should extend left or right
 	 */
 	private boolean goLeft;
-
+	
 	/**
 	 * Constructor which takes the initial position and if the stack
 	 * should go left or right
@@ -39,7 +39,7 @@ public class CounterCluster {
 		this.initialPos = initialPos;
 		this.goLeft = goLeft;
 	}
-
+	
 	/**
 	 * Adds a new counter to the array-list and returns a reference to it
 	 *
@@ -54,10 +54,10 @@ public class CounterCluster {
 		);
 		startPos.add(nextPos);
 		counters.add(counter);
-
+		
 		return counter;
 	}
-
+	
 	/**
 	 * Adds an existing counter to the array-list
 	 *
@@ -69,7 +69,7 @@ public class CounterCluster {
 		startPos.add(nextPos);
 		counter.setTarget(nextPos);
 	}
-
+	
 	/**
 	 * Calculates the start position of a new counter
 	 *
@@ -81,7 +81,7 @@ public class CounterCluster {
 			0
 		);
 	}
-
+	
 	/**
 	 * Removes a counter from the array-list and moves all the other counters
 	 * along to fill the gap <tt>What does this do</tt>
@@ -103,7 +103,7 @@ public class CounterCluster {
 					counters.get(i).setTarget(startPos.get(i));
 				}
 			}
-
+			
 			/**
 			 * Simple method which sleeps the thread and catches any errors thrown
 			 *

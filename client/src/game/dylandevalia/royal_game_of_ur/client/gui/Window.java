@@ -8,16 +8,16 @@ import javax.swing.WindowConstants;
  * The main window of the program
  */
 public class Window extends JFrame {
-
+	
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-
+	
 	// Should the window run is fullscreen or windowed
 	private final boolean fullscreen = false;
-
+	
 	public Window() {
 		this.setTitle("The Royal Game of Ur");
-
+		
 		// Sets size of window
 		if (fullscreen) {
 			setUndecorated(true);
@@ -31,7 +31,7 @@ public class Window extends JFrame {
 			setLocationRelativeTo(null);
 			setResizable(false);
 		}
-
+		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setContentPane(new Framework());
 		setVisible(true);

@@ -11,61 +11,61 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MainMenu implements State {
-
+	
 	private StateManager stateManager;
 	private Box box;
-
+	
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		this.box = new Box(20, 20);
 	}
-
+	
 	public void update() {
 		box.update();
 	}
-
+	
 	public void draw(Graphics2D g2d, double interpolate) {
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-
+		
 		box.draw(g2d, interpolate);
 	}
-
+	
 	public void packetReceived(PacketManager packet) {
-
+	
 	}
-
+	
 	public void keyPressed(KeyEvent e) {
 //		Log.debug("main menu/key press", "char: '" + e.getKeyChar() + "'");
 	}
-
+	
 	public void keyReleased(KeyEvent e) {
-
+	
 	}
-
+	
 	public void mousePressed(MouseEvent e) {
-
+	
 	}
-
+	
 	public void mouseReleased(MouseEvent e) {
 		if (!stateManager.isLoaded(StateManager.GameState.PLAY)) {
 			stateManager.loadState(StateManager.GameState.PLAY);
 		}
 		stateManager.setState(StateManager.GameState.PLAY);
 	}
-
+	
 	private class Box extends BaseEntity {
-
+		
 		Box(int x, int y) {
 			super(x, y, 20, 20);
 		}
-
+		
 		@Override
 		public void update() {
 			super.update();
-
+			
 			int speed = Canvas.getKeyState(KeyEvent.VK_SHIFT) ? 10 : 5;
-
+			
 			Vector2D vel = new Vector2D();
 			if (Canvas.getKeyState(KeyEvent.VK_A)) {
 				vel.add(Vector2D.LEFT());
@@ -81,7 +81,7 @@ public class MainMenu implements State {
 			}
 			pos.add(vel.setMag(speed));
 		}
-
+		
 		@Override
 		public void draw(Graphics2D g, double interpolate) {
 			super.draw(g, interpolate);

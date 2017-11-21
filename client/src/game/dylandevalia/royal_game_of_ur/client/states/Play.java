@@ -17,12 +17,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class Play implements State {
-
+	
 	// Reference to the state manager
 	private StateManager stateManager;
 	/* Game board */
 	private Board board = new Board(4, 8, 2);
-
+	
 	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
 	/* Counters */
 	// The number of counters each player should have
@@ -38,21 +38,21 @@ public class Play implements State {
 	private int currentRoll;
 	/* Misc */
 	private UrDice dice = new UrDice();
-
+	
 	@Override
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
-
+		
 		board.generate();
 		generateCounters();
 		Log.info("Play", "Generation completed");
-
+		
 		playerOnesTurn = true;
 		do {
 			currentRoll = dice.roll();
 		} while (currentRoll == 0);
 	}
-
+	
 	/**
 	 * Generates the counters and their starting positions
 	 */
@@ -75,13 +75,13 @@ public class Play implements State {
 				.sub(0, Tile.WIDTH),
 			false
 		);
-
+		
 		for (int i = 0; i < noCounters; i++) {
 			one_counters[i] = one_countersStart.addNew(true);
 			two_counters[i] = two_countersStart.addNew(false);
 		}
 	}
-
+	
 	@Override
 	public void update() {
 		board.update();
@@ -91,19 +91,19 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.update(Framework.getMousePos());
 		}
-
+		
 		if (currentRoll == 0) {
 			Log.debug("Dice", "Rolled a 0 - swapping players");
 			currentRoll = dice.roll();
 			playerOnesTurn = !playerOnesTurn;
 		}
 	}
-
+	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		g.setColor(ColorMaterial.GREY[2]);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-
+		
 		board.draw(g, interpolate);
 		for (Counter counter : one_counters) {
 			counter.draw(g, interpolate);
@@ -111,7 +111,7 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.draw(g, interpolate);
 		}
-
+		
 		g.setFont(new Font("TimesRoman", Font.BOLD, 18));
 		String turn = playerOnesTurn ? "1" : "2";
 		g.drawString("Player: " + turn, Window.WIDTH - 150, 50);
@@ -121,7 +121,7 @@ public class Play implements State {
 //		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
 //		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
 	}
-
+	
 	/**
 	 * Moves a counter a certain amount of spaces through the given route. Adds
 	 * all the moves along the way so that the counter will still move through
@@ -135,15 +135,15 @@ public class Play implements State {
 		if (counter.currentRouteIndex >= 0 && counter.currentRouteIndex < route.length) {
 			route[counter.currentRouteIndex].setHasCounter(false);
 		}
-
+		
 		for (int i = 0; i < Math.abs(spaces); i++) {
 			counter.setTarget(counterInTilePosition(getNextTile(route, counter, spaces > 0)));
 		}
-
+		
 		route[counter.currentRouteIndex].setHasCounter(true);
 		return route[counter.currentRouteIndex];
 	}
-
+	
 	/**
 	 * Gets the next tile in the route
 	 *
@@ -160,7 +160,7 @@ public class Play implements State {
 		}
 		return route[counter.currentRouteIndex];
 	}
-
+	
 	/**
 	 * Gets the position vector of the middle of the given tile where a counter should sit
 	 *
@@ -173,7 +173,7 @@ public class Play implements State {
 			tile.getPos().y + (Tile.WIDTH / 2) - (Counter.WIDTH / 2)
 		);
 	}
-
+	
 	/**
 	 * Checks move a certain amount ahead
 	 *
@@ -191,28 +191,28 @@ public class Play implements State {
 		}
 		return !route[counter.currentRouteIndex + spaces].hasCounter();
 	}
-
+	
 	public void packetReceived(PacketManager packet) {
-
+	
 	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
-
+	
 	}
-
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
 			stateManager.setState(StateManager.GameState.PAUSE);
 		}
 	}
-
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+	
 	}
-
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (playerOnesTurn) {
