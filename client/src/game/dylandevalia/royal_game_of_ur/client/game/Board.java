@@ -151,6 +151,7 @@ public class Board {
 		if (newIndex < 0) {
 			return MoveState.START;
 		} else if (newIndex == route.length) {
+			// Needs exact number to exit board
 			return MoveState.END;
 		} else if (newIndex > route.length) {
 			return MoveState.BLOCKED;
