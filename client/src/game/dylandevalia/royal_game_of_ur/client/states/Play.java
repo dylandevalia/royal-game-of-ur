@@ -20,8 +20,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 // TODO: Delay captured counter returning until taken
-// TODO: When counter returns to starting cluster, move other counters
-//       back and add returning counter to the front #stylepoints
 // TODO: Use Game more / swap out playerOnesTurn to Game.currentPlayer
 public class Play implements State {
 	
