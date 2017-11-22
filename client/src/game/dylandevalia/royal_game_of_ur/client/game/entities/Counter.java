@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -11,15 +12,15 @@ public class Counter extends BaseEntity {
 	public static final int WIDTH = Window.WIDTH / 15;
 	
 	public int currentRouteIndex = -1;
-	private boolean playerOne;
+	public Players player;
 	private LinkedList<Vector2D> targets = new LinkedList<>();
 	private Vector2D target;
 	private boolean mouseHovering = false;
 	
-	public Counter(int x, int y, boolean playerOne) {
+	public Counter(int x, int y, Players player) {
 		super(x, y, WIDTH, WIDTH);
 		target = pos;
-		this.playerOne = playerOne;
+		this.player = player;
 	}
 	
 	public void setTarget(Vector2D target) {
@@ -29,6 +30,7 @@ public class Counter extends BaseEntity {
 	public void update(Vector2D mousePos) {
 		super.update();
 		
+		// See if the mouse is over this counter
 		mouseHovering = isColliding(mousePos);
 		
 		if (atTarget() && targets.isEmpty()) {
@@ -73,7 +75,7 @@ public class Counter extends BaseEntity {
 		super.draw(g, interpolate);
 		
 		g.setColor(mouseHovering ? ColorMaterial.amber
-			: (playerOne ? ColorMaterial.purple : ColorMaterial.green));
+			: (player == Players.ONE ? ColorMaterial.purple : ColorMaterial.green));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 }

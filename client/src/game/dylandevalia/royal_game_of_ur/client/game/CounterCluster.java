@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -43,14 +44,14 @@ public class CounterCluster {
 	/**
 	 * Adds a new counter to the array-list and returns a reference to it
 	 *
-	 * @param playerOne Is the counter player one's or two's
+	 * @param player The player/owner of the counter ({@link Players})
 	 * @return A reference to the newly created counter
 	 */
-	public Counter addNew(boolean playerOne) {
+	public Counter addNew(Players player) {
 		Vector2D nextPos = getNextPos();
 		Counter counter = new Counter(
 			(int) nextPos.x, (int) nextPos.y,
-			playerOne
+			player
 		);
 		startPos.add(nextPos);
 		counters.add(counter);

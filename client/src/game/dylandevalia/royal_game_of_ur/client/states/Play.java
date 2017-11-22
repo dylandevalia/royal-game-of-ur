@@ -2,6 +2,8 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Board;
 import game.dylandevalia.royal_game_of_ur.client.game.CounterCluster;
+import game.dylandevalia.royal_game_of_ur.client.game.Game.MoveState;
+import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
@@ -16,27 +18,51 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+// TODO: Delay captured counter returning until taken
+// TODO: When counter returns to starting cluster, move other counters
+//       back and add returning counter to the front #stylepoints
 public class Play implements State {
 	
-	// Reference to the state manager
+	/**
+	 * Reference to the state manager
+	 */
 	private StateManager stateManager;
-	/* Game board */
+	/**
+	 * Game board
+	 */
 	private Board board = new Board(4, 8, 2);
 	
-	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
 	/* Counters */
-	// The number of counters each player should have
+	/**
+	 * The number of counters each player should have
+	 */
 	private int noCounters = 6;
-	// Player one's counters
+	/**
+	 * Player one's counters
+	 */
 	private Counter[] one_counters = new Counter[noCounters];
-	// Player two's counters
+	/**
+	 * Player two's counters
+	 */
 	private Counter[] two_counters = new Counter[noCounters];
+	/**
+	 * The clusters for each of the start and end areas
+	 */
+	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
+	
 	/* Game logic */
-	// Keeps track of who's turn it is
+	/**
+	 * Keeps track of who's turn it is
+	 */
 	private boolean playerOnesTurn;
-	// The current roll of the dice
+	/**
+	 * The current roll of the dice
+	 */
 	private int currentRoll;
 	/* Misc */
+	/**
+	 * The dice controller
+	 */
 	private UrDice dice = new UrDice();
 	
 	@Override
@@ -54,31 +80,31 @@ public class Play implements State {
 	}
 	
 	/**
-	 * Generates the counters and their starting positions
+	 * Generates the counters, clusters and their starting positions
 	 */
 	private void generateCounters() {
 		one_countersStart = new CounterCluster(
-			counterInTilePosition(board.getOne_route()[0]).add(0, Tile.WIDTH),
+			counterInTilePosition(board.getRoute(Players.ONE)[0]).add(0, Tile.WIDTH),
 			true
 		);
 		one_countersEnd = new CounterCluster(
-			counterInTilePosition(board.getOne_route()[board.getRouteLength() - 1])
+			counterInTilePosition(board.getRoute(Players.ONE)[board.getRouteLength() - 1])
 				.add(0, Tile.WIDTH),
 			false
 		);
 		two_countersStart = new CounterCluster(
-			counterInTilePosition(board.getTwo_route()[0]).sub(0, Tile.WIDTH),
+			counterInTilePosition(board.getRoute(Players.TWO)[0]).sub(0, Tile.WIDTH),
 			true
 		);
 		two_countersEnd = new CounterCluster(
-			counterInTilePosition(board.getTwo_route()[board.getRouteLength() - 1])
+			counterInTilePosition(board.getRoute(Players.TWO)[board.getRouteLength() - 1])
 				.sub(0, Tile.WIDTH),
 			false
 		);
 		
 		for (int i = 0; i < noCounters; i++) {
-			one_counters[i] = one_countersStart.addNew(true);
-			two_counters[i] = two_countersStart.addNew(false);
+			one_counters[i] = one_countersStart.addNew(Players.ONE);
+			two_counters[i] = two_countersStart.addNew(Players.TWO);
 		}
 	}
 	
@@ -104,6 +130,7 @@ public class Play implements State {
 		g.setColor(ColorMaterial.GREY[2]);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
+		/* Objects */
 		board.draw(g, interpolate);
 		for (Counter counter : one_counters) {
 			counter.draw(g, interpolate);
@@ -112,14 +139,12 @@ public class Play implements State {
 			counter.draw(g, interpolate);
 		}
 		
+		/* Text */
+		g.setColor(ColorMaterial.GREY[9]);
 		g.setFont(new Font("TimesRoman", Font.BOLD, 18));
 		String turn = playerOnesTurn ? "1" : "2";
 		g.drawString("Player: " + turn, Window.WIDTH - 150, 50);
 		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 150, Window.HEIGHT - 50);
-
-//		g.setColor(ColorMaterial.GREY[9]);
-//		g.drawRect(0, 0, Window.WIDTH / 2, Window.HEIGHT / 2);
-//		g.drawRect(Window.WIDTH / 2, Window.HEIGHT / 2, Window.WIDTH, Window.HEIGHT);
 	}
 	
 	/**
@@ -127,38 +152,52 @@ public class Play implements State {
 	 * all the moves along the way so that the counter will still move through
 	 * the route rather than move directly to the last target
 	 *
-	 * @param route The route the counter will travel through
 	 * @param counter The counter to move
 	 * @param spaces The amount of spaces to move the counter along the route
 	 */
-	private Tile moveCounter(Tile[] route, Counter counter, int spaces) {
-		if (counter.currentRouteIndex >= 0 && counter.currentRouteIndex < route.length) {
-			route[counter.currentRouteIndex].setHasCounter(false);
-		}
-		
-		for (int i = 0; i < Math.abs(spaces); i++) {
-			counter.setTarget(counterInTilePosition(getNextTile(route, counter, spaces > 0)));
-		}
-		
-		route[counter.currentRouteIndex].setHasCounter(true);
-		return route[counter.currentRouteIndex];
-	}
-	
-	/**
-	 * Gets the next tile in the route
-	 *
-	 * @param route The route the tile travels
-	 * @param counter The counter to move
-	 * @return The tile to move to
-	 */
-	private Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
-		counter.currentRouteIndex += forward ? 1 : -1;
+	private Tile moveCounter(Counter counter, int spaces) {
+		Tile[] route = board.getRoute(counter.player);
 		if (counter.currentRouteIndex < 0) {
-			return route[0];
-		} else if (counter.currentRouteIndex >= route.length) {
-			return route[route.length - 1];
+			// Get out of starting cluster
+			CounterCluster cluster =
+				(counter.player == Players.ONE) ? one_countersStart : two_countersStart;
+			cluster.remove(counter);
+		} else {
+			route[counter.currentRouteIndex].setCounter(null);
 		}
-		return route[counter.currentRouteIndex];
+		
+		// Go through each tile one by one
+		for (int i = 0; i < Math.abs(spaces); i++) {
+			switch (board.checkMove(counter, (spaces > 0) ? 1 : -1)) {
+				case START:
+					if (counter.player == Players.ONE) {
+						one_countersStart.add(counter);
+					} else {
+						two_countersStart.add(counter);
+					}
+					return null;
+				case END:
+					if (counter.player == Players.ONE) {
+						one_countersEnd.add(counter);
+					} else {
+						two_countersEnd.add(counter);
+					}
+					return null;
+				default:
+					Tile nextTile = board.getNextTile(counter, spaces > 0);
+					counter.setTarget(counterInTilePosition(nextTile));
+					break;
+			}
+		}
+		
+		Tile finalTile = route[counter.currentRouteIndex];
+		if (finalTile.hasCounter()) {
+			// Must be opponent counter since moveCounter is not run if
+			// is blocked by player's counter - move back to start
+			moveCounter(finalTile.getCounter(), -board.getRouteLength());
+		}
+		finalTile.setCounter(counter);
+		return finalTile;
 	}
 	
 	/**
@@ -175,21 +214,33 @@ public class Play implements State {
 	}
 	
 	/**
-	 * Checks move a certain amount ahead
+	 * Calculates if a counter has been click on and checks if it can move
 	 *
-	 * @param route The route the counter will follow
-	 * @param counter The counter to calculate new position
-	 * @param spaces The amount of spaces ahead to check
-	 * @return Boolean if the move is viable/allowed
+	 * @param mousePos The position vector of the mouse pointer
+	 * @param counter The counter to check and move
+	 * @return True if successfully clicked on a counter
 	 */
-	private boolean checkMove(Tile[] route, Counter counter, int spaces) {
-		// TODO: Replace boolean return with enum with more detail for future AI
-		if (counter.currentRouteIndex + spaces < 0
-			|| counter.currentRouteIndex + spaces > route.length) {
-			// Outside of route
-			return false;
+	private boolean processClick(Vector2D mousePos, Counter counter) {
+		if (counter.isColliding(mousePos)) {                                    // Clicked on
+			if (counter.currentRouteIndex < board.getRouteLength()              // In play
+				&& board.checkMove(counter, currentRoll) != MoveState.BLOCKED   // Can move
+				) {
+				Tile finalCounter = moveCounter(
+					counter,
+					currentRoll
+				);
+				
+				// Swap turn
+				if (finalCounter != null && !finalCounter.isRosette()) {
+					playerOnesTurn = false;
+				}
+				currentRoll = dice.roll();
+				// Return since we found the counter, there's not point
+				// looking through the rest of them
+				return true;
+			}
 		}
-		return !route[counter.currentRouteIndex + spaces].hasCounter();
+		return false;
 	}
 	
 	public void packetReceived(PacketManager packet) {
@@ -215,35 +266,16 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
 		if (playerOnesTurn) {
 			for (Counter counter : one_counters) {
-				if (counter.isColliding(new Vector2D(e.getX(), e.getY()))
-					&& checkMove(board.getOne_route(), counter, currentRoll)
-					) {
-					if (counter.currentRouteIndex < 0) {
-						one_countersStart.remove(counter);
-					}
-					Tile newTile = moveCounter(board.getOne_route(), counter, currentRoll);
-					if (!newTile.isRosette()) {
-						playerOnesTurn = false;
-					}
-					currentRoll = dice.roll();
+				if (processClick(mousePos, counter)) {
 					return;
 				}
 			}
 		} else {
 			for (Counter counter : two_counters) {
-				if (counter.isColliding(new Vector2D(e.getX(), e.getY()))
-					&& checkMove(board.getTwo_route(), counter, currentRoll)
-					) {
-					if (counter.currentRouteIndex < 0) {
-						two_countersStart.remove(counter);
-					}
-					Tile newTile = moveCounter(board.getTwo_route(), counter, currentRoll);
-					if (!newTile.isRosette()) {
-						playerOnesTurn = true;
-					}
-					currentRoll = dice.roll();
+				if (processClick(mousePos, counter)) {
 					return;
 				}
 			}

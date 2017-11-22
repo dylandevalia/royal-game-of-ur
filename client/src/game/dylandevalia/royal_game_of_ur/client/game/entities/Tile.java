@@ -9,7 +9,7 @@ public class Tile extends BaseEntity {
 	public static int WIDTH = Window.WIDTH / 10;
 	
 	private boolean rosette = false;
-	private boolean hasCounter = false;
+	private Counter counter = null;
 	
 	public Tile(int x, int y) {
 		super(x, y, WIDTH, WIDTH);
@@ -24,11 +24,15 @@ public class Tile extends BaseEntity {
 	}
 	
 	public boolean hasCounter() {
-		return hasCounter;
+		return counter != null;
 	}
 	
-	public void setHasCounter(boolean hasCounter) {
-		this.hasCounter = hasCounter;
+	public Counter getCounter() {
+		return counter;
+	}
+	
+	public void setCounter(Counter counter) {
+		this.counter = counter;
 	}
 	
 	@Override
