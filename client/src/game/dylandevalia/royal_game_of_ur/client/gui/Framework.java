@@ -142,7 +142,7 @@ public class Framework extends Canvas {
 				mouse.x - getLocationOnScreen().x,
 				mouse.y - getLocationOnScreen().y
 			);
-		} catch (IllegalComponentStateException e) {
+		} catch (IllegalComponentStateException | NullPointerException e) {
 			Log.error("Framework", "Couldn't get mouse position"/*, e*/);
 		}
 		stateManager.update();

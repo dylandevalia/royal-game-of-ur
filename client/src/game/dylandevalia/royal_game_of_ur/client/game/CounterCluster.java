@@ -65,10 +65,22 @@ public class CounterCluster {
 	 * @param counter Reference to the counter to add to the cluster
 	 */
 	public void add(Counter counter) {
-		counters.add(counter);
+		// Generate new position and add to end of startPos
 		Vector2D nextPos = getNextPos();
 		startPos.add(nextPos);
-		counter.setTarget(nextPos);
+		// Add new counter to the front and set to initialPos
+		counters.add(0, counter);
+		counter.setTarget(initialPos.copy());
+		// Animate counters shifting backwards
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = startPos.size() - 1; i > 0; i--) {
+					sleep(200);
+					counters.get(i).setTarget(startPos.get(i));
+				}
+			}
+		}).start();
 	}
 	
 	/**
@@ -104,19 +116,19 @@ public class CounterCluster {
 					counters.get(i).setTarget(startPos.get(i));
 				}
 			}
-			
-			/**
-			 * Simple method which sleeps the thread and catches any errors thrown
-			 *
-			 * @param millis    The amount of milliseconds to sleep the thread for
-			 */
-			private void sleep(int millis) {
-				try {
-					Thread.sleep(millis);
-				} catch (InterruptedException e) {
-					Log.error("COUNTER_CLUSTER", "Failed to sleep");
-				}
-			}
 		}).start();
+	}
+	
+	/**
+	 * Simple method which sleeps the thread and catches any errors thrown
+	 *
+	 * @param millis The amount of milliseconds to sleep the thread for
+	 */
+	private void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			Log.error("COUNTER_CLUSTER", "Failed to sleep");
+		}
 	}
 }

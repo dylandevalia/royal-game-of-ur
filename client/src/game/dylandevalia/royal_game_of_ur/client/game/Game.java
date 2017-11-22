@@ -1,11 +1,16 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
+import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
+import java.awt.Color;
+
 /**
  * Keeps track of all the game logic and enums
  */
 public class Game {
 	
 	public Players currentPlayer = Players.NONE;
+	public static final Color one_colour = ColorMaterial.purple;
+	public static final Color two_colour = ColorMaterial.green;
 	
 	/**
 	 * Player identifications

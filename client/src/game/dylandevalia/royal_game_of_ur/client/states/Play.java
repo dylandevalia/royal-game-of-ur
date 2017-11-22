@@ -2,6 +2,7 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Board;
 import game.dylandevalia.royal_game_of_ur.client.game.CounterCluster;
+import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.Game.MoveState;
 import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
@@ -141,8 +142,8 @@ public class Play implements State {
 		}
 		
 		/* Text */
-		g.setColor(ColorMaterial.GREY[9]);
-		g.setFont(new Font("TimesRoman", Font.BOLD, 18));
+		g.setColor(playerOnesTurn ? Game.one_colour : Game.two_colour);
+		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
 		String turn = playerOnesTurn ? "1" : "2";
 		g.drawString("Player: " + turn, Window.WIDTH - 150, 50);
 		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 150, Window.HEIGHT - 50);
@@ -176,6 +177,7 @@ public class Play implements State {
 					} else {
 						two_countersStart.add(counter);
 					}
+					counter.currentRouteIndex = -1;
 					return null;
 				case END:
 					if (counter.player == Players.ONE) {
@@ -183,6 +185,7 @@ public class Play implements State {
 					} else {
 						two_countersEnd.add(counter);
 					}
+					counter.currentRouteIndex = board.getRouteLength();
 					return null;
 				default:
 					Tile nextTile = board.getNextTile(counter, spaces > 0);
@@ -226,16 +229,13 @@ public class Play implements State {
 			if (counter.currentRouteIndex < board.getRouteLength()              // In play
 				&& board.checkMove(counter, currentRoll) != MoveState.BLOCKED   // Can move
 				) {
-				Tile finalCounter = moveCounter(
-					counter,
-					currentRoll
-				);
+				Tile finalCounter = moveCounter(counter, currentRoll);
 				
-				// Swap turn
-				if (finalCounter != null && !finalCounter.isRosette()) {
-					playerOnesTurn = false;
+				if (finalCounter == null || !finalCounter.isRosette()) {
+					playerOnesTurn = !playerOnesTurn;
 				}
 				currentRoll = dice.roll();
+				
 				// Return since we found the counter, there's not point
 				// looking through the rest of them
 				return true;

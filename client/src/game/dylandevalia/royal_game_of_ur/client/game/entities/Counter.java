@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Game;
 import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
@@ -16,6 +17,7 @@ public class Counter extends BaseEntity {
 	private LinkedList<Vector2D> targets = new LinkedList<>();
 	private Vector2D target;
 	private boolean mouseHovering = false;
+	public int speed = 8;
 	
 	public Counter(int x, int y, Players player) {
 		super(x, y, WIDTH, WIDTH);
@@ -37,7 +39,6 @@ public class Counter extends BaseEntity {
 			return;
 		}
 		
-		int speed = 8;
 		double dist = Vector2D.dist(pos, target);
 		
 		if (dist > speed) {
@@ -75,7 +76,7 @@ public class Counter extends BaseEntity {
 		super.draw(g, interpolate);
 		
 		g.setColor(mouseHovering ? ColorMaterial.amber
-			: (player == Players.ONE ? ColorMaterial.purple : ColorMaterial.green));
+			: (player == Players.ONE ? Game.one_colour : Game.two_colour));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 }
