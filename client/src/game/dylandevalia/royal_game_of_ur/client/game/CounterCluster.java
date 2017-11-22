@@ -119,6 +119,10 @@ public class CounterCluster {
 		}).start();
 	}
 	
+	public int getSize() {
+		return counters.size();
+	}
+	
 	/**
 	 * Simple method which sleeps the thread and catches any errors thrown
 	 *

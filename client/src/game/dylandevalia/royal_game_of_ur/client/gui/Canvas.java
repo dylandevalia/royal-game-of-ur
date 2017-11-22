@@ -40,6 +40,9 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/* ----------------- */
 	/* Keyboard listener */
 	/* ----------------- */
+	/**
+	 * A hashmap of all the keyCodes and whether they are currently held down
+	 */
 	private static HashMap<Integer, Boolean> keyboardStates = new HashMap<>();
 	
 	/**

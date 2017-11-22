@@ -59,6 +59,10 @@ public class Play implements State {
 	 * The current roll of the dice
 	 */
 	private int currentRoll;
+	/**
+	 * Has the game been won
+	 */
+	private boolean gameWon = false;
 	/* Misc */
 	/**
 	 * The dice controller
@@ -120,8 +124,7 @@ public class Play implements State {
 		
 		if (currentRoll == 0) {
 			Log.debug("Dice", "Rolled a 0 - swapping players");
-			currentRoll = dice.roll();
-			playerOnesTurn = !playerOnesTurn;
+			swapPlayersAndReroll(true);
 		}
 	}
 	
@@ -143,8 +146,15 @@ public class Play implements State {
 		g.setColor(playerOnesTurn ? Game.one_colour : Game.two_colour);
 		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
 		String turn = playerOnesTurn ? "1" : "2";
-		g.drawString("Player: " + turn, Window.WIDTH - 150, 50);
-		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 150, Window.HEIGHT - 50);
+		g.drawString("Player: " + turn, Window.WIDTH - 200, 50);
+		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 200, Window.HEIGHT - 25);
+	}
+	
+	private void swapPlayersAndReroll(boolean swap) {
+		if (swap) {
+			playerOnesTurn = !playerOnesTurn;
+		}
+		currentRoll = dice.roll();
 	}
 	
 	/**
@@ -216,6 +226,22 @@ public class Play implements State {
 	}
 	
 	/**
+	 * Checks if, for the given set of counters, there are any possible moves
+	 *
+	 * @param counters The counters to check ({@link #one_counters} or {@link #two_counters})
+	 * @param spaces The amount of spaces the counters will move
+	 * @return True if there are possible moves
+	 */
+	private boolean arePossibleMoves(Counter[] counters, int spaces) {
+		for (Counter counter : counters) {
+			if (board.checkMove(counter, spaces) != MoveState.BLOCKED) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Calculates if a counter has been click on and checks if it can move
 	 *
 	 * @param mousePos The position vector of the mouse pointer
@@ -229,10 +255,27 @@ public class Play implements State {
 				) {
 				Tile finalCounter = moveCounter(counter, currentRoll);
 				
-				if (finalCounter == null || !finalCounter.isRosette()) {
-					playerOnesTurn = !playerOnesTurn;
+				// Check if game is won
+				if (one_countersEnd.getSize() == noCounters
+					|| two_countersEnd.getSize() == noCounters) {
+					gameWon = true;
+					Log.debug("PLAY", "GAME WON!");
+					return true;
 				}
-				currentRoll = dice.roll();
+				
+				swapPlayersAndReroll(finalCounter == null || !finalCounter.isRosette());
+				
+				// Check if there are possible moves
+				while (!arePossibleMoves(playerOnesTurn ? one_counters : two_counters,
+					currentRoll)) {
+					Log.debug(
+						"PLAY-CLICK",
+						"No possible moves for player "
+							+ (playerOnesTurn ? "one" : "two")
+							+ " - swapping players"
+					);
+					swapPlayersAndReroll(true);
+				}
 				
 				// Return since we found the counter, there's not point
 				// looking through the rest of them
@@ -265,17 +308,19 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
-		if (playerOnesTurn) {
-			for (Counter counter : one_counters) {
-				if (processClick(mousePos, counter)) {
-					return;
+		if (!gameWon) {
+			Vector2D mousePos = new Vector2D(e.getX(), e.getY());
+			if (playerOnesTurn) {
+				for (Counter counter : one_counters) {
+					if (processClick(mousePos, counter)) {
+						return;
+					}
 				}
-			}
-		} else {
-			for (Counter counter : two_counters) {
-				if (processClick(mousePos, counter)) {
-					return;
+			} else {
+				for (Counter counter : two_counters) {
+					if (processClick(mousePos, counter)) {
+						return;
+					}
 				}
 			}
 		}
