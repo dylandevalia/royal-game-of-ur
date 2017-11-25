@@ -1,6 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;

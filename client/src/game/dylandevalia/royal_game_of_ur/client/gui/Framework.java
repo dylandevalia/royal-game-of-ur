@@ -32,7 +32,7 @@ public class Framework extends Canvas {
 	// Set to `1` for perfect rendering
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
 	private static Vector2D mousePos = new Vector2D();
-	//	private Game game = new Game(this);
+	
 	StateManager stateManager = new StateManager();
 	
 	/* Game updates */

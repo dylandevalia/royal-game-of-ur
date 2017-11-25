@@ -2,16 +2,15 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.game.Board;
 import game.dylandevalia.royal_game_of_ur.client.game.CounterCluster;
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
-import game.dylandevalia.royal_game_of_ur.client.game.Game.MoveState;
-import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.MoveState;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Font;
@@ -20,7 +19,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 // TODO: Delay captured counter returning until taken
-// TODO: Use Game more / swap out playerOnesTurn to Game.currentPlayer
+// TODO: Use GameLogic more / swap out playerOnesTurn to GameLogic.currentPlayer
 public class Play implements State {
 	
 	/**
@@ -28,11 +27,12 @@ public class Play implements State {
 	 */
 	private StateManager stateManager;
 	/**
-	 * Game board
+	 * GameLogic board
 	 */
 	private Board board = new Board(4, 8, 2);
 	
 	/* Counters */
+	
 	/**
 	 * The number of counters each player should have
 	 */
@@ -50,24 +50,8 @@ public class Play implements State {
 	 */
 	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
 	
-	/* Game logic */
-	/**
-	 * Keeps track of who's turn it is
-	 */
-	private boolean playerOnesTurn;
-	/**
-	 * The current roll of the dice
-	 */
-	private int currentRoll;
-	/**
-	 * Has the game been won
-	 */
-	private boolean gameWon = false;
-	/* Misc */
-	/**
-	 * The dice controller
-	 */
-	private UrDice dice = new UrDice();
+	private GameLogic game;
+	
 	
 	@Override
 	public void initialise(StateManager stateManager) {
@@ -75,12 +59,10 @@ public class Play implements State {
 		
 		board.generate();
 		generateCounters();
-		Log.info("Play", "Generation completed");
+		Log.info("PLAY", "Generation completed");
 		
-		playerOnesTurn = true;
-		do {
-			currentRoll = dice.roll();
-		} while (currentRoll == 0);
+		game = new GameLogic();
+		Log.info("PLAY", "GameLogic created");
 	}
 	
 	/**
@@ -122,9 +104,10 @@ public class Play implements State {
 			counter.update(Framework.getMousePos());
 		}
 		
-		if (currentRoll == 0) {
-			Log.debug("Dice", "Rolled a 0 - swapping players");
-			swapPlayersAndReroll(true);
+		if (game.currentRoll == 0) {
+			Log.debug("PLAY", "Rolled a 0 - swapping players");
+			game.swapPlayers();
+			game.reroll();
 		}
 	}
 	
@@ -143,24 +126,17 @@ public class Play implements State {
 		}
 		
 		/* Text */
-		g.setColor(playerOnesTurn ? Game.one_colour : Game.two_colour);
+		g.setColor(game.getPlayerColour());
 		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
-		String turn = playerOnesTurn ? "1" : "2";
+		String turn = game.getPlayerName();
 		g.drawString("Player: " + turn, Window.WIDTH - 200, 50);
-		g.drawString("  Roll: " + currentRoll, Window.WIDTH - 200, Window.HEIGHT - 25);
-	}
-	
-	private void swapPlayersAndReroll(boolean swap) {
-		if (swap) {
-			playerOnesTurn = !playerOnesTurn;
-		}
-		currentRoll = dice.roll();
+		g.drawString("  Roll: " + game.currentRoll, Window.WIDTH - 200, Window.HEIGHT - 25);
 	}
 	
 	/**
-	 * Moves a counter a certain amount of spaces through the given route. Adds
-	 * all the moves along the way so that the counter will still move through
-	 * the route rather than move directly to the last target
+	 * Moves a counter a certain amount of spaces through the given route. Adds all the moves along
+	 * the way so that the counter will still move through the route rather than move directly to
+	 * the last target
 	 *
 	 * @param counter The counter to move
 	 * @param spaces The amount of spaces to move the counter along the route
@@ -251,30 +227,39 @@ public class Play implements State {
 	private boolean processClick(Vector2D mousePos, Counter counter) {
 		if (counter.isColliding(mousePos)) {                                    // Clicked on
 			if (counter.currentRouteIndex < board.getRouteLength()              // In play
-				&& board.checkMove(counter, currentRoll) != MoveState.BLOCKED   // Can move
+				&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED   // Can move
 				) {
-				Tile finalCounter = moveCounter(counter, currentRoll);
+				Tile finalCounter = moveCounter(counter, game.currentRoll);
 				
 				// Check if game is won
 				if (one_countersEnd.getSize() == noCounters
 					|| two_countersEnd.getSize() == noCounters) {
-					gameWon = true;
+					game.won = true;
 					Log.debug("PLAY", "GAME WON!");
 					return true;
 				}
 				
-				swapPlayersAndReroll(finalCounter == null || !finalCounter.isRosette());
+				if (finalCounter == null || !finalCounter.isRosette()) {
+					game.swapPlayers();
+				}
+				game.reroll();
 				
 				// Check if there are possible moves
-				while (!arePossibleMoves(playerOnesTurn ? one_counters : two_counters,
-					currentRoll)) {
+				Counter[] counters = null;
+				if (game.currentPlayer == Players.ONE) {
+					counters = one_counters;
+				} else if (game.currentPlayer == Players.TWO) {
+					counters = two_counters;
+				}
+				while (!arePossibleMoves(counters, game.currentRoll)) {
 					Log.debug(
 						"PLAY-CLICK",
 						"No possible moves for player "
-							+ (playerOnesTurn ? "one" : "two")
+							+ game.getPlayerName()
 							+ " - swapping players"
 					);
-					swapPlayersAndReroll(true);
+					game.swapPlayers();
+					game.reroll();
 				}
 				
 				// Return since we found the counter, there's not point
@@ -308,20 +293,22 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (!gameWon) {
+		if (game.acceptInput && !game.won) {
 			Vector2D mousePos = new Vector2D(e.getX(), e.getY());
-			if (playerOnesTurn) {
+			if (game.currentPlayer == Players.ONE) {
 				for (Counter counter : one_counters) {
 					if (processClick(mousePos, counter)) {
 						return;
 					}
 				}
-			} else {
+			} else if (game.currentPlayer == Players.TWO) {
 				for (Counter counter : two_counters) {
 					if (processClick(mousePos, counter)) {
 						return;
 					}
 				}
+			} else {
+				Log.warn("PLAY", "Player NONE's turn");
 			}
 		}
 	}

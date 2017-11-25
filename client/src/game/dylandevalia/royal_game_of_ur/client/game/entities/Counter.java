@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game;
-import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -76,7 +76,7 @@ public class Counter extends BaseEntity {
 		super.draw(g, interpolate);
 		
 		g.setColor(mouseHovering ? ColorMaterial.amber
-			: (player == Players.ONE ? Game.one_colour : Game.two_colour));
+			: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 }

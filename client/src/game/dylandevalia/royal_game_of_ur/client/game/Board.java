@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Game.MoveState;
-import game.dylandevalia.royal_game_of_ur.client.game.Game.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.MoveState;
+import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;

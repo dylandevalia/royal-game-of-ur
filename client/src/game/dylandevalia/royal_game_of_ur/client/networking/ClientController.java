@@ -56,9 +56,9 @@ public class ClientController {
 //					Log.info("Client", "Received message: " + packet.message);
 //
 //					if (packet.message.contains("player one")) {
-//						Log.debug("Client Game", "I am player one");
+//						Log.debug("Client GameLogic", "I am player one");
 //					} else if (packet.message.contains("player two")) {
-//						Log.debug("Client Game", "I am player two");
+//						Log.debug("Client GameLogic", "I am player two");
 //					}
 					
 					PacketManager packet = (PacketManager) p;
