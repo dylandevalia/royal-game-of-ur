@@ -49,8 +49,8 @@ public class Board {
 	}
 	
 	/**
-	 * Generates the board of tiles using {@link #startingTilesLen}, {@link #middleTilesLen}
-	 * and {@link #endTilesLen} as well as {@link #rosetteSquares}
+	 * Generates the board of tiles using {@link #startingTilesLen}, {@link #middleTilesLen} and
+	 * {@link #endTilesLen} as well as {@link #rosetteSquares}
 	 */
 	public void generate() {
 		// Set tile width programmatically based on size available
