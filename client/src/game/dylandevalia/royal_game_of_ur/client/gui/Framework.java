@@ -84,8 +84,6 @@ public class Framework extends Canvas {
 		// Simple way to find fps
 		int lastSecondTime = (int) (lastUpdateTime / NS_A_SEC);
 
-//		setup();
-		
 		while (runGame) {
 			/* Update game */
 			
