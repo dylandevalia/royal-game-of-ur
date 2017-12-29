@@ -65,7 +65,7 @@ public class UrDice {
 			
 			Die(int noSides) {
 				this.noSides = noSides;
-				random = new Random(System.currentTimeMillis());
+				random = new Random(System.nanoTime());
 			}
 			
 			int roll() {

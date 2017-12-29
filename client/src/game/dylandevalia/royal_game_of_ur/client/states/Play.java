@@ -36,7 +36,7 @@ public class Play implements State {
 	/**
 	 * The number of counters each player should have
 	 */
-	private int noCounters = 6;
+	private int noCounters = 1;
 	/**
 	 * Player one's counters
 	 */
@@ -104,12 +104,11 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.update(Framework.getMousePos());
 		}
-		
-		if (game.currentRoll == 0) {
-			Log.debug("PLAY", "Rolled a 0 - swapping players");
-			game.swapPlayers();
-			game.reroll();
-		}
+
+//		if (game.currentRoll == 0) {
+//			game.swapPlayers();
+//			game.reroll();
+//		}
 	}
 	
 	@Override
@@ -226,15 +225,18 @@ public class Play implements State {
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
-		if (counter.isColliding(mousePos)) {                                    // Clicked on
-			if (counter.currentRouteIndex < board.getRouteLength()              // In play
-				&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED   // Can move
+		if (counter.isColliding(mousePos)) {    // Clicked on
+			if (
+				counter.currentRouteIndex < board.getRouteLength()                  // In play
+					&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED  // Can move
 				) {
 				Tile finalCounter = moveCounter(counter, game.currentRoll);
 				
 				// Check if game is won
-				if (one_countersEnd.getSize() == noCounters
-					|| two_countersEnd.getSize() == noCounters) {
+				if (
+					one_countersEnd.getSize() == noCounters
+						|| two_countersEnd.getSize() == noCounters
+					) {
 					game.won = true;
 					Log.debug("PLAY", "GAME WON!");
 					return true;
@@ -245,20 +247,27 @@ public class Play implements State {
 				}
 				game.reroll();
 				
-				// Check if there are possible moves
-				Counter[] counters = null;
-				if (game.currentPlayer == Players.ONE) {
-					counters = one_counters;
-				} else if (game.currentPlayer == Players.TWO) {
-					counters = two_counters;
-				}
-				while (!arePossibleMoves(counters, game.currentRoll)) {
-					Log.debug(
-						"PLAY-CLICK",
-						"No possible moves for player "
-							+ game.getPlayerName()
-							+ " - swapping players"
-					);
+				while (true) {
+					// Check if there are possible moves
+					Counter[] counters = null;
+					if (game.currentPlayer == Players.ONE) {
+						counters = one_counters;
+					} else if (game.currentPlayer == Players.TWO) {
+						counters = two_counters;
+					}
+					if (game.currentRoll == 0) {
+						Log.debug("PLAY", "Rolled a 0 - swapping players");
+					} else if (!arePossibleMoves(counters, game.currentRoll)) {
+						Log.debug(
+							"PLAY-CLICK",
+							"No possible moves for player "
+								+ game.getPlayerName()
+								+ " - swapping players"
+						);
+					} else {
+						break;
+					}
+					
 					game.swapPlayers();
 					game.reroll();
 				}

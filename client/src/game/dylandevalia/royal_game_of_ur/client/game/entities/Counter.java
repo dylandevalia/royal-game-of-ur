@@ -10,14 +10,43 @@ import java.util.LinkedList;
 
 public class Counter extends BaseEntity {
 	
+	/**
+	 * The width of a counter scales to the window width
+	 */
 	public static final int WIDTH = Window.WIDTH / 15;
 	
+	/**
+	 * The current index through the counter's route
+	 * -1 is used to describe a counter not currently on the route
+	 */
 	public int currentRouteIndex = -1;
+	
+	/**
+	 * The player that the counter belongs to
+	 */
 	public Players player;
+	/**
+	 * A stack of targets which the counter will move to in order
+	 */
 	private LinkedList<Vector2D> targets = new LinkedList<>();
+	/**
+	 * The current target
+	 */
 	private Vector2D target;
+	
+	/**
+	 * True if the mouse is hovering over this counter
+	 */
 	private boolean mouseHovering = false;
-	public int speed = 8;
+	
+	/**
+	 * How quickly the counter will move towards its current target
+	 */
+	private int speed = 8;
+	/**
+	 * Is the counter currently moving
+	 */
+	private boolean isMoving = false;
 	
 	public Counter(int x, int y, Players player) {
 		super(x, y, WIDTH, WIDTH);
@@ -43,8 +72,10 @@ public class Counter extends BaseEntity {
 		
 		if (dist > speed) {
 			pos.add(Vector2D.sub(target, pos).setMag(speed));
+			isMoving = true;
 		} else {    // At target
 			pos.set(target);
+			isMoving = false;
 			if (!targets.isEmpty()) {
 				target = targets.getFirst();
 				targets.removeFirst();
