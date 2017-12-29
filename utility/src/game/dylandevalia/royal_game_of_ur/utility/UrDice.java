@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.utility;
 import java.util.Random;
 
 public class UrDice {
+	
 	private Dice dice = new Dice(4, 2);
 	
 	public void setNoDice(int noDice) {
@@ -16,6 +17,7 @@ public class UrDice {
 	}
 	
 	private class Dice {
+		
 		private Die[] dice;
 		
 		Dice(int noDice, int sides) {
@@ -57,6 +59,7 @@ public class UrDice {
 		 * noSides - 1
 		 */
 		private class Die {
+			
 			private int noSides;
 			private Random random;
 			

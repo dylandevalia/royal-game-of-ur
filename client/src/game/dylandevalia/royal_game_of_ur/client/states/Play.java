@@ -70,7 +70,8 @@ public class Play implements State {
 	 */
 	private void generateCounters() {
 		one_countersStart = new CounterCluster(
-			counterInTilePosition(board.getRoute(Players.ONE)[0]).add(0, Tile.WIDTH),
+			counterInTilePosition(board.getRoute(Players.ONE)[0])
+				.add(0, Tile.WIDTH),
 			true
 		);
 		one_countersEnd = new CounterCluster(

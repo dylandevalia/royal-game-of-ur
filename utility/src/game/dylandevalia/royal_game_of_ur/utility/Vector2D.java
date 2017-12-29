@@ -1,6 +1,14 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
 public class Vector2D {
+	
+	private static final Vector2D ZERO = new Vector2D(0, 0);
+	private static final Vector2D UNIT = new Vector2D(1, 1);
+	private static final Vector2D UP = new Vector2D(0, -1);
+	private static final Vector2D DOWN = new Vector2D(0, 1);
+	private static final Vector2D LEFT = new Vector2D(-1, 0);
+	private static final Vector2D RIGHT = new Vector2D(1, 0);
+	
 	public double x, y;
 	
 	public Vector2D(double x, double y) {
@@ -10,13 +18,6 @@ public class Vector2D {
 	public Vector2D() {
 		this(0, 0);
 	}
-	
-	private static final Vector2D ZERO = new Vector2D(0, 0);
-	private static final Vector2D UNIT = new Vector2D(1, 1);
-	private static final Vector2D UP = new Vector2D(0, -1);
-	private static final Vector2D DOWN = new Vector2D(0, 1);
-	private static final Vector2D LEFT = new Vector2D(-1, 0);
-	private static final Vector2D RIGHT = new Vector2D(1, 0);
 	
 	public static Vector2D ZERO() {
 		return ZERO.copy();
@@ -40,6 +41,26 @@ public class Vector2D {
 	
 	public static Vector2D RIGHT() {
 		return RIGHT.copy();
+	}
+	
+	public static boolean equals(Vector2D a, Vector2D b) {
+		return a.equals(b);
+	}
+	
+	public static Vector2D add(Vector2D a, Vector2D b) {
+		return a.copy().add(b);
+	}
+	
+	public static Vector2D sub(Vector2D a, Vector2D b) {
+		return a.copy().sub(b);
+	}
+	
+	public static double dot(Vector2D a, Vector2D b) {
+		return a.copy().dot(b);
+	}
+	
+	public static double dist(Vector2D a, Vector2D b) {
+		return a.dist(b);
 	}
 	
 	@Override
@@ -69,10 +90,6 @@ public class Vector2D {
 		return equals(other.x, other.y);
 	}
 	
-	public static boolean equals(Vector2D a, Vector2D b) {
-		return a.equals(b);
-	}
-	
 	public Vector2D add(double x, double y) {
 		this.x += x;
 		this.y += y;
@@ -83,10 +100,6 @@ public class Vector2D {
 		return add(other.x, other.y);
 	}
 	
-	public static Vector2D add(Vector2D a, Vector2D b) {
-		return a.copy().add(b);
-	}
-	
 	public Vector2D sub(double x, double y) {
 		this.x -= x;
 		this.y -= y;
@@ -95,10 +108,6 @@ public class Vector2D {
 	
 	public Vector2D sub(Vector2D other) {
 		return sub(other.x, other.y);
-	}
-	
-	public static Vector2D sub(Vector2D a, Vector2D b) {
-		return a.copy().sub(b);
 	}
 	
 	public Vector2D mult(double n) {
@@ -129,21 +138,12 @@ public class Vector2D {
 		return dot(other.x, other.y);
 	}
 	
-	public static double dot(Vector2D a, Vector2D b) {
-		return a.copy().dot(b);
-	}
-	
 	public double dist(Vector2D other) {
 		return other.copy().sub(this).mag();
 	}
 	
-	public static double dist(Vector2D a, Vector2D b) {
-		return a.dist(b);
-	}
-	
-	
 	public Vector2D normalise() {
-		return this.mag() == 0 ? this : this.div(this.mag());
+		return (this.mag() == 0) ? this : this.div(this.mag());
 	}
 	
 	public Vector2D limit(double max) {

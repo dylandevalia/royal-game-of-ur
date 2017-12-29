@@ -11,11 +11,6 @@ import java.awt.Color;
 public class GameLogic {
 	
 	/**
-	 * The current player's turn
-	 */
-	public Players currentPlayer = Players.NONE;
-	
-	/**
 	 * The colour for {@link Players}.ONE
 	 */
 	public static final Color one_colour = ColorMaterial.purple;
@@ -31,16 +26,14 @@ public class GameLogic {
 	 * The name for {@link Players}.TWO
 	 */
 	public static final String two_name = "2";
-	
 	/**
-	 * The dice controller
+	 * The current player's turn
 	 */
-	private UrDice dice = new UrDice();
+	public Players currentPlayer = Players.NONE;
 	/**
 	 * The current roll of the dice
 	 */
 	public int currentRoll;
-	
 	/**
 	 * Has the game been won
 	 */
@@ -49,6 +42,10 @@ public class GameLogic {
 	 * Should the game accept input
 	 */
 	public boolean acceptInput = true;
+	/**
+	 * The dice controller
+	 */
+	private UrDice dice = new UrDice();
 	
 	public GameLogic() {
 		// Set player to one
