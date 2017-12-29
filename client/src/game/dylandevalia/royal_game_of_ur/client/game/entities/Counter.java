@@ -14,13 +14,15 @@ public class Counter extends BaseEntity {
 	 * The width of a counter scales to the window width
 	 */
 	public static final int WIDTH = Window.WIDTH / 15;
-	
+	/**
+	 * How quickly the counter will move towards its current target
+	 */
+	private static final int speed = 8;
 	/**
 	 * The current index through the counter's route
 	 * -1 is used to describe a counter not currently on the route
 	 */
 	public int currentRouteIndex = -1;
-	
 	/**
 	 * The player that the counter belongs to
 	 */
@@ -33,17 +35,10 @@ public class Counter extends BaseEntity {
 	 * The current target
 	 */
 	private TargetInfo target;
-	
 	/**
 	 * True if the mouse is hovering over this counter
 	 */
 	private boolean mouseHovering = false;
-	
-	/**
-	 * How quickly the counter will move towards its current target
-	 */
-	private static final int speed = 8;
-	
 	/**
 	 * Is the counter currently moving
 	 */
@@ -108,7 +103,7 @@ public class Counter extends BaseEntity {
 		super.draw(g, interpolate);
 		
 		g.setColor(mouseHovering ? ColorMaterial.amber
-			: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
+			           : (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 	
