@@ -70,14 +70,14 @@ public class CounterCluster {
 		startPos.add(nextPos);
 		// Add new counter to the front and set to initialPos
 		counters.add(0, counter);
-		counter.setTarget(initialPos.copy());
+		counter.setTarget(initialPos.copy(), false);
 		// Animate counters shifting backwards
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				for (int i = startPos.size() - 1; i > 0; i--) {
 					sleep(200);
-					counters.get(i).setTarget(startPos.get(i));
+					counters.get(i).setTarget(startPos.get(i), false);
 				}
 			}
 		}).start();
@@ -113,7 +113,7 @@ public class CounterCluster {
 			public void run() {
 				for (int i = 0; i < counters.size(); i++) {
 					sleep(200);
-					counters.get(i).setTarget(startPos.get(i));
+					counters.get(i).setTarget(startPos.get(i), false);
 				}
 			}
 		}).start();

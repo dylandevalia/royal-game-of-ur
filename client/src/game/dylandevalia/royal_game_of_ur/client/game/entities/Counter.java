@@ -28,11 +28,11 @@ public class Counter extends BaseEntity {
 	/**
 	 * A stack of targets which the counter will move to in order
 	 */
-	private LinkedList<Vector2D> targets = new LinkedList<>();
+	private LinkedList<TargetInfo> targets = new LinkedList<>();
 	/**
 	 * The current target
 	 */
-	private Vector2D target;
+	private TargetInfo target;
 	
 	/**
 	 * True if the mouse is hovering over this counter
@@ -42,7 +42,8 @@ public class Counter extends BaseEntity {
 	/**
 	 * How quickly the counter will move towards its current target
 	 */
-	private int speed = 8;
+	private static final int speed = 8;
+	
 	/**
 	 * Is the counter currently moving
 	 */
@@ -50,12 +51,12 @@ public class Counter extends BaseEntity {
 	
 	public Counter(int x, int y, Players player) {
 		super(x, y, WIDTH, WIDTH);
-		target = pos;
+		target = new TargetInfo(pos, false);
 		this.player = player;
 	}
 	
-	public void setTarget(Vector2D target) {
-		targets.add(target);
+	public void setTarget(Vector2D target, boolean captured) {
+		targets.add(new TargetInfo(target, captured));
 	}
 	
 	public void update(Vector2D mousePos) {
@@ -68,13 +69,13 @@ public class Counter extends BaseEntity {
 			return;
 		}
 		
-		double dist = Vector2D.dist(pos, target);
+		double dist = Vector2D.dist(pos, target.getPos());
 		
 		if (dist > speed) {
-			pos.add(Vector2D.sub(target, pos).setMag(speed));
+			pos.add(Vector2D.sub(target.getPos(), pos).setMag(target.captured ? speed * 2 : speed));
 			isMoving = true;
 		} else {    // At target
-			pos.set(target);
+			pos.set(target.getPos());
 			isMoving = false;
 			if (!targets.isEmpty()) {
 				target = targets.getFirst();
@@ -89,7 +90,7 @@ public class Counter extends BaseEntity {
 	 * @return Boolean if at the current target position
 	 */
 	private boolean atTarget() {
-		return pos == target;
+		return pos == target.getPos();
 	}
 	
 	/**
@@ -109,5 +110,24 @@ public class Counter extends BaseEntity {
 		g.setColor(mouseHovering ? ColorMaterial.amber
 			: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
+	}
+	
+	private class TargetInfo {
+		
+		private Vector2D target;
+		private boolean captured;
+		
+		public TargetInfo(Vector2D target, boolean captured) {
+			this.target = target;
+			this.captured = captured;
+		}
+		
+		public Vector2D getPos() {
+			return target;
+		}
+		
+		public boolean isCaptured() {
+			return captured;
+		}
 	}
 }

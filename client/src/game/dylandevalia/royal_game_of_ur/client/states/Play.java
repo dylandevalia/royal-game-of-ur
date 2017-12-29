@@ -104,11 +104,6 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.update(Framework.getMousePos());
 		}
-
-//		if (game.currentRoll == 0) {
-//			game.swapPlayers();
-//			game.reroll();
-//		}
 	}
 	
 	@Override
@@ -173,7 +168,7 @@ public class Play implements State {
 					return null;
 				default:
 					Tile nextTile = board.getNextTile(counter, spaces > 0);
-					counter.setTarget(counterInTilePosition(nextTile));
+					counter.setTarget(counterInTilePosition(nextTile), spaces < 0);
 					break;
 			}
 		}
