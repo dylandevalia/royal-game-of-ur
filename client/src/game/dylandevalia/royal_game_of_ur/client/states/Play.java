@@ -36,7 +36,7 @@ public class Play implements State {
 	/**
 	 * The number of counters each player should have
 	 */
-	private int noCounters = 1;
+	private int noCounters = 6;
 	/**
 	 * Player one's counters
 	 */

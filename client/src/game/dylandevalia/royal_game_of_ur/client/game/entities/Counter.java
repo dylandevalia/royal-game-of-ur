@@ -8,7 +8,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
-public class Counter extends BaseEntity {
+public class Counter extends Button {
 	
 	/**
 	 * The width of a counter scales to the window width
@@ -19,8 +19,8 @@ public class Counter extends BaseEntity {
 	 */
 	private static final int speed = 8;
 	/**
-	 * The current index through the counter's route
-	 * -1 is used to describe a counter not currently on the route
+	 * The current index through the counter's route -1 is used to describe a counter not currently
+	 * on the route
 	 */
 	public int currentRouteIndex = -1;
 	/**
@@ -45,7 +45,7 @@ public class Counter extends BaseEntity {
 	private boolean isMoving = false;
 	
 	public Counter(int x, int y, Players player) {
-		super(x, y, WIDTH, WIDTH);
+		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new TargetInfo(pos, false);
 		this.player = player;
 	}
@@ -55,10 +55,10 @@ public class Counter extends BaseEntity {
 	}
 	
 	public void update(Vector2D mousePos) {
-		super.update();
+		super.update(mousePos);
 		
 		// See if the mouse is over this counter
-		mouseHovering = isColliding(mousePos);
+//		mouseHovering = isColliding(mousePos);
 		
 		if (atTarget() && targets.isEmpty()) {
 			return;
@@ -79,6 +79,16 @@ public class Counter extends BaseEntity {
 		}
 	}
 	
+	@Override
+	public void draw(Graphics2D g, double interpolate) {
+		super.draw(g, interpolate);
+		
+		g.setColor(
+			isMouseHovering ? ColorMaterial.amber
+				: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
+		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
+	}
+	
 	/**
 	 * If the counter is at the current target
 	 *
@@ -86,25 +96,6 @@ public class Counter extends BaseEntity {
 	 */
 	private boolean atTarget() {
 		return pos == target.getPos();
-	}
-	
-	/**
-	 * Checks if the given position vector is intersecting with the counter
-	 *
-	 * @param other The other position
-	 * @return If the vector is within the counter
-	 */
-	public boolean isColliding(Vector2D other) {
-		return (Vector2D.dist(pos.copy().add(WIDTH / 2, WIDTH / 2), other) < WIDTH / 2);
-	}
-	
-	@Override
-	public void draw(Graphics2D g, double interpolate) {
-		super.draw(g, interpolate);
-		
-		g.setColor(mouseHovering ? ColorMaterial.amber
-			           : (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
-		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 	
 	private class TargetInfo {
