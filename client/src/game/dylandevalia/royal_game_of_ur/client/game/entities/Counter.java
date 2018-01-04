@@ -2,13 +2,14 @@ package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
-public class Counter extends Button {
+public class Counter extends AbstractButton {
 	
 	/**
 	 * The width of a counter scales to the window width
@@ -19,8 +20,8 @@ public class Counter extends Button {
 	 */
 	private static final int speed = 8;
 	/**
-	 * The current index through the counter's route -1 is used to describe a counter not currently
-	 * on the route
+	 * The current index through the counter's route
+	 * -1 is used to describe a counter not currently on the route
 	 */
 	public int currentRouteIndex = -1;
 	/**
@@ -50,15 +51,8 @@ public class Counter extends Button {
 		this.player = player;
 	}
 	
-	public void setTarget(Vector2D target, boolean captured) {
-		targets.add(new TargetInfo(target, captured));
-	}
-	
 	public void update(Vector2D mousePos) {
 		super.update(mousePos);
-		
-		// See if the mouse is over this counter
-//		mouseHovering = isColliding(mousePos);
 		
 		if (atTarget() && targets.isEmpty()) {
 			return;
@@ -86,7 +80,11 @@ public class Counter extends Button {
 		g.setColor(
 			isMouseHovering ? ColorMaterial.amber
 				: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
-		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
+		g.fillOval((int)drawPos.x, (int)drawPos.y, width, height);
+	}
+	
+	public void setTarget(Vector2D target, boolean captured) {
+		targets.add(new TargetInfo(target, captured));
 	}
 	
 	/**

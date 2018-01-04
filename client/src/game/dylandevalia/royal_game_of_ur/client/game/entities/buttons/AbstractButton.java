@@ -1,13 +1,14 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities;
+package game.dylandevalia.royal_game_of_ur.client.game.entities.buttons;
 
+import game.dylandevalia.royal_game_of_ur.client.game.entities.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
-public abstract class Button extends BaseEntity {
+public abstract class AbstractButton extends BaseEntity {
 	
-	private Shape shape;
 	protected boolean isMouseHovering;
+	private Shape shape;
 	
-	public Button(int x, int y, int width, int height, Shape shape) {
+	public AbstractButton(int x, int y, int width, int height, Shape shape) {
 		super(x, y, width, height);
 		this.shape = shape;
 	}
@@ -26,7 +27,7 @@ public abstract class Button extends BaseEntity {
 	 */
 	public boolean isColliding(Vector2D other) {
 		switch (shape) {
-			case SQUARE:
+			case RECTANGLE:
 				return !(
 					(other.x < pos.x)
 						|| (other.x > pos.x + width)
@@ -34,29 +35,21 @@ public abstract class Button extends BaseEntity {
 						|| (other.y > pos.y + height)
 				);
 			case CIRCLE:
-//				Vector2D center = new Vector2D(width / 2, height / 2);
-//				double a = other.x - center.x;
-//				double b = other.y - center.y;
-//				double rx = width / 2.0;
-//				double ry = height / 2.0;
-//				return (
-//					((a * a) / (rx * rx))
-//						+ ((b * b) / (ry * ry))
-//						< width / 2
-//				);
+				// True if the distance between the middle of the object and
+				// 'other' is less than the radius
 				return (
 					Vector2D.dist(
 						Vector2D.add(
 							pos, new Vector2D(width / 2, width / 2)
 						),
-						other)
-						< width / 2
+						other
+					) < width / 2
 				);
 		}
 		return false;
 	}
 	
 	public enum Shape {
-		SQUARE, CIRCLE
+		RECTANGLE, CIRCLE
 	}
 }

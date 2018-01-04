@@ -7,6 +7,7 @@ import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.MoveState;
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
+import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
@@ -19,20 +20,24 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 // TODO: Delay captured counter returning until taken
-// TODO: Use GameLogic more / swap out playerOnesTurn to GameLogic.currentPlayer
 public class Play implements State {
 	
 	/**
 	 * Reference to the state manager
 	 */
 	private StateManager stateManager;
+	
 	/**
 	 * GameLogic board
 	 */
 	private Board board = new Board(4, 8, 2);
 	
-	/* Counters */
+	/**
+	 * Holds the game logic
+	 */
+	private GameLogic game;
 	
+	/* Counters */
 	/**
 	 * The number of counters each player should have
 	 */
@@ -48,21 +53,33 @@ public class Play implements State {
 	/**
 	 * The clusters for each of the start and end areas
 	 */
+	
 	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
 	
-	private GameLogic game;
+	/* Buttons */
 	
+	/**
+	 * Reroll button
+	 */
+	private TextButton btn_roll;
 	
 	@Override
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		board.generate();
-		generateCounters();
-		Log.info("PLAY", "Generation completed");
-		
 		game = new GameLogic();
 		Log.info("PLAY", "GameLogic created");
+		
+		board.generate();
+		generateCounters();
+		
+		btn_roll = new TextButton(
+			0, 0, 100, 70,
+			"Roll",
+			ColorMaterial.amber, ColorMaterial.blueGrey,
+			game::reroll
+		);
+		Log.info("PLAY", "Generation completed");
 	}
 	
 	/**
@@ -97,13 +114,16 @@ public class Play implements State {
 	
 	@Override
 	public void update() {
+		Vector2D mousePos = Framework.getMousePos();
+		
 		board.update();
 		for (Counter counter : one_counters) {
-			counter.update(Framework.getMousePos());
+			counter.update(mousePos);
 		}
 		for (Counter counter : two_counters) {
-			counter.update(Framework.getMousePos());
+			counter.update(mousePos);
 		}
+		btn_roll.update(mousePos);
 	}
 	
 	@Override
@@ -119,6 +139,8 @@ public class Play implements State {
 		for (Counter counter : two_counters) {
 			counter.draw(g, interpolate);
 		}
+		
+		btn_roll.draw(g, interpolate);
 		
 		/* Text */
 		g.setColor(game.getPlayerColour());
@@ -220,58 +242,62 @@ public class Play implements State {
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
-		if (counter.isColliding(mousePos)) {    // Clicked on
+		if (!counter.isColliding(mousePos)) {
+			return false;
+		}
+		
+		// Clicked on
+		if (
+			counter.currentRouteIndex < board.getRouteLength()                      // In play
+				&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED  // Can move
+			) {
+			Tile finalCounter = moveCounter(counter, game.currentRoll);
+			
+			// Check if game is won
 			if (
-				counter.currentRouteIndex < board.getRouteLength()                  // In play
-					&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED  // Can move
+				one_countersEnd.getSize() == noCounters
+					|| two_countersEnd.getSize() == noCounters
 				) {
-				Tile finalCounter = moveCounter(counter, game.currentRoll);
-				
-				// Check if game is won
-				if (
-					one_countersEnd.getSize() == noCounters
-						|| two_countersEnd.getSize() == noCounters
-					) {
-					game.won = true;
-					Log.debug("PLAY", "GAME WON!");
-					return true;
-				}
-				
-				if (finalCounter == null || !finalCounter.isRosette()) {
-					game.swapPlayers();
-				}
-				game.reroll();
-				
-				while (true) {
-					// Check if there are possible moves
-					Counter[] counters = null;
-					if (game.currentPlayer == Players.ONE) {
-						counters = one_counters;
-					} else if (game.currentPlayer == Players.TWO) {
-						counters = two_counters;
-					}
-					if (game.currentRoll == 0) {
-						Log.debug("PLAY", "Rolled a 0 - swapping players");
-					} else if (!arePossibleMoves(counters, game.currentRoll)) {
-						Log.debug(
-							"PLAY-CLICK",
-							"No possible moves for player "
-								+ game.getPlayerName()
-								+ " - swapping players"
-						);
-					} else {
-						break;
-					}
-					
-					game.swapPlayers();
-					game.reroll();
-				}
-				
-				// Return since we found the counter, there's not point
-				// looking through the rest of them
+				game.won = true;
+				Log.debug("PLAY", "GAME WON!");
 				return true;
 			}
+			
+			if (finalCounter == null || !finalCounter.isRosette()) {
+				game.swapPlayers();
+			}
+			game.reroll();
+			
+			while (true) {
+				// Check if there are possible moves
+				Counter[] counters = null;
+				if (game.currentPlayer == Players.ONE) {
+					counters = one_counters;
+				} else if (game.currentPlayer == Players.TWO) {
+					counters = two_counters;
+				}
+				if (game.currentRoll == 0) {
+					Log.debug("PLAY", "Rolled a 0 - swapping players");
+				} else if (!arePossibleMoves(counters, game.currentRoll)) {
+					Log.debug(
+						"PLAY-CLICK",
+						"No possible moves for player "
+							+ game.getPlayerName()
+							+ " - swapping players"
+					);
+				} else {
+					break;
+				}
+				
+				game.swapPlayers();
+				game.reroll();
+			}
+			
+			// Return since we found the counter, there's not point
+			// looking through the rest of them
+			return true;
 		}
+		
 		return false;
 	}
 	
@@ -298,23 +324,32 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (game.acceptInput && !game.won) {
-			Vector2D mousePos = new Vector2D(e.getX(), e.getY());
-			if (game.currentPlayer == Players.ONE) {
-				for (Counter counter : one_counters) {
-					if (processClick(mousePos, counter)) {
-						return;
-					}
-				}
-			} else if (game.currentPlayer == Players.TWO) {
-				for (Counter counter : two_counters) {
-					if (processClick(mousePos, counter)) {
-						return;
-					}
-				}
-			} else {
-				Log.warn("PLAY", "Player NONE's turn");
-			}
+		if (!game.acceptInput || game.won) {
+			return;
 		}
+		
+		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
+		
+		if (btn_roll.isColliding(mousePos)) {
+			btn_roll.press();
+			return;
+		}
+		
+		if (game.currentPlayer == Players.ONE) {
+			for (Counter counter : one_counters) {
+				if (processClick(mousePos, counter)) {
+					return;
+				}
+			}
+		} else if (game.currentPlayer == Players.TWO) {
+			for (Counter counter : two_counters) {
+				if (processClick(mousePos, counter)) {
+					return;
+				}
+			}
+		} else {
+			Log.warn("PLAY", "Player NONE's turn");
+		}
+		
 	}
 }
