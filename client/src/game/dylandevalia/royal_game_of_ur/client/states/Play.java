@@ -73,10 +73,14 @@ public class Play implements State {
 		board.generate();
 		generateCounters();
 		
+		int btn_roll_width = 100;
+		int btn_roll_height = 60;
 		btn_roll = new TextButton(
-			0, 0, 100, 70,
+			Window.WIDTH - (int)(btn_roll_width * 1.15),
+			(Window.HEIGHT / 2) - (btn_roll_height / 2),
+			btn_roll_width, btn_roll_height,
 			"Roll",
-			ColorMaterial.amber, ColorMaterial.blueGrey,
+			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9],
 			game::reroll
 		);
 		Log.info("PLAY", "Generation completed");
@@ -117,12 +121,14 @@ public class Play implements State {
 		Vector2D mousePos = Framework.getMousePos();
 		
 		board.update();
+		
 		for (Counter counter : one_counters) {
 			counter.update(mousePos);
 		}
 		for (Counter counter : two_counters) {
 			counter.update(mousePos);
 		}
+		
 		btn_roll.update(mousePos);
 	}
 	
@@ -146,8 +152,9 @@ public class Play implements State {
 		g.setColor(game.getPlayerColour());
 		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
 		String turn = game.getPlayerName();
-		g.drawString("Player: " + turn, Window.WIDTH - 200, 50);
-		g.drawString("  Roll: " + game.currentRoll, Window.WIDTH - 200, Window.HEIGHT - 25);
+		g.drawString("Player: " + turn, (int)(Window.WIDTH * 0.8), 50);
+		String roll = (game.currentRoll < 0) ? "-" : Integer.toString(game.currentRoll);
+		g.drawString("Current Roll: " + roll, (int)(Window.WIDTH * 0.8), Window.HEIGHT - 25);
 	}
 	
 	/**
@@ -242,63 +249,59 @@ public class Play implements State {
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
-		if (!counter.isColliding(mousePos)) {
+		if (
+			!counter.isColliding(mousePos)                                      // Not clicked on
+				|| counter.currentRouteIndex >= board.getRouteLength()              // Out of play
+				|| board.checkMove(counter, game.currentRoll) == MoveState.BLOCKED  // Can't move
+			) {
 			return false;
 		}
 		
-		// Clicked on
+		Tile finalCounter = moveCounter(counter, game.currentRoll);
+		
+		// Check if game is won
 		if (
-			counter.currentRouteIndex < board.getRouteLength()                      // In play
-				&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED  // Can move
+			one_countersEnd.getSize() == noCounters
+				|| two_countersEnd.getSize() == noCounters
 			) {
-			Tile finalCounter = moveCounter(counter, game.currentRoll);
-			
-			// Check if game is won
-			if (
-				one_countersEnd.getSize() == noCounters
-					|| two_countersEnd.getSize() == noCounters
-				) {
-				game.won = true;
-				Log.debug("PLAY", "GAME WON!");
-				return true;
-			}
-			
-			if (finalCounter == null || !finalCounter.isRosette()) {
-				game.swapPlayers();
-			}
-			game.reroll();
-			
-			while (true) {
-				// Check if there are possible moves
-				Counter[] counters = null;
-				if (game.currentPlayer == Players.ONE) {
-					counters = one_counters;
-				} else if (game.currentPlayer == Players.TWO) {
-					counters = two_counters;
-				}
-				if (game.currentRoll == 0) {
-					Log.debug("PLAY", "Rolled a 0 - swapping players");
-				} else if (!arePossibleMoves(counters, game.currentRoll)) {
-					Log.debug(
-						"PLAY-CLICK",
-						"No possible moves for player "
-							+ game.getPlayerName()
-							+ " - swapping players"
-					);
-				} else {
-					break;
-				}
-				
-				game.swapPlayers();
-				game.reroll();
-			}
-			
-			// Return since we found the counter, there's not point
-			// looking through the rest of them
+			game.won = true;
+			Log.debug("PLAY", "GAME WON!");
 			return true;
 		}
 		
-		return false;
+		if (finalCounter == null || !finalCounter.isRosette()) {
+			game.swapPlayers();
+		}
+		game.reroll();
+		
+		while (true) {
+			// Check if there are possible moves
+			Counter[] counters = null;
+			if (game.currentPlayer == Players.ONE) {
+				counters = one_counters;
+			} else if (game.currentPlayer == Players.TWO) {
+				counters = two_counters;
+			}
+			if (game.currentRoll == 0) {
+				Log.debug("PLAY", "Rolled a 0 - swapping players");
+			} else if (!arePossibleMoves(counters, game.currentRoll)) {
+				Log.debug(
+					"PLAY-CLICK",
+					"No possible moves for player "
+						+ game.getPlayerName()
+						+ " - swapping players"
+				);
+			} else {
+				break;
+			}
+			
+			game.swapPlayers();
+			game.reroll();
+		}
+		
+		// Return since we found the counter, there's not point
+		// looking through the rest of them
+		return true;
 	}
 	
 	public void packetReceived(PacketManager packet) {
@@ -332,6 +335,7 @@ public class Play implements State {
 		
 		if (btn_roll.isColliding(mousePos)) {
 			btn_roll.press();
+			btn_roll.setActive(false);
 			return;
 		}
 		
@@ -350,6 +354,5 @@ public class Play implements State {
 		} else {
 			Log.warn("PLAY", "Player NONE's turn");
 		}
-		
 	}
 }

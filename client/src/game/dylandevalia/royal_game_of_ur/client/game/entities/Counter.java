@@ -37,10 +37,6 @@ public class Counter extends AbstractButton {
 	 */
 	private TargetInfo target;
 	/**
-	 * True if the mouse is hovering over this counter
-	 */
-	private boolean mouseHovering = false;
-	/**
 	 * Is the counter currently moving
 	 */
 	private boolean isMoving = false;

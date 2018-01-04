@@ -33,7 +33,7 @@ public class GameLogic {
 	/**
 	 * The current roll of the dice
 	 */
-	public int currentRoll;
+	public int currentRoll = -1;
 	/**
 	 * Has the game been won
 	 */
@@ -52,9 +52,9 @@ public class GameLogic {
 		currentPlayer = Players.ONE;
 		
 		// Keep rolling so first roll isn't a zero
-		do {
-			currentRoll = dice.roll();
-		} while (currentRoll == 0);
+//		do {
+//			currentRoll = dice.roll();
+//		} while (currentRoll == 0);
 	}
 	
 	public void swapPlayers() {
