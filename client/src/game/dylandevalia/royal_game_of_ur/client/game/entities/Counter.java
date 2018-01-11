@@ -10,38 +10,31 @@ import java.util.LinkedList;
 
 public class Counter extends AbstractButton {
 	
-	/**
-	 * The width of a counter scales to the window width
-	 */
+	/** The width of a counter scales to the window width */
 	public static final int WIDTH = Window.WIDTH / 15;
-	/**
-	 * How quickly the counter will move towards its current target
-	 */
+	
+	/** How quickly the counter will move towards its current target */
 	private static final int speed = 8;
+	
 	/**
 	 * The current index through the counter's route
 	 * -1 is used to describe a counter not currently on the route
 	 */
 	public int currentRouteIndex = -1;
-	/**
-	 * The player that the counter belongs to
-	 */
+	
+	/** The player that the counter belongs to */
 	public Players player;
-	/**
-	 * A stack of targets which the counter will move to in order
-	 */
+	
+	/** A stack of targets which the counter will move to in order */
 	private LinkedList<TargetInfo> targets = new LinkedList<>();
-	/**
-	 * The current target
-	 */
+	
+	/** The current target */
 	private TargetInfo target;
-	/**
-	 * Is the counter currently moving
-	 */
+	
+	/** Is the counter currently moving */
 	private boolean isMoving = false;
-	/**
-	 * Allow hovering over counter
-	 */
+	
+	/** Allow hovering over counter */
 	private boolean allowHover = true;
 	
 	

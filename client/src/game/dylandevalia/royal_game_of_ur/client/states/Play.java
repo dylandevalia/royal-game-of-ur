@@ -22,45 +22,32 @@ import java.awt.event.MouseEvent;
 // TODO: Delay captured counter returning until taken
 public class Play implements State {
 	
-	/**
-	 * Reference to the state manager
-	 */
+	/** Reference to the state manager */
 	private StateManager stateManager;
 	
-	/**
-	 * GameLogic board
-	 */
+	/** GameLogic board */
 	private Board board = new Board(4, 8, 2);
 	
-	/**
-	 * Holds the game logic
-	 */
+	/** Holds the game logic */
 	private GameLogic game;
 	
 	/* Counters */
-	/**
-	 * The number of counters each player should have
-	 */
-	private int noCounters = 6;
-	/**
-	 * Player one's counters
-	 */
-	private Counter[] one_counters = new Counter[noCounters];
-	/**
-	 * Player two's counters
-	 */
-	private Counter[] two_counters = new Counter[noCounters];
-	/**
-	 * The clusters for each of the start and end areas
-	 */
 	
+	/** The number of counters each player should have */
+	private int noCounters = 6;
+	
+	/** Player one's counters */
+	private Counter[] one_counters = new Counter[noCounters];
+	
+	/** Player two's counters */
+	private Counter[] two_counters = new Counter[noCounters];
+	
+	/** The clusters for each of the start and end areas */
 	private CounterCluster one_countersStart, one_countersEnd, two_countersStart, two_countersEnd;
 	
 	/* Buttons */
 	
-	/**
-	 * Reroll button
-	 */
+	/** Reroll button */
 	private TextButton btn_roll;
 	
 	@Override
@@ -123,7 +110,11 @@ public class Play implements State {
 		board.update();
 		
 		for (Counter counter : one_counters) {
-			counter.update(mousePos, game.allowMove && game.currentPlayer == Players.ONE);
+			counter.update(mousePos,
+				game.allowMove
+					&& game.currentPlayer == Players.ONE
+					&& board.checkMove(counter, game.currentRoll) != MoveState.BLOCKED
+			);
 		}
 		for (Counter counter : two_counters) {
 			counter.update(mousePos, game.allowMove && game.currentPlayer == Players.TWO);
@@ -183,7 +174,7 @@ public class Play implements State {
 	 * the last target
 	 *
 	 * @param counter The counter to move
-	 * @param spaces The amount of spaces to move the counter along the route
+	 * @param spaces  The amount of spaces to move the counter along the route
 	 */
 	private Tile moveCounter(Counter counter, int spaces) {
 		Tile[] route = board.getRoute(counter.player);
@@ -249,7 +240,7 @@ public class Play implements State {
 	 * Checks if, for the given set of counters, there are any possible moves
 	 *
 	 * @param counters The counters to check ({@link #one_counters} or {@link #two_counters})
-	 * @param spaces The amount of spaces the counters will move
+	 * @param spaces   The amount of spaces the counters will move
 	 * @return True if there are possible moves
 	 */
 	private boolean arePossibleMoves(Counter[] counters, int spaces) {
@@ -265,7 +256,7 @@ public class Play implements State {
 	 * Calculates if a counter has been click on and checks if it can move
 	 *
 	 * @param mousePos The position vector of the mouse pointer
-	 * @param counter The counter to check and move
+	 * @param counter  The counter to check and move
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
