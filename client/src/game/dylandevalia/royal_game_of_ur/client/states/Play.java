@@ -13,8 +13,8 @@ import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
-import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -81,7 +81,7 @@ public class Play implements State {
 			btn_roll_width, btn_roll_height,
 			"Roll",
 			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9],
-			game::reroll
+			game::rollDice
 		);
 		Log.info("PLAY", "Generation completed");
 	}
@@ -123,12 +123,13 @@ public class Play implements State {
 		board.update();
 		
 		for (Counter counter : one_counters) {
-			counter.update(mousePos);
+			counter.update(mousePos, game.allowMove && game.currentPlayer == Players.ONE);
 		}
 		for (Counter counter : two_counters) {
-			counter.update(mousePos);
+			counter.update(mousePos, game.allowMove && game.currentPlayer == Players.TWO);
 		}
 		
+		btn_roll.setActive(game.allowRoll);
 		btn_roll.update(mousePos);
 	}
 	
@@ -137,7 +138,9 @@ public class Play implements State {
 		g.setColor(ColorMaterial.GREY[2]);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
+		
 		/* Objects */
+		
 		board.draw(g, interpolate);
 		for (Counter counter : one_counters) {
 			counter.draw(g, interpolate);
@@ -148,13 +151,30 @@ public class Play implements State {
 		
 		btn_roll.draw(g, interpolate);
 		
+		
 		/* Text */
-		g.setColor(game.getPlayerColour());
+		
 		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
-		String turn = game.getPlayerName();
-		g.drawString("Player: " + turn, (int)(Window.WIDTH * 0.8), 50);
+		FontMetrics fm = g.getFontMetrics();
+		
+		// Current player
+		g.setColor(game.getPlayerColour()[5]);
+		String turn = "Player: " + game.getPlayerName();
+		g.drawString(turn, (Window.WIDTH - 20) - fm.stringWidth(turn), fm.getHeight());
+		
+		// Current / previous roll
+		// On first turn show '-'
 		String roll = (game.currentRoll < 0) ? "-" : Integer.toString(game.currentRoll);
-		g.drawString("Current Roll: " + roll, (int)(Window.WIDTH * 0.8), Window.HEIGHT - 25);
+		if (game.allowRoll) {
+			// Previous player rolled last
+			g.setColor(game.getPlayerColour(game.previousPlayer)[5]);
+			roll = "Previous Roll: " + roll;
+		} else {
+			// Else use current player colour
+			roll = "Current Roll: " + roll;
+		}
+		g.drawString(roll, (Window.WIDTH - 20) - fm.stringWidth(roll),
+			Window.HEIGHT - fm.getHeight());
 	}
 	
 	/**
@@ -269,10 +289,7 @@ public class Play implements State {
 			return true;
 		}
 		
-		if (finalCounter == null || !finalCounter.isRosette()) {
-			game.swapPlayers();
-		}
-		game.reroll();
+		game.nextTurn(finalCounter == null || !finalCounter.isRosette());
 		
 		while (true) {
 			// Check if there are possible moves
@@ -294,18 +311,11 @@ public class Play implements State {
 			} else {
 				break;
 			}
-			
-			game.swapPlayers();
-			game.reroll();
 		}
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them
 		return true;
-	}
-	
-	public void packetReceived(PacketManager packet) {
-	
 	}
 	
 	@Override
@@ -327,15 +337,22 @@ public class Play implements State {
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (!game.acceptInput || game.won) {
+		if (game.won) {
 			return;
 		}
 		
 		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
 		
-		if (btn_roll.isColliding(mousePos)) {
+		if (
+			game.allowRoll
+				&& btn_roll.isColliding(mousePos)
+			) {
 			btn_roll.press();
-			btn_roll.setActive(false);
+			return;
+		}
+		
+		if (!game.allowMove) {
+			// If not allowing moving counters then escape
 			return;
 		}
 		

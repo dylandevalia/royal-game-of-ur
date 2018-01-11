@@ -3,7 +3,6 @@ package game.dylandevalia.royal_game_of_ur.client.game.entities;
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
-import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
@@ -40,6 +39,11 @@ public class Counter extends AbstractButton {
 	 * Is the counter currently moving
 	 */
 	private boolean isMoving = false;
+	/**
+	 * Allow hovering over counter
+	 */
+	private boolean allowHover = true;
+	
 	
 	public Counter(int x, int y, Players player) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
@@ -47,8 +51,9 @@ public class Counter extends AbstractButton {
 		this.player = player;
 	}
 	
-	public void update(Vector2D mousePos) {
+	public void update(Vector2D mousePos, boolean allowHover) {
 		super.update(mousePos);
+		this.allowHover = allowHover;
 		
 		if (atTarget() && targets.isEmpty()) {
 			return;
@@ -73,9 +78,9 @@ public class Counter extends AbstractButton {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
+		int shade = (allowHover && isMouseHovering) ? 3 : 5;
 		g.setColor(
-			isMouseHovering ? ColorMaterial.amber
-				: (player == Players.ONE ? GameLogic.one_colour : GameLogic.two_colour));
+			(player == Players.ONE) ? GameLogic.one_colour[shade] : GameLogic.two_colour[shade]);
 		g.fillOval((int)drawPos.x, (int)drawPos.y, width, height);
 	}
 	
