@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
+import game.dylandevalia.royal_game_of_ur.client.game.AIController;
 import game.dylandevalia.royal_game_of_ur.client.game.Board;
 import game.dylandevalia.royal_game_of_ur.client.game.CounterCluster;
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
@@ -54,7 +55,7 @@ public class Play implements State {
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic();
+		game = new GameLogic(new AIController(board, one_counters, two_counters));
 		Log.info("PLAY", "GameLogic created");
 		
 		board.generate();
@@ -73,9 +74,7 @@ public class Play implements State {
 		Log.info("PLAY", "Generation completed");
 	}
 	
-	/**
-	 * Generates the counters, clusters and their starting positions
-	 */
+	/** Generates the counters, clusters and their starting positions */
 	private void generateCounters() {
 		one_countersStart = new CounterCluster(
 			counterInTilePosition(board.getRoute(Players.ONE)[0])
@@ -154,18 +153,23 @@ public class Play implements State {
 		g.drawString(turn, (Window.WIDTH - 20) - fm.stringWidth(turn), fm.getHeight());
 		
 		// Current / previous roll
-		// On first turn show '-'
-		String roll = (game.currentRoll < 0) ? "-" : Integer.toString(game.currentRoll);
-		if (game.allowRoll) {
-			// Previous player rolled last
-			g.setColor(game.getPlayerColour(game.previousPlayer)[5]);
-			roll = "Previous Roll: " + roll;
-		} else {
-			// Else use current player colour
-			roll = "Current Roll: " + roll;
+		// On first turn show nothing
+		if (game.currentRoll > 0) {
+			String roll = Integer.toString(game.currentRoll);
+			if (game.allowRoll) {
+				// Previous player rolled last
+				g.setColor(game.getPlayerColour(game.previousPlayer)[5]);
+				roll = "Previous Roll: " + roll;
+			} else {
+				// Else use current player colour
+				roll = "Current Roll: " + roll;
+			}
+			g.drawString(
+				roll,
+				(Window.WIDTH - 20) - fm.stringWidth(roll),
+				Window.HEIGHT - fm.getHeight()
+			);
 		}
-		g.drawString(roll, (Window.WIDTH - 20) - fm.stringWidth(roll),
-			Window.HEIGHT - fm.getHeight());
 	}
 	
 	/**
@@ -237,22 +241,6 @@ public class Play implements State {
 	}
 	
 	/**
-	 * Checks if, for the given set of counters, there are any possible moves
-	 *
-	 * @param counters The counters to check ({@link #one_counters} or {@link #two_counters})
-	 * @param spaces   The amount of spaces the counters will move
-	 * @return True if there are possible moves
-	 */
-	private boolean arePossibleMoves(Counter[] counters, int spaces) {
-		for (Counter counter : counters) {
-			if (board.checkMove(counter, spaces) != MoveState.BLOCKED) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
 	 * Calculates if a counter has been click on and checks if it can move
 	 *
 	 * @param mousePos The position vector of the mouse pointer
@@ -267,6 +255,7 @@ public class Play implements State {
 			) {
 			return false;
 		}
+		// Counter was clicked on, in play and can move
 		
 		Tile finalCounter = moveCounter(counter, game.currentRoll);
 		
@@ -282,31 +271,20 @@ public class Play implements State {
 		
 		game.nextTurn(finalCounter == null || !finalCounter.isRosette());
 		
-		while (true) {
-			// Check if there are possible moves
-			Counter[] counters = null;
-			if (game.currentPlayer == Players.ONE) {
-				counters = one_counters;
-			} else if (game.currentPlayer == Players.TWO) {
-				counters = two_counters;
-			}
-			if (game.currentRoll == 0) {
-				Log.debug("PLAY", "Rolled a 0 - swapping players");
-			} else if (!arePossibleMoves(counters, game.currentRoll)) {
-				Log.debug(
-					"PLAY-CLICK",
-					"No possible moves for player "
-						+ game.getPlayerName()
-						+ " - swapping players"
-				);
-			} else {
-				break;
-			}
-		}
-		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them
 		return true;
+	}
+	
+	private Counter[] getPlayerCounters() {
+		if (game.currentPlayer == Players.ONE) {
+			return one_counters;
+		} else if (game.currentPlayer == Players.TWO) {
+			return two_counters;
+		} else {
+			Log.error("PLAY", "Unknown player to get counter");
+			return null;
+		}
 	}
 	
 	@Override
@@ -347,20 +325,11 @@ public class Play implements State {
 			return;
 		}
 		
-		if (game.currentPlayer == Players.ONE) {
-			for (Counter counter : one_counters) {
-				if (processClick(mousePos, counter)) {
-					return;
-				}
+		// Go through current player's counters and see if it was clicked
+		for (Counter counter : getPlayerCounters()) {
+			if (processClick(mousePos, counter)) {
+				return;
 			}
-		} else if (game.currentPlayer == Players.TWO) {
-			for (Counter counter : two_counters) {
-				if (processClick(mousePos, counter)) {
-					return;
-				}
-			}
-		} else {
-			Log.warn("PLAY", "Player NONE's turn");
 		}
 	}
 }

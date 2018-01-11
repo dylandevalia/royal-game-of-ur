@@ -21,11 +21,11 @@ public class GameLogic {
 	/**
 	 * The name for {@link Players}.ONE
 	 */
-	public static final String one_name = "1";
+	private static final String one_name = "1";
 	/**
 	 * The name for {@link Players}.TWO
 	 */
-	public static final String two_name = "2";
+	private static final String two_name = "2";
 	/**
 	 * The current player's turn
 	 */
@@ -50,15 +50,18 @@ public class GameLogic {
 	 * Should the game be allowed to roll
 	 */
 	public boolean allowRoll = true;
+	public AIController ai;
 	/**
 	 * The dice controller
 	 */
 	private UrDice dice = new UrDice();
 	
-	public GameLogic() {
+	public GameLogic(AIController ai) {
 		// Set player to one
 		currentPlayer = Players.ONE;
 		previousPlayer = Players.ONE;
+		
+		this.ai = ai;
 	}
 	
 	private void swapPlayers() {
@@ -86,7 +89,19 @@ public class GameLogic {
 		allowRoll = false;
 		
 		currentRoll = dice.roll();
+		checkMove();
+	}
+	
+	private void checkMove() {
 		if (currentRoll == 0) {
+			nextTurn(true);
+		} else if (!ai.arePossibleMoves(currentPlayer, currentRoll)) {
+			Log.debug(
+				"PLAY/CLICK",
+				"No possible moves for player "
+					+ getPlayerName()
+					+ " - swapping players"
+			);
 			nextTurn(true);
 		}
 	}
