@@ -50,6 +50,9 @@ public class GameLogic {
 	 * Should the game be allowed to roll
 	 */
 	public boolean allowRoll = true;
+	/**
+	 * AI controller
+	 */
 	public AIController ai;
 	/**
 	 * The dice controller
@@ -64,6 +67,9 @@ public class GameLogic {
 		this.ai = ai;
 	}
 	
+	/**
+	 * Swaps the current player
+	 */
 	private void swapPlayers() {
 		if (currentPlayer == Players.ONE) {
 			currentPlayer = Players.TWO;
@@ -74,6 +80,11 @@ public class GameLogic {
 		}
 	}
 	
+	/**
+	 * Resets turn and switches players if needed
+	 *
+	 * @param swapPlayers Whether the players should be swapped
+	 */
 	public void nextTurn(boolean swapPlayers) {
 		previousPlayer = currentPlayer;
 		if (swapPlayers) {
@@ -84,6 +95,10 @@ public class GameLogic {
 		allowRoll = true;
 	}
 	
+	/**
+	 * Rerolls the dice and resets {@link #allowMove} and {@link #allowRoll} booleans
+	 * Also checks if the next move is possible and resets if required
+	 */
 	public void rollDice() {
 		allowMove = true;
 		allowRoll = false;
@@ -92,6 +107,9 @@ public class GameLogic {
 		checkMove();
 	}
 	
+	/**
+	 * Checks if the next move is possible or should swap and reset players
+	 */
 	private void checkMove() {
 		if (currentRoll == 0) {
 			nextTurn(true);

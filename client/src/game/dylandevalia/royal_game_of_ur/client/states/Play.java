@@ -74,7 +74,9 @@ public class Play implements State {
 		Log.info("PLAY", "Generation completed");
 	}
 	
-	/** Generates the counters, clusters and their starting positions */
+	/**
+	 * Generates the counters, clusters and their starting positions
+	 */
 	private void generateCounters() {
 		one_countersStart = new CounterCluster(
 			counterInTilePosition(board.getRoute(Players.ONE)[0])
@@ -276,6 +278,11 @@ public class Play implements State {
 		return true;
 	}
 	
+	/**
+	 * Gets the current player's counters
+	 *
+	 * @return The current player's counters
+	 */
 	private Counter[] getPlayerCounters() {
 		if (game.currentPlayer == Players.ONE) {
 			return one_counters;
@@ -307,19 +314,23 @@ public class Play implements State {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (game.won) {
+			// If game is won, ignore
 			return;
 		}
 		
+		// Get mouse position
 		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
 		
+		/* Button */
 		if (
 			game.allowRoll
 				&& btn_roll.isColliding(mousePos)
-			) {
+		) {
 			btn_roll.press();
 			return;
 		}
 		
+		/* Counters */
 		if (!game.allowMove) {
 			// If not allowing moving counters then escape
 			return;
