@@ -4,7 +4,6 @@ import game.dylandevalia.royal_game_of_ur.client.game.entities.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.client.gui.Canvas;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
-import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -29,10 +28,6 @@ public class MainMenu implements State {
 		g2d.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
 		box.draw(g2d, interpolate);
-	}
-	
-	public void packetReceived(PacketManager packet) {
-	
 	}
 	
 	public void keyPressed(KeyEvent e) {

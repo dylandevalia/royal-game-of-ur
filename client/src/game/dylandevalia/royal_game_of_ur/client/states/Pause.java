@@ -1,7 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -25,10 +24,6 @@ public class Pause implements State {
 	public void draw(Graphics2D g2d, double interpolate) {
 		g2d.setColor(Color.RED);
 		g2d.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-	}
-	
-	public void packetReceived(PacketManager packet) {
-	
 	}
 	
 	@Override

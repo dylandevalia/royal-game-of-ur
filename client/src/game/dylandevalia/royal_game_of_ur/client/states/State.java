@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -15,8 +14,8 @@ public interface State {
 	void update();
 	
 	void draw(Graphics2D g, double interpolate);
-	
-	void packetReceived(PacketManager packet);
+
+//	void packetReceived(PacketManager packet);
 	
 	void keyPressed(KeyEvent e);
 	

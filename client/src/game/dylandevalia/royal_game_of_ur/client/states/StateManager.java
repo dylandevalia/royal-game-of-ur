@@ -2,7 +2,6 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 
 import com.esotericsoftware.kryonet.Connection;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
-import game.dylandevalia.royal_game_of_ur.utility.networking.PacketManager;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -73,10 +72,6 @@ public class StateManager {
 	
 	public void clientConnected(Connection c) {
 	
-	}
-	
-	public void packetReceived(Connection c, PacketManager packet) {
-		currentState.packetReceived(packet);
 	}
 	
 	public void clientDisconnected(Connection c) {

@@ -62,7 +62,7 @@ public class ClientController {
 //					}
 					
 					PacketManager packet = (PacketManager) p;
-					stateManager.packetReceived(c, packet);
+//					stateManager.packetReceived(c, packet);
 				}
 			}
 			
