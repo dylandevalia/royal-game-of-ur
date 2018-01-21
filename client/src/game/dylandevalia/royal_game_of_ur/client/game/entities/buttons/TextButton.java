@@ -42,7 +42,7 @@ public class TextButton extends AbstractButton {
 			active ? (isMouseHovering ? hoverColor : baseColor)
 				: ColorMaterial.blueGrey
 		);
-		g.fillRect((int)drawPos.x, (int)drawPos.y, width, height);
+		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		g.setColor(textColor);
 		drawCenteredString(g, message, new Font("TimesRoman", Font.BOLD, 28));
 	}
@@ -72,12 +72,20 @@ public class TextButton extends AbstractButton {
 		// Get the FontMetrics
 		FontMetrics metrics = g.getFontMetrics(font);
 		// Determine the X coordinate for the text
-		int x = (int)pos.x + (width - metrics.stringWidth(text)) / 2;
+		int x = (int) pos.x + (width - metrics.stringWidth(text)) / 2;
 		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-		int y = (int)pos.y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+		int y = (int) pos.y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
 		// Set the font
 		g.setFont(font);
 		// Draw the String
 		g.drawString(text, x, y);
+	}
+	
+	/**
+	 * Interface which defines callback method
+	 */
+	public interface ButtonCallback {
+		
+		void callback();
 	}
 }
