@@ -240,19 +240,15 @@ public class GameLogic {
 		final int oldRouteIndex = counter.currentRouteIndex;
 		
 		// Go through each tile one by one
-		for (int i = 0; i < Math.abs(spaces); i++) {
-			switch (AIController.checkMove(route, counter, (spaces > 0) ? 1 : -1)) {
-				case START:
-					player.getStartCluster().add(counter);
-					counter.currentRouteIndex = -1;
-					return null;
+		for (int i = 0; i < spaces; i++) {
+			switch (AIController.checkMove(route, counter, 1)) {
 				case END:
 					player.getEndCluster().add(counter);
 					counter.currentRouteIndex = board.getRouteLength();
 					return null;
 				default:
-					Tile nextTile = board.getNextTile(route, counter, spaces > 0);
-					counter.setTarget(counterInTilePosition(nextTile), spaces < 0);
+					Tile nextTile = board.getNextTile(route, counter, true);
+					counter.setTarget(counterInTilePosition(nextTile), false);
 					break;
 			}
 		}
