@@ -5,7 +5,14 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 public abstract class AbstractButton extends BaseEntity {
 	
+	/** Is the mouse hovering over this button */
 	protected boolean isMouseHovering;
+	
+	/**
+	 * The shape pattern of the object
+	 *
+	 * @see Shape
+	 */
 	private Shape shape;
 	
 	public AbstractButton(int x, int y, int width, int height, Shape shape) {
@@ -49,6 +56,9 @@ public abstract class AbstractButton extends BaseEntity {
 		return false;
 	}
 	
+	/**
+	 * Enum to define the shape of the button
+	 */
 	public enum Shape {
 		RECTANGLE, CIRCLE
 	}

@@ -8,7 +8,10 @@ public class Tile extends BaseEntity {
 	
 	public static int WIDTH = Window.WIDTH / 10;
 	
+	/** If the tile is a rosette tile */
 	private boolean rosette = false;
+	
+	/** Reference to the counter on the tile */
 	private Counter counter = null;
 	
 	public Tile(int x, int y) {

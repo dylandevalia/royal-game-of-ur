@@ -54,12 +54,16 @@ public class Counter extends AbstractButton {
 		
 		double dist = Vector2D.dist(pos, target.getPos());
 		
-		if (dist > speed) {
+		if (dist > speed) { // If more that speed away from the target
+			// Move speed towards target
 			pos.add(Vector2D.sub(target.getPos(), pos).setMag(target.captured ? speed * 2 : speed));
 			isMoving = true;
-		} else {    // At target
+		} else {    // Less that speed away from target
+			// So just move to target
 			pos.set(target.getPos());
 			isMoving = false;
+			
+			// Target is next target if exists
 			if (!targets.isEmpty()) {
 				target = targets.getFirst();
 				targets.removeFirst();
@@ -91,9 +95,14 @@ public class Counter extends AbstractButton {
 		return pos == target.getPos();
 	}
 	
+	/**
+	 * Holds information about target
+	 */
 	private class TargetInfo {
 		
+		/** The position of the target */
 		private Vector2D target;
+		/** If the target was captured */
 		private boolean captured;
 		
 		public TargetInfo(Vector2D target, boolean captured) {

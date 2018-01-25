@@ -6,11 +6,26 @@ import java.awt.Graphics2D;
 
 public class BaseEntity {
 	
+	/** The current position of the entity */
 	protected Vector2D pos = new Vector2D();
-	private Vector2D lastPos = new Vector2D();
+	
+	/** The drawable position to be used in {@link #draw(Graphics2D, double)} */
 	protected Vector2D drawPos = new Vector2D();
+	
+	/** The dimensions of the entity */
 	protected int width, height;
+	
+	/**
+	 * If the entity is currently on screen
+	 * Calculated in {@link #isOnScreen()}
+	 */
 	protected boolean onScreen;
+	
+	/**
+	 * The previous position of the entity used to
+	 * calculate {@link #drawPos}
+	 */
+	private Vector2D lastPos = new Vector2D();
 	
 	protected BaseEntity(int x, int y, int width, int height) {
 		this.pos.set(x, y);
@@ -39,6 +54,9 @@ public class BaseEntity {
 		return height;
 	}
 	
+	/**
+	 * Uses the interpolation value to calculate a draw position
+	 */
 	private void calculateDrawPos(double interpolate) {
 		if (pos == lastPos) {
 			drawPos = pos;
@@ -47,6 +65,9 @@ public class BaseEntity {
 		drawPos.y = ((pos.y - lastPos.y) * interpolate + lastPos.y);
 	}
 	
+	/**
+	 * Checks if the drawable object is on the screen
+	 */
 	private void isOnScreen() {
 		onScreen =
 			!(drawPos.x + width < 0 || drawPos.x > Window.WIDTH

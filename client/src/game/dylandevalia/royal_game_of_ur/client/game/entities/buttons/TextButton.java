@@ -9,9 +9,19 @@ import java.awt.Graphics2D;
 
 public class TextButton extends AbstractButton {
 	
+	/** The colour of the button if inactive */
+	private static final Color inactiveColor = ColorMaterial.blueGrey;
+	
+	/** The message that the button will show */
 	private String message;
+	
+	/** The colours that the button will turn for each state */
 	private Color baseColor, hoverColor, textColor;
+	
+	/** The callback interface */
 	private ButtonCallback callback;
+	
+	/** Is the button currently active */
 	private boolean active = true;
 	
 	public TextButton(
@@ -39,15 +49,20 @@ public class TextButton extends AbstractButton {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
+		// Sets colour depending on state (eg. hovering, normal, in-active)
 		g.setColor(
 			active ? (isMouseHovering ? hoverColor : baseColor)
-				: ColorMaterial.blueGrey
+				: inactiveColor
 		);
 		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		g.setColor(textColor);
 		drawCenteredString(g, message, new Font("TimesRoman", Font.BOLD, 28));
 	}
 	
+	/**
+	 * Call this function when the button is pressed
+	 * Runs callback function
+	 */
 	public void press() {
 		if (active) {
 			callback.callback();
@@ -65,7 +80,7 @@ public class TextButton extends AbstractButton {
 	/**
 	 * Draw a String centered in the middle of a Rectangle
 	 *
-	 * @param g The Graphics instance
+	 * @param g    The Graphics instance
 	 * @param text The String to draw
 	 * @param font The Font to use
 	 */

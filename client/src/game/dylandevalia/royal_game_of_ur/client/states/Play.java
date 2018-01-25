@@ -96,10 +96,13 @@ public class Play implements State {
 	
 	@Override
 	public void update() {
+		// Get mouse position
 		Vector2D mousePos = Framework.getMousePos();
 		
+		// Update board (tiles)
 		board.update();
 		
+		// Update counters
 		for (Counter counter : playerOne.getCounters()) {
 			counter.update(mousePos,
 				game.allowMove
@@ -114,6 +117,7 @@ public class Play implements State {
 			);
 		}
 		
+		// Update buttons
 		btn_roll.setActive(game.allowRoll);
 		btn_roll.update(mousePos);
 	}
