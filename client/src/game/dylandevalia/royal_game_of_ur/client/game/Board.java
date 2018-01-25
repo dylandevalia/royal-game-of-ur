@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.MoveState;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
@@ -97,40 +96,6 @@ public class Board {
 			return route[route.length - 1];
 		}
 		return route[counter.currentRouteIndex];
-	}
-	
-	/**
-	 * Checks move a certain amount ahead and returns the corresponding {@link MoveState}
-	 *
-	 * @param counter The counter to calculate new position
-	 * @param spaces  The amount of spaces ahead to check
-	 * @return The appropriate {@link MoveState} according to the move
-	 */
-	public MoveState checkMove(Tile[] route, Counter counter, int spaces) {
-		int newIndex = counter.currentRouteIndex + spaces;
-		
-		/* Going off the board */
-		if (newIndex < 0) {
-			return MoveState.START;
-		} else if (newIndex == route.length) {
-			// Needs exact number to exit board
-			return MoveState.END;
-		} else if (newIndex > route.length) {
-			return MoveState.BLOCKED;
-		}
-		
-		Tile newTile = route[newIndex];
-		if (newTile.hasCounter()) {
-			if (newTile.getCounter().player == counter.player) {
-				return MoveState.BLOCKED;
-			} else if (newTile.isRosette()) {
-				return MoveState.BLOCKED;
-			} else {
-				return MoveState.CAPTURE;
-			}
-		}
-		
-		return MoveState.EMPTY;
 	}
 	
 	public int getRouteLength() {

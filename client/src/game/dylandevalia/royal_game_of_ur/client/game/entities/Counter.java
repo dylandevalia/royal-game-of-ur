@@ -1,10 +1,10 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
 import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
@@ -14,7 +14,7 @@ public class Counter extends AbstractButton {
 	public static final int WIDTH = Window.WIDTH / 15;
 	
 	/** How quickly the counter will move towards its current target */
-	private static final int speed = 8;
+	public static final int SPEED = 8;
 	
 	/**
 	 * The current index through the counter's route
@@ -54,9 +54,9 @@ public class Counter extends AbstractButton {
 		
 		double dist = Vector2D.dist(pos, target.getPos());
 		
-		if (dist > speed) { // If more that speed away from the target
+		if (dist > SPEED) { // If more that speed away from the target
 			// Move speed towards target
-			pos.add(Vector2D.sub(target.getPos(), pos).setMag(target.captured ? speed * 2 : speed));
+			pos.add(Vector2D.sub(target.getPos(), pos).setMag(target.captured ? SPEED * 2 : SPEED));
 			isMoving = true;
 		} else {    // Less that speed away from target
 			// So just move to target
@@ -71,14 +71,11 @@ public class Counter extends AbstractButton {
 		}
 	}
 	
-	@Override
-	public void draw(Graphics2D g, double interpolate) {
+	public void draw(Graphics2D g, double interpolate, Color[] colors) {
 		super.draw(g, interpolate);
 		
 		int shade = (allowHover && isMouseHovering) ? 3 : 5;
-		g.setColor(
-			(player == PlayerNames.ONE) ? GameLogic.one_colour[shade]
-				: GameLogic.two_colour[shade]);
+		g.setColor(colors[shade]);
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 	

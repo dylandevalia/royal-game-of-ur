@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client.game;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
 
 public class Player {
 	
@@ -22,8 +23,16 @@ public class Player {
 	/** The route that the player's counters will follow */
 	private Tile[] route;
 	
-	public Player(PlayerNames name, int routeLength) {
+	/**
+	 * The colours associated with the player
+	 *
+	 * @see game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial
+	 */
+	private Color[] colors;
+	
+	public Player(PlayerNames name, Color[] colors, int routeLength) {
 		this.name = name;
+		this.colors = colors;
 		route = new Tile[routeLength];
 	}
 	
@@ -45,6 +54,10 @@ public class Player {
 		}
 	}
 	
+	public PlayerNames getName() {
+		return name;
+	}
+	
 	public Counter[] getCounters() {
 		return counters;
 	}
@@ -59,6 +72,14 @@ public class Player {
 	
 	public CounterCluster getEndCluster() {
 		return endCluster;
+	}
+	
+	public Color[] getColors() {
+		return colors;
+	}
+	
+	public Color getMainColor() {
+		return colors[5];
 	}
 	
 	/**
