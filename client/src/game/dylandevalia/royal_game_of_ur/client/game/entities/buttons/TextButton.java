@@ -17,8 +17,7 @@ public class TextButton extends AbstractButton {
 	public TextButton(
 		int x, int y, int width, int height,
 		String message,
-		Color baseColor, Color hoverColor, Color textColor,
-		ButtonCallback callback
+		Color baseColor, Color hoverColor, Color textColor
 	) {
 		super(x, y, width, height, Shape.RECTANGLE);
 		
@@ -27,7 +26,9 @@ public class TextButton extends AbstractButton {
 		this.baseColor = baseColor;
 		this.hoverColor = hoverColor;
 		this.textColor = textColor;
-		
+	}
+	
+	public void setOnClickListener(ButtonCallback callback) {
 		this.callback = callback;
 	}
 	

@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -23,7 +23,7 @@ public class Counter extends AbstractButton {
 	public int currentRouteIndex = -1;
 	
 	/** The player that the counter belongs to */
-	public Players player;
+	public PlayerNames player;
 	
 	/** A stack of targets which the counter will move to in order */
 	private LinkedList<TargetInfo> targets = new LinkedList<>();
@@ -38,7 +38,7 @@ public class Counter extends AbstractButton {
 	private boolean allowHover = true;
 	
 	
-	public Counter(int x, int y, Players player) {
+	public Counter(int x, int y, PlayerNames player) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new TargetInfo(pos, false);
 		this.player = player;
@@ -73,8 +73,9 @@ public class Counter extends AbstractButton {
 		
 		int shade = (allowHover && isMouseHovering) ? 3 : 5;
 		g.setColor(
-			(player == Players.ONE) ? GameLogic.one_colour[shade] : GameLogic.two_colour[shade]);
-		g.fillOval((int)drawPos.x, (int)drawPos.y, width, height);
+			(player == PlayerNames.ONE) ? GameLogic.one_colour[shade]
+				: GameLogic.two_colour[shade]);
+		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 	
 	public void setTarget(Vector2D target, boolean captured) {

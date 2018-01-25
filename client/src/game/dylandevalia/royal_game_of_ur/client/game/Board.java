@@ -1,42 +1,28 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
 import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.MoveState;
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
-import game.dylandevalia.royal_game_of_ur.utility.Log;
 import java.awt.Graphics2D;
 
 public class Board {
 	
-	/**
-	 * The lengths of each segment of the board
-	 */
+	/** The lengths of each segment of the board */
 	private int startingTilesLen, middleTilesLen, endTilesLen;
-	/**
-	 * The array of all tiles in the board
-	 */
+	
+	/** The array of all tiles in the board */
 	private Tile[] tiles;
-	/**
-	 * The array of tiles which player one will follow in order
-	 */
-	private Tile[] one_route;
-	/**
-	 * The array of tiles which player two will follow in order
-	 */
-	private Tile[] two_route;
-	/**
-	 * The indexes in {@link #tiles} which should be rosette squares
-	 */
+	
+	/** The indexes in {@link #tiles} which should be rosette squares */
 	private int[] rosetteSquares = {3, 7, 11, 17, 19};
 	
 	/**
 	 * Creates the board using {@link Tile}s in the correct positions
 	 *
 	 * @param startingTilesLen The length of the starting segment
-	 * @param middleTilesLen The length of the middle segment
-	 * @param endTilesLen The length of the end segment
+	 * @param middleTilesLen   The length of the middle segment
+	 * @param endTilesLen      The length of the end segment
 	 */
 	public Board(int startingTilesLen, int middleTilesLen, int endTilesLen) {
 		this.startingTilesLen = startingTilesLen;
@@ -44,15 +30,13 @@ public class Board {
 		this.endTilesLen = endTilesLen;
 		
 		tiles = new Tile[(2 * startingTilesLen) + middleTilesLen + (2 * endTilesLen)];
-		one_route = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
-		two_route = new Tile[startingTilesLen + middleTilesLen + endTilesLen];
 	}
 	
 	/**
 	 * Generates the board of tiles using {@link #startingTilesLen}, {@link #middleTilesLen} and
 	 * {@link #endTilesLen} as well as {@link #rosetteSquares}
 	 */
-	public void generate() {
+	public void generate(Tile[] one_route, Tile[] two_route) {
 		// Set tile width programmatically based on size available
 		Tile.WIDTH = Window.WIDTH / (middleTilesLen + 2);
 		
@@ -105,8 +89,7 @@ public class Board {
 	 * @param counter The counter to move
 	 * @return The tile to move to
 	 */
-	public Tile getNextTile(Counter counter, boolean forward) {
-		Tile[] route = getRoute(counter.player);
+	public Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
 		counter.currentRouteIndex += forward ? 1 : -1;
 		if (counter.currentRouteIndex < 0) {
 			return route[0];
@@ -117,34 +100,13 @@ public class Board {
 	}
 	
 	/**
-	 * Returns the route of the given player
-	 *
-	 * @param player The player whose route to get
-	 * @return Either {@link #one_route} or {@link #two_route} or {@code null} if incorrect player
-	 * is given
-	 * @see Players
-	 */
-	public Tile[] getRoute(Players player) {
-		if (player == Players.ONE) {
-			return one_route;
-		} else if (player == Players.TWO) {
-			return two_route;
-		} else {
-			Log.error("Board", "Get route unknown player: " + player,
-				new IllegalArgumentException());
-			return null;
-		}
-	}
-	
-	/**
 	 * Checks move a certain amount ahead and returns the corresponding {@link MoveState}
 	 *
 	 * @param counter The counter to calculate new position
-	 * @param spaces The amount of spaces ahead to check
+	 * @param spaces  The amount of spaces ahead to check
 	 * @return The appropriate {@link MoveState} according to the move
 	 */
-	public MoveState checkMove(Counter counter, int spaces) {
-		Tile[] route = getRoute(counter.player);
+	public MoveState checkMove(Tile[] route, Counter counter, int spaces) {
 		int newIndex = counter.currentRouteIndex + spaces;
 		
 		/* Going off the board */
@@ -172,9 +134,7 @@ public class Board {
 	}
 	
 	public int getRouteLength() {
-		// Using one_route but both one_route and
-		// two_route should be the same length
-		return one_route.length;
+		return startingTilesLen + middleTilesLen + endTilesLen;
 	}
 	
 	public void update() {

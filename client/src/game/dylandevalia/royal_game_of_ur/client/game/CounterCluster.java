@@ -1,6 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic.Players;
+import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -11,22 +11,16 @@ import java.util.ArrayList;
  */
 public class CounterCluster {
 	
-	/**
-	 * The array-list of counters
-	 */
+	/** The array-list of counters */
 	private ArrayList<Counter> counters = new ArrayList<>();
-	/**
-	 * The array-list of starting positions
-	 */
+	
+	/** The array-list of starting positions */
 	private ArrayList<Vector2D> startPos = new ArrayList<>();
 	
-	/**
-	 * The initial position where the counters should be displayed
-	 */
+	/** The initial position where the counters should be displayed */
 	private Vector2D initialPos;
-	/**
-	 * Whether the stack should extend left or right
-	 */
+	
+	/** Whether the stack should extend left or right */
 	private boolean goLeft;
 	
 	/**
@@ -34,7 +28,7 @@ public class CounterCluster {
 	 * should go left or right
 	 *
 	 * @param initialPos The initial position for the first counter
-	 * @param goLeft Should the counters stack left or right
+	 * @param goLeft     Should the counters stack left or right
 	 */
 	public CounterCluster(Vector2D initialPos, boolean goLeft) {
 		this.initialPos = initialPos;
@@ -44,10 +38,10 @@ public class CounterCluster {
 	/**
 	 * Adds a new counter to the array-list and returns a reference to it
 	 *
-	 * @param player The player/owner of the counter ({@link Players})
+	 * @param player The player/owner of the counter ({@link PlayerNames})
 	 * @return A reference to the newly created counter
 	 */
-	public Counter addNew(Players player) {
+	public Counter addNew(PlayerNames player) {
 		Vector2D nextPos = getNextPos();
 		Counter counter = new Counter(
 			(int) nextPos.x, (int) nextPos.y,

@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
+import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
@@ -10,59 +11,46 @@ import java.awt.Color;
  */
 public class GameLogic {
 	
-	/**
-	 * The colour for {@link Players}.ONE
-	 */
+	/** The colour for {@link PlayerNames}.ONE */
 	public static final Color[] one_colour = ColorMaterial.PURPLE;
-	/**
-	 * The colour for {@link Players}.TWO
-	 */
+	
+	/** The colour for {@link PlayerNames}.TWO */
 	public static final Color[] two_colour = ColorMaterial.GREEN;
-	/**
-	 * The name for {@link Players}.ONE
-	 */
+	
+	/** The name for {@link PlayerNames}.ONE */
 	private static final String one_name = "1";
-	/**
-	 * The name for {@link Players}.TWO
-	 */
+	
+	/** The name for {@link PlayerNames}.TWO */
 	private static final String two_name = "2";
-	/**
-	 * The current player's turn
-	 */
-	public Players currentPlayer = Players.ONE;
-	/**
-	 * The previous player
-	 */
-	public Players previousPlayer = Players.ONE;
-	/**
-	 * The current roll of the dice
-	 */
+	
+	/** The current player's turn */
+	public PlayerNames currentPlayer;
+	
+	/** The previous player */
+	public PlayerNames previousPlayer;
+	
+	/** The current roll of the dice */
 	public int currentRoll = -1;
-	/**
-	 * Has the game been won
-	 */
+	
+	/** Has the game been won */
 	public boolean won = false;
-	/**
-	 * Should the game allow counters to be moved
-	 */
+	
+	/** Should the game allow counters to be moved */
 	public boolean allowMove = false;
-	/**
-	 * Should the game be allowed to roll
-	 */
+	
+	/** Should the game be allowed to roll */
 	public boolean allowRoll = true;
-	/**
-	 * AI controller
-	 */
+	
+	/** AI controller */
 	public AIController ai;
-	/**
-	 * The dice controller
-	 */
+	
+	/** The dice controller */
 	private UrDice dice = new UrDice();
 	
 	public GameLogic(AIController ai) {
 		// Set player to one
-		currentPlayer = Players.ONE;
-		previousPlayer = Players.ONE;
+		currentPlayer = PlayerNames.ONE;
+		previousPlayer = PlayerNames.ONE;
 		
 		this.ai = ai;
 	}
@@ -71,10 +59,10 @@ public class GameLogic {
 	 * Swaps the current player
 	 */
 	private void swapPlayers() {
-		if (currentPlayer == Players.ONE) {
-			currentPlayer = Players.TWO;
-		} else if (currentPlayer == Players.TWO) {
-			currentPlayer = Players.ONE;
+		if (currentPlayer == PlayerNames.ONE) {
+			currentPlayer = PlayerNames.TWO;
+		} else if (currentPlayer == PlayerNames.TWO) {
+			currentPlayer = PlayerNames.ONE;
 		} else {
 			Log.error("GAME LOGIC", "Trying to swap NONE player");
 		}
@@ -125,9 +113,9 @@ public class GameLogic {
 	}
 	
 	public Color[] getPlayerColour() {
-		if (currentPlayer == Players.ONE) {
+		if (currentPlayer == PlayerNames.ONE) {
 			return one_colour;
-		} else if (currentPlayer == Players.TWO) {
+		} else if (currentPlayer == PlayerNames.TWO) {
 			return two_colour;
 		} else {
 			Log.error("GAME LOGIC", "Player is NONE, trying to get colour");
@@ -135,10 +123,10 @@ public class GameLogic {
 		}
 	}
 	
-	public Color[] getPlayerColour(Players player) {
-		if (player == Players.ONE) {
+	public Color[] getPlayerColour(PlayerNames player) {
+		if (player == PlayerNames.ONE) {
 			return one_colour;
-		} else if (player == Players.TWO) {
+		} else if (player == PlayerNames.TWO) {
 			return two_colour;
 		} else {
 			Log.error("GAME LOGIC", "Unknown player to get colour");
@@ -147,21 +135,14 @@ public class GameLogic {
 	}
 	
 	public String getPlayerName() {
-		if (currentPlayer == Players.ONE) {
+		if (currentPlayer == PlayerNames.ONE) {
 			return one_name;
-		} else if (currentPlayer == Players.TWO) {
+		} else if (currentPlayer == PlayerNames.TWO) {
 			return two_name;
 		} else {
 			Log.error("GAME LOGIC", "Player is NONE, trying to get name");
 			return null;
 		}
-	}
-	
-	/**
-	 * Player identifications
-	 */
-	public enum Players {
-		ONE, TWO
 	}
 	
 	/**
