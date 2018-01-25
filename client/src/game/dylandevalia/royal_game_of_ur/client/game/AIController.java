@@ -5,19 +5,6 @@ import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 
 public class AIController {
 	
-	/** The game board */
-	private Board board;
-	
-	
-	private Player playerOne, playerTwo;
-	
-	public AIController(Board board, Player playerOne,
-		Player playerTwo) {
-		this.board = board;
-		this.playerOne = playerOne;
-		this.playerTwo = playerTwo;
-	}
-	
 	/**
 	 * Checks move a certain amount ahead and returns the corresponding {@link MoveState}
 	 *
@@ -25,7 +12,7 @@ public class AIController {
 	 * @param spaces  The amount of spaces ahead to check
 	 * @return The appropriate {@link MoveState} according to the move
 	 */
-	public MoveState checkMove(Tile[] route, Counter counter, int spaces) {
+	public static MoveState checkMove(Tile[] route, Counter counter, int spaces) {
 		int newIndex = counter.currentRouteIndex + spaces;
 		
 		/* Going off the board */
@@ -58,7 +45,7 @@ public class AIController {
 	 * @param spaces The amount of spaces the counters will move
 	 * @return True if there are possible moves
 	 */
-	public boolean arePossibleMoves(Player player, int spaces) {
+	public static boolean arePossibleMoves(Player player, int spaces) {
 		for (Counter counter : player.getCounters()) {
 			if (checkMove(player.getRoute(), counter, spaces) != MoveState.BLOCKED) {
 				return true;

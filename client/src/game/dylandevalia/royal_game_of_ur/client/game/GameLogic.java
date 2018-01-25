@@ -43,9 +43,9 @@ public class GameLogic {
 	
 	/** Should the game be allowed to roll */
 	private boolean allowRoll = true;
-	
-	/** AI controller */
-	private AIController ai;
+
+//	/** AI controller */
+//	private AIController ai;
 	
 	/** The dice controller */
 	private UrDice dice = new UrDice();
@@ -72,8 +72,6 @@ public class GameLogic {
 		// Set player to one
 		currentPlayer = playerOne;
 		previousPlayer = playerOne;
-		
-		ai = new AIController(board, playerOne, playerTwo);
 	}
 	
 	/**
@@ -155,7 +153,7 @@ public class GameLogic {
 	private void checkMoveIsPossible() {
 		if (currentRoll == 0) {
 			nextTurn(true);
-		} else if (!ai.arePossibleMoves(currentPlayer, currentRoll)) {
+		} else if (!AIController.arePossibleMoves(currentPlayer, currentRoll)) {
 			Log.debug(
 				"GAME",
 				"No possible moves for player "
@@ -179,7 +177,8 @@ public class GameLogic {
 	public boolean isMovePossible(Vector2D mousePos, Counter counter) {
 		return counter.isColliding(mousePos)
 			&& counter.currentRouteIndex < board.getRouteLength()
-			&& ai.checkMove(currentPlayer.getRoute(), counter, currentRoll) != MoveState.BLOCKED;
+			&& AIController.checkMove(currentPlayer.getRoute(), counter, currentRoll)
+			!= MoveState.BLOCKED;
 	}
 	
 	/**
@@ -238,7 +237,7 @@ public class GameLogic {
 		
 		// Go through each tile one by one
 		for (int i = 0; i < Math.abs(spaces); i++) {
-			switch (ai.checkMove(route, counter, (spaces > 0) ? 1 : -1)) {
+			switch (AIController.checkMove(route, counter, (spaces > 0) ? 1 : -1)) {
 				case START:
 					player.getStartCluster().add(counter);
 					counter.currentRouteIndex = -1;
