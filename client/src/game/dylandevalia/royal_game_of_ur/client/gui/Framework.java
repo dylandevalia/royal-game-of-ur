@@ -21,7 +21,7 @@ public class Framework extends Canvas {
 	private static final long MS_A_SEC = 1000000;
 	
 	// How often the game should update a second
-	private static final double GAME_HERTZ = 30.0;
+	public static final double GAME_HERTZ = 30.0;
 	// How many times the game should render a second
 	private static final double TARGET_FPS = 60.0;
 	// How many nanoseconds it should take to reach the target speed

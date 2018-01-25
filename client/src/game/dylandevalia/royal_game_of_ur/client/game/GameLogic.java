@@ -5,6 +5,7 @@ import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
+import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -232,8 +233,11 @@ public class GameLogic {
 			CounterCluster cluster = player.getStartCluster();
 			cluster.remove(counter);
 		} else {
+			// Set current tile to not have counter
 			route[counter.currentRouteIndex].setCounter(null);
 		}
+		
+		final int oldRouteIndex = counter.currentRouteIndex;
 		
 		// Go through each tile one by one
 		for (int i = 0; i < Math.abs(spaces); i++) {
@@ -253,14 +257,41 @@ public class GameLogic {
 			}
 		}
 		
-		Tile finalTile = route[counter.currentRouteIndex];
+		final int newRouteIndex = counter.currentRouteIndex;
+		
+		Tile finalTile = route[newRouteIndex];
 		if (finalTile.hasCounter()) {
 			// Must be opponent counter since moveCounter is not run if
 			// is blocked by player's counter - move back to start
-			moveCounter(getOtherPlayer(), finalTile.getCounter(), -board.getRouteLength());
+			final Counter takenCounter = finalTile.getCounter();
+			final Player otherPlayer = getOtherPlayer();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						int dist = (newRouteIndex - oldRouteIndex) * Tile.WIDTH;
+						int time = (int) Math.ceil((dist * 1.0) / Counter.SPEED);
+						Thread.sleep(time * (int) Framework.GAME_HERTZ);
+						
+						moveCounterToStart(otherPlayer, takenCounter);
+					} catch (InterruptedException e) {
+						Log.error("GAME", "Failed to sleep before moving final tile", e);
+					}
+				}
+			}).start();
 		}
 		finalTile.setCounter(counter);
 		return finalTile;
+	}
+	
+	private void moveCounterToStart(Player player, Counter counter) {
+		Tile[] route = player.getRoute();
+		while (AIController.checkMove(route, counter, -1) != MoveState.START) {
+			Tile nextTile = board.getNextTile(route, counter, false);
+			counter.setTarget(counterInTilePosition(nextTile), true);
+		}
+		player.getStartCluster().add(counter);
+		counter.currentRouteIndex = -1;
 	}
 	
 	public void update(Vector2D mousePos) {
