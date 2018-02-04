@@ -1,7 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.client.game;
-
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
+package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
 public class AIController {
 	

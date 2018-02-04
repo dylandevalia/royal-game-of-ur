@@ -1,6 +1,6 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities.buttons;
+package game.dylandevalia.royal_game_of_ur.client.objects.base.buttons;
 
-import game.dylandevalia.royal_game_of_ur.client.game.entities.BaseEntity;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 public abstract class AbstractButton extends BaseEntity {

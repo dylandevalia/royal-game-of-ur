@@ -33,18 +33,18 @@ public class Game {
 	
 	public void packetReceived(Connection c, PacketManager packet) {
 		if (players[0] == c) {
-			Log.debug("Server game", "Packet received from player one");
+			Log.debug("Server objects", "Packet received from player one");
 		} else if (players[1] == c) {
-			Log.debug("Server game", "Packet received from player two");
+			Log.debug("Server objects", "Packet received from player two");
 		}
 	}
 	
 	public void clientDisconnected(final Connection c) {
 		if (players[0] == c) {
 		} else if (players[1] == c) {
-			Log.debug("Server game", "Player two disconnected");
+			Log.debug("Server objects", "Player two disconnected");
 		} else {
-			Log.debug("Server game", "Someone else disconnected");
+			Log.debug("Server objects", "Someone else disconnected");
 		}
 	}
 	

@@ -1,7 +1,5 @@
-package game.dylandevalia.royal_game_of_ur.client.game;
+package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 

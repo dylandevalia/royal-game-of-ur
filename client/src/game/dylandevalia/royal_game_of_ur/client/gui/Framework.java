@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * The main logic of the window, implementing the game loop and calls
+ * The main logic of the window, implementing the objects loop and calls
  * for the updates and draws which are passed onto the state manager
  */
 public class Framework extends Canvas {
@@ -20,9 +20,9 @@ public class Framework extends Canvas {
 	private static final long NS_A_SEC = 1000000000;
 	private static final long MS_A_SEC = 1000000;
 	
-	// How often the game should update a second
+	// How often the objects should update a second
 	public static final double GAME_HERTZ = 30.0;
-	// How many times the game should render a second
+	// How many times the objects should render a second
 	private static final double TARGET_FPS = 60.0;
 	// How many nanoseconds it should take to reach the target speed
 	private static final double TIME_BETWEEN_UPDATES = NS_A_SEC / GAME_HERTZ;
@@ -36,7 +36,7 @@ public class Framework extends Canvas {
 	StateManager stateManager = new StateManager();
 	
 	/* Game updates */
-	// Should the game loop run
+	// Should the objects loop run
 	private boolean runGame = true;
 	//  Used to calculate positions for rendering (ie. deltaTime)
 	private double interpolate;
@@ -51,7 +51,7 @@ public class Framework extends Canvas {
 		
 		stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
-		// Stats the game loop in its own thread
+		// Stats the objects loop in its own thread
 		new Thread() {
 			@Override
 			public void run() {
@@ -71,13 +71,13 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Runs the main game loop. The loop tries to keep
+	 * Runs the main objects loop. The loop tries to keep
 	 */
 	private void gameLoop() {
 		int fps = 0;
 		int frameCount = 0;
 		
-		// Last time the game was updated/rendered
+		// Last time the objects was updated/rendered
 		double lastUpdateTime = System.nanoTime();
 		double lastRenderTime = System.nanoTime();
 		
@@ -85,7 +85,7 @@ public class Framework extends Canvas {
 		int lastSecondTime = (int) (lastUpdateTime / NS_A_SEC);
 		
 		while (runGame) {
-			/* Update game */
+			/* Update objects */
 			
 			double now = System.nanoTime();
 			int updateCount = 0;
@@ -103,7 +103,7 @@ public class Framework extends Canvas {
 				lastUpdateTime = now - TIME_BETWEEN_UPDATES;
 			}
 			
-			/* Render game */
+			/* Render objects */
 			
 			// Calculate interpolation for smoother render
 			interpolate = Math.min(1.0, (now - lastUpdateTime) / TIME_BETWEEN_UPDATES);
@@ -114,7 +114,7 @@ public class Framework extends Canvas {
 			// Update frame
 			int curSecond = (int) (lastUpdateTime / NS_A_SEC);
 			if (curSecond > lastSecondTime) {
-				Log.trace("game loop", "FPS: " + fps);
+				Log.trace("objects loop", "FPS: " + fps);
 				fps = frameCount;
 				frameCount = 0;
 				lastSecondTime = curSecond;

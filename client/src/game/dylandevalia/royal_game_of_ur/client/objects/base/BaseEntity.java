@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities;
+package game.dylandevalia.royal_game_of_ur.client.objects.base;
 
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -17,9 +17,9 @@ public class BaseEntity {
 	
 	/**
 	 * If the entity is currently on screen
-	 * Calculated in {@link #isOnScreen()}
+	 * Calculated in {@link #isOnScreen(Vector2D)}
 	 */
-	protected boolean onScreen;
+	protected boolean shouldDraw;
 	
 	/**
 	 * The previous position of the entity used to
@@ -33,13 +33,17 @@ public class BaseEntity {
 		this.height = height;
 	}
 	
+	protected BaseEntity(int x, int y, int size) {
+		this(x, y, size, size);
+	}
+	
 	protected void update() {
 		this.lastPos = this.pos;
 	}
 	
 	protected void draw(Graphics2D g, double interpolate) {
 		calculateDrawPos(interpolate);
-		isOnScreen();
+		shouldDraw = isOnScreen(drawPos);
 	}
 	
 	public Vector2D getPos() {
@@ -68,9 +72,8 @@ public class BaseEntity {
 	/**
 	 * Checks if the drawable object is on the screen
 	 */
-	private void isOnScreen() {
-		onScreen =
-			!(drawPos.x + width < 0 || drawPos.x > Window.WIDTH
-				|| drawPos.y + height < 0 || drawPos.y > Window.HEIGHT);
+	protected boolean isOnScreen(Vector2D pos) {
+		return !(pos.x + width < 0 || pos.x > Window.WIDTH
+			|| pos.y + height < 0 || pos.y > Window.HEIGHT);
 	}
 }

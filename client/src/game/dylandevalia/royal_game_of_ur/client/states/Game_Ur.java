@@ -1,12 +1,12 @@
 package game.dylandevalia.royal_game_of_ur.client.states;
 
-import game.dylandevalia.royal_game_of_ur.client.game.GameLogic;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.Counter;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.GameLogic;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Font;
@@ -15,7 +15,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class Play implements State {
+public class Game_Ur implements State {
 	
 	/** Reference to the state manager */
 	private StateManager stateManager;
@@ -26,7 +26,7 @@ public class Play implements State {
 	/** The number of counters each player should have */
 	private int noCounters = 6;
 	
-	/** Holds the game logic */
+	/** Holds the objects logic */
 	private GameLogic game;
 	
 	
@@ -127,7 +127,7 @@ public class Play implements State {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (game.isWon()) {
-			// If game is won, ignore
+			// If objects is won, ignore
 			return;
 		}
 		
@@ -177,7 +177,7 @@ public class Play implements State {
 		Tile finalCounter = game
 			.moveCounter(game.getCurrentPlayer(), counter, game.getCurrentRoll());
 		
-		// Check if game is won
+		// Check if objects is won
 		if (game.checkIfWon(noCounters)) {
 			return true;
 		}

@@ -1,8 +1,8 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities;
+package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerID;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.AbstractButton;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Graphics2D;

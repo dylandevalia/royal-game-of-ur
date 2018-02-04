@@ -1,18 +1,16 @@
-package game.dylandevalia.royal_game_of_ur.client.game;
+package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
-import game.dylandevalia.royal_game_of_ur.client.game.AIController.MoveState;
-import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerID;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
-import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.AIController.MoveState;
+import game.dylandevalia.royal_game_of_ur.client.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 
 /**
- * Keeps track of all the game logic and enums
+ * Keeps track of all the objects logic and enums
  */
 public class GameLogic {
 	
@@ -29,13 +27,13 @@ public class GameLogic {
 	/** The current roll of the dice */
 	private int currentRoll = -1;
 	
-	/** Has the game been won */
+	/** Has the objects been won */
 	private boolean won = false;
 	
-	/** Should the game allow counters to be moved */
+	/** Should the objects allow counters to be moved */
 	private boolean allowMove = false;
 	
-	/** Should the game be allowed to roll */
+	/** Should the objects be allowed to roll */
 	private boolean allowRoll = true;
 
 //	/** AI controller */
@@ -180,11 +178,11 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Checks if the game is won by seeing if either player's end
+	 * Checks if the objects is won by seeing if either player's end
 	 * cluster is equal to the number of counters
 	 *
-	 * @param noCounters The number of counters that the game is using
-	 * @return True if the game is won
+	 * @param noCounters The number of counters that the objects is using
+	 * @return True if the objects is won
 	 */
 	public boolean checkIfWon(int noCounters) {
 		if (

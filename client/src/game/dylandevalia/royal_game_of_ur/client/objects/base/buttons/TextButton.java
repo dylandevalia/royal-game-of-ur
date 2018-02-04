@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities.buttons;
+package game.dylandevalia.royal_game_of_ur.client.objects.base.buttons;
 
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;

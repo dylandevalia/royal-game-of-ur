@@ -1,7 +1,8 @@
-package game.dylandevalia.royal_game_of_ur.client.game.entities;
+package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.BaseEntity;
 import java.awt.Graphics2D;
 
 public class Tile extends BaseEntity {
