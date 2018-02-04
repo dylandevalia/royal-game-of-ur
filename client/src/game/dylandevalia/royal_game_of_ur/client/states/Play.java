@@ -15,7 +15,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-// TODO: Delay captured counter returning until taken
 public class Play implements State {
 	
 	/** Reference to the state manager */
@@ -166,11 +165,11 @@ public class Play implements State {
 	 * Calculates if a counter has been click on and checks if it can move
 	 *
 	 * @param mousePos The position vector of the mouse pointer
-	 * @param counter  The counter to check and move
+	 * @param counter The counter to check and move
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
-		if (!game.isMovePossible(mousePos, counter)) {
+		if (!game.canCounterMove(mousePos, counter)) {
 			return false;
 		}
 		

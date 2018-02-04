@@ -8,11 +8,14 @@ import java.awt.Color;
 public class Player {
 	
 	/**
-	 * The name of the player
+	 * The id of the player
 	 *
-	 * @see PlayerNames
+	 * @see PlayerID
 	 */
-	private PlayerNames name;
+	private PlayerID id;
+	
+	/** Name of the player */
+	private String name;
 	
 	/** Counters owned by the player */
 	private Counter[] counters;
@@ -30,10 +33,15 @@ public class Player {
 	 */
 	private Color[] colors;
 	
-	public Player(PlayerNames name, Color[] colors, int routeLength) {
+	/** Is the player AI controlled */
+	private boolean isAI;
+	
+	public Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
+		this.id = id;
 		this.name = name;
 		this.colors = colors;
 		route = new Tile[routeLength];
+		this.isAI = isAI;
 	}
 	
 	/**
@@ -50,11 +58,15 @@ public class Player {
 		endCluster = new CounterCluster(endPos, false);
 		
 		for (int i = 0; i < noCounters; i++) {
-			counters[i] = startCluster.addNew(name);
+			counters[i] = startCluster.addNew(id);
 		}
 	}
 	
-	public PlayerNames getName() {
+	public PlayerID getId() {
+		return id;
+	}
+	
+	public String getName() {
 		return name;
 	}
 	
@@ -82,10 +94,14 @@ public class Player {
 		return colors[5];
 	}
 	
+	public boolean isAI() {
+		return isAI;
+	}
+	
 	/**
 	 * Player identifications
 	 */
-	public enum PlayerNames {
+	public enum PlayerID {
 		ONE, TWO
 	}
 }

@@ -1,6 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.client.game.entities;
 
-import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
+import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -23,7 +23,7 @@ public class Counter extends AbstractButton {
 	public int currentRouteIndex = -1;
 	
 	/** The player that the counter belongs to */
-	public PlayerNames player;
+	public PlayerID player;
 	
 	/** A stack of targets which the counter will move to in order */
 	private LinkedList<TargetInfo> targets = new LinkedList<>();
@@ -38,7 +38,7 @@ public class Counter extends AbstractButton {
 	private boolean allowHover = true;
 	
 	
-	public Counter(int x, int y, PlayerNames player) {
+	public Counter(int x, int y, PlayerID player) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new TargetInfo(pos, false);
 		this.player = player;

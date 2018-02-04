@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.game;
 
 import game.dylandevalia.royal_game_of_ur.client.game.AIController.MoveState;
-import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerNames;
+import game.dylandevalia.royal_game_of_ur.client.game.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Counter;
 import game.dylandevalia.royal_game_of_ur.client.game.entities.Tile;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
@@ -15,13 +15,6 @@ import java.awt.Graphics2D;
  * Keeps track of all the game logic and enums
  */
 public class GameLogic {
-	
-	// TODO
-	/** The name for {@link PlayerNames}.ONE */
-	private static final String one_name = "1";
-	
-	/** The name for {@link PlayerNames}.TWO */
-	private static final String two_name = "2";
 	
 	private Board board;
 	
@@ -57,14 +50,18 @@ public class GameLogic {
 	) {
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
 		playerOne = new Player(
-			PlayerNames.ONE,
+			PlayerID.ONE,
+			"Amy",
 			ColorMaterial.PURPLE,
-			board.getRouteLength()
+			board.getRouteLength(),
+			false
 		);
 		playerTwo = new Player(
-			PlayerNames.TWO,
+			PlayerID.TWO,
+			"Bert",
 			ColorMaterial.GREEN,
-			board.getRouteLength()
+			board.getRouteLength(),
+			true
 		);
 		
 		board.generate(playerOne.getRoute(), playerTwo.getRoute());
@@ -145,20 +142,20 @@ public class GameLogic {
 		allowRoll = false;
 		
 		currentRoll = dice.roll();
-		checkMoveIsPossible();
+		arePossibleMoves();
 	}
 	
 	/**
 	 * Checks if the next move is possible or should swap and reset players
 	 */
-	private void checkMoveIsPossible() {
+	private void arePossibleMoves() {
 		if (currentRoll == 0) {
 			nextTurn(true);
 		} else if (!AIController.arePossibleMoves(currentPlayer, currentRoll)) {
 			Log.debug(
 				"GAME",
 				"No possible moves for player "
-					+ currentPlayer.getName()
+					+ currentPlayer.getId()
 					+ " - swapping players"
 			);
 			nextTurn(true);
@@ -175,7 +172,7 @@ public class GameLogic {
 	 * @param counter  The counter to check if it can move
 	 * @return True if move is possible
 	 */
-	public boolean isMovePossible(Vector2D mousePos, Counter counter) {
+	public boolean canCounterMove(Vector2D mousePos, Counter counter) {
 		return counter.isColliding(mousePos)
 			&& counter.currentRouteIndex < board.getRouteLength()
 			&& AIController.checkMove(currentPlayer.getRoute(), counter, currentRoll)
