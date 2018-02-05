@@ -3,7 +3,10 @@ package game.dylandevalia.royal_game_of_ur.client.states;
 import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton.ButtonCallback;
 import game.dylandevalia.royal_game_of_ur.client.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
@@ -18,6 +21,8 @@ public class MainMenu implements State {
 	private StateManager stateManager;
 	private Node[] nodes;
 	
+	private TextButton btn_play;
+	
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
@@ -28,12 +33,29 @@ public class MainMenu implements State {
 				Utility.randBetween(-200, Window.HEIGHT + 200)
 			);
 		}
+		
+		int btn_play_width = 200;
+		int btn_play_height = 60;
+		btn_play = new TextButton(
+			(Window.WIDTH / 2) - (int) (btn_play_width * 1.15),
+			(Window.HEIGHT / 2) - (btn_play_height / 2),
+			btn_play_width, btn_play_height,
+			"Play Game",
+			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9]
+		);
+		btn_play.setOnClickListener(new ButtonCallback() {
+			@Override
+			public void callback() {
+				playGame();
+			}
+		});
 	}
 	
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
 		}
+		btn_play.update(Framework.getMousePos());
 	}
 	
 	public void draw(Graphics2D g, double interpolate) {
@@ -68,6 +90,16 @@ public class MainMenu implements State {
 				);
 			}
 		}
+		
+		btn_play.draw(g, interpolate);
+	}
+	
+	private void playGame() {
+		Log.info("MENU", "Starting game");
+		if (!stateManager.isLoaded(StateManager.GameState.PLAY)) {
+			stateManager.loadState(StateManager.GameState.PLAY);
+		}
+		stateManager.setState(StateManager.GameState.PLAY);
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -83,9 +115,10 @@ public class MainMenu implements State {
 	}
 	
 	public void mouseReleased(MouseEvent e) {
-//		if (!stateManager.isLoaded(StateManager.GameState.PLAY)) {
-//			stateManager.loadState(StateManager.GameState.PLAY);
-//		}
-//		stateManager.setState(StateManager.GameState.PLAY);
+		// Get mouse position
+		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
+		if (btn_play.isColliding(mousePos)) {
+			btn_play.press();
+		}
 	}
 }
