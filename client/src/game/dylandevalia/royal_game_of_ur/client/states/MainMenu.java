@@ -22,7 +22,7 @@ public class MainMenu implements State {
 	private StateManager stateManager;
 	private Node[] nodes;
 	
-	private TextButton btn_play;
+	private TextButton btn_play, btn_quit;
 	
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
@@ -35,22 +35,41 @@ public class MainMenu implements State {
 			);
 		}
 		
+		Color base = ColorMaterial.INDIGO[8];
+		Color hover = ColorMaterial.INDIGO[8];
+		base = new Color(base.getRed(), base.getGreen(), base.getBlue(), 100);
+		hover = new Color(hover.getRed(), hover.getGreen(), hover.getBlue(), 200);
+		
 		btn_play = new TextButton(
 			(Window.WIDTH / 2), (Window.HEIGHT / 2),
 			25, 25,
-			new Font("TimesRoman", Font.BOLD, 28),
+			new Font("TimesRoman", Font.BOLD, 64),
 			Alignment.CENTER,
 			"Play Game",
-			ColorMaterial.INDIGO[8], ColorMaterial.INDIGO[7], ColorMaterial.INDIGO[0]
+			base, hover,
+			ColorMaterial.INDIGO[0]
 		);
 		btn_play.setOnClickListener(this::playGame);
+		
+		btn_quit = new TextButton(
+			(Window.WIDTH / 2), 3 * (Window.HEIGHT / 4),
+			25, 25,
+			new Font("TimesRoman", Font.PLAIN, 24),
+			Alignment.CENTER,
+			"Quit",
+			base, hover,
+			ColorMaterial.INDIGO[0]
+		);
+		btn_quit.setOnClickListener(() -> System.exit(0));
 	}
 	
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
 		}
-		btn_play.update(Framework.getMousePos());
+		Vector2D mousePos = Framework.getMousePos();
+		btn_play.update(mousePos);
+		btn_quit.update(mousePos);
 	}
 	
 	public void draw(Graphics2D g, double interpolate) {
@@ -87,6 +106,7 @@ public class MainMenu implements State {
 		}
 		
 		btn_play.draw(g, interpolate);
+		btn_quit.draw(g, interpolate);
 	}
 	
 	private void playGame() {
@@ -114,6 +134,8 @@ public class MainMenu implements State {
 		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
 		if (btn_play.isColliding(mousePos)) {
 			btn_play.press();
+		} else if (btn_quit.isColliding(mousePos)) {
+			btn_quit.press();
 		}
 	}
 }
