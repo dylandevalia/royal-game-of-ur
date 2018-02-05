@@ -27,16 +27,16 @@ public class Node extends BaseEntity {
 		
 		pos.add(vel);
 		
-		if (pos.x < -50) {
-			pos.x += Window.WIDTH;
-		} else if (pos.x > Window.WIDTH + 50) {
-			pos.x -= Window.WIDTH + 60;
+		if (pos.x < -200) {
+			pos.x += Window.WIDTH + 399;
+		} else if (pos.x > Window.WIDTH + 200) {
+			pos.x -= Window.WIDTH + 399;
 		}
 		
-		if (pos.y < -50) {
-			pos.y += Window.HEIGHT;
-		} else if (pos.y > Window.HEIGHT + 50) {
-			pos.y -= Window.HEIGHT + 60;
+		if (pos.y < -200) {
+			pos.y += Window.HEIGHT + 399;
+		} else if (pos.y > Window.HEIGHT + 200) {
+			pos.y -= Window.HEIGHT + 399;
 		}
 	}
 	

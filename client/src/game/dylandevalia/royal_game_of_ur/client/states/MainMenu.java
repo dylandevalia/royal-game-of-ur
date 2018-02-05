@@ -21,11 +21,11 @@ public class MainMenu implements State {
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		nodes = new Node[80];
+		nodes = new Node[150];
 		for (int i = 0; i < nodes.length; i++) {
 			nodes[i] = new Node(
-				Utility.randBetween(0, Window.WIDTH),
-				Utility.randBetween(0, Window.HEIGHT)
+				Utility.randBetween(-200, Window.WIDTH + 200),
+				Utility.randBetween(-200, Window.HEIGHT + 200)
 			);
 		}
 	}
@@ -41,11 +41,10 @@ public class MainMenu implements State {
 		GradientPaint gradientPaint = new GradientPaint(
 			-100, -100,
 			ColorMaterial.INDIGO[4],
-			Window.WIDTH + 100, Window.HEIGHT + 100,
-			ColorMaterial.INDIGO[8]
+			Window.WIDTH + 200, Window.HEIGHT + 200,
+			ColorMaterial.INDIGO[9]
 		);
 		g.setPaint(gradientPaint);
-//		g.setColor(ColorMaterial.indigo);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		g.setPaint(oldPaint);
 		
