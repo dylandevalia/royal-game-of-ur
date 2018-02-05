@@ -14,6 +14,8 @@ public class Node extends BaseEntity {
 	
 	public Node(int x, int y) {
 		super(x, y, Utility.randBetween(0, 5));
+		
+		// Random velocity
 		double maxSpeed = 0.5;
 		vel = new Vector2D(
 			Utility.randBetween(-maxSpeed, maxSpeed),
@@ -25,18 +27,21 @@ public class Node extends BaseEntity {
 	public void update() {
 		super.update();
 		
+		// Update position
 		pos.add(vel);
 		
-		if (pos.x < -200) {
-			pos.x += Window.WIDTH + 399;
-		} else if (pos.x > Window.WIDTH + 200) {
-			pos.x -= Window.WIDTH + 399;
+		// Wrap around screen
+		int boundary = 200;
+		if (pos.x < -boundary) {
+			pos.x += Window.WIDTH + (boundary * 2);
+		} else if (pos.x > Window.WIDTH + boundary) {
+			pos.x -= Window.WIDTH + (boundary * 2);
 		}
 		
-		if (pos.y < -200) {
-			pos.y += Window.HEIGHT + 399;
-		} else if (pos.y > Window.HEIGHT + 200) {
-			pos.y -= Window.HEIGHT + 399;
+		if (pos.y < -boundary) {
+			pos.y += Window.HEIGHT + (boundary * 2);
+		} else if (pos.y > Window.HEIGHT + boundary) {
+			pos.y -= Window.HEIGHT + (boundary * 2);
 		}
 	}
 	
@@ -49,10 +54,12 @@ public class Node extends BaseEntity {
 		for (int j = i + 1; j < nodes.length; j++) {
 			Node n = nodes[j];
 			
+			// Get distance to
 			double dist = Vector2D.dist(pos, n.getPos());
-			
 			if (dist < 200) {
 				noConnections++;
+				
+				// Draw line more transparent the further away
 				g.setColor(
 					new Color(
 						c.getRed(), c.getGreen(), c.getBlue(),
@@ -66,6 +73,7 @@ public class Node extends BaseEntity {
 			}
 		}
 		
+		// More opaque the more connections
 		c = ColorMaterial.INDIGO[1];
 		g.setColor(
 			new Color(
@@ -73,9 +81,12 @@ public class Node extends BaseEntity {
 				(int) Utility.map(noConnections, 0, nodes.length, 150, 250)
 			)
 		);
+		// Wider the more connections -- edit: doesn't look all that great
+		int w = width; // + noConnections;
+		int h = height; // + noConnections;
 		g.fillOval(
-			(int) drawPos.x, (int) drawPos.y,
-			width, height
+			(int) drawPos.x - (w / 2), (int) drawPos.y - (h / 2),
+			w, h
 		);
 	}
 }
