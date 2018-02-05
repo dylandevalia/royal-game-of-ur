@@ -4,6 +4,7 @@ import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.Counter;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.Tile;
@@ -42,12 +43,11 @@ public class Game_Ur implements State {
 		game = new GameLogic(boardStartLength, boardMidLength, boardEndLength, noCounters);
 		Log.info("PLAY", "GameLogic created");
 		
-		int btn_roll_width = 100;
-		int btn_roll_height = 60;
 		btn_roll = new TextButton(
-			Window.WIDTH - (int) (btn_roll_width * 1.15),
-			(Window.HEIGHT / 2) - (btn_roll_height / 2),
-			btn_roll_width, btn_roll_height,
+			Window.WIDTH - 20, (Window.HEIGHT / 2),
+			20, 10,
+			new Font("TimesRoman", Font.BOLD, 28),
+			Alignment.RIGHT,
 			"Roll",
 			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9]
 		);

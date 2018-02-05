@@ -4,12 +4,13 @@ import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton;
-import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton.ButtonCallback;
+import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.client.objects.menu.Node;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -34,21 +35,15 @@ public class MainMenu implements State {
 			);
 		}
 		
-		int btn_play_width = 200;
-		int btn_play_height = 60;
 		btn_play = new TextButton(
-			(Window.WIDTH / 2) - (int) (btn_play_width * 1.15),
-			(Window.HEIGHT / 2) - (btn_play_height / 2),
-			btn_play_width, btn_play_height,
+			(Window.WIDTH / 2), (Window.HEIGHT / 2),
+			25, 25,
+			new Font("TimesRoman", Font.BOLD, 28),
+			Alignment.CENTER,
 			"Play Game",
-			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9]
+			ColorMaterial.INDIGO[8], ColorMaterial.INDIGO[7], ColorMaterial.INDIGO[0]
 		);
-		btn_play.setOnClickListener(new ButtonCallback() {
-			@Override
-			public void callback() {
-				playGame();
-			}
-		});
+		btn_play.setOnClickListener(this::playGame);
 	}
 	
 	public void update() {

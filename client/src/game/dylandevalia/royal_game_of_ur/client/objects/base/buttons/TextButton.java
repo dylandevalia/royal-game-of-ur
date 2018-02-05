@@ -4,7 +4,6 @@ import game.dylandevalia.royal_game_of_ur.client.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 public class TextButton extends AbstractButton {
@@ -14,6 +13,12 @@ public class TextButton extends AbstractButton {
 	
 	/** The message that the button will show */
 	private String message;
+	
+	private Font font;
+	
+	private Alignment alignment;
+	
+	private int boundsX, boundsY;
 	
 	/** The colours that the button will turn for each state */
 	private Color baseColor, hoverColor, textColor;
@@ -25,13 +30,21 @@ public class TextButton extends AbstractButton {
 	private boolean active = true;
 	
 	public TextButton(
-		int x, int y, int width, int height,
+		int x, int y, int boundsX, int boundsY,
+		Font font,
+		Alignment alignment,
 		String message,
 		Color baseColor, Color hoverColor, Color textColor
 	) {
-		super(x, y, width, height, Shape.RECTANGLE);
+		super(x, y, -1, -1, Shape.RECTANGLE);
 		
 		this.message = message;
+		
+		this.boundsX = boundsX;
+		this.boundsY = boundsY;
+		
+		this.font = font;
+		this.alignment = alignment;
 		
 		this.baseColor = baseColor;
 		this.hoverColor = hoverColor;
@@ -43,20 +56,36 @@ public class TextButton extends AbstractButton {
 	}
 	
 	public void update(Vector2D mousePos) {
+		if (width < 0 || height < 0) {
+			return;
+		}
 		super.update(mousePos);
+		isMouseHovering = isColliding(mousePos);
 	}
 	
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
+		
+		if (width < 0) {
+			width = g.getFontMetrics(font).stringWidth(message);
+		}
+		if (height < 0) {
+			height = g.getFontMetrics(font).getHeight();
+		}
 		
 		// Sets colour depending on state (eg. hovering, normal, in-active)
 		g.setColor(
 			active ? (isMouseHovering ? hoverColor : baseColor)
 				: inactiveColor
 		);
-		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
+		
+		int x = getLeftEdge((int) drawPos.x);
+		int y = getTopEdge((int) drawPos.y);
+		
+		g.fillRect(x, y, width + (boundsX * 2), height + (boundsY * 2));
 		g.setColor(textColor);
-		drawCenteredString(g, message, new Font("TimesRoman", Font.BOLD, 28));
+		
+		drawCenteredString(g);
 	}
 	
 	/**
@@ -77,24 +106,64 @@ public class TextButton extends AbstractButton {
 		this.active = active;
 	}
 	
+	@Override
+	public boolean isColliding(Vector2D other) {
+		int x = getLeftEdge((int) pos.x);
+		int y = getTopEdge((int) pos.y);
+		
+		return (other.x > x && other.x < x + width + (boundsX * 2))
+			&& (other.y > y && other.y < y + height + (boundsY * 2));
+	}
+	
+	private int getLeftEdge(int x) {
+		switch (alignment) {
+			case LEFT:
+				break;
+			case CENTER:
+				x -= (width / 2) + boundsX;
+				break;
+			case RIGHT:
+				x -= width + boundsX * 2;
+				break;
+		}
+		return x;
+	}
+	
+	private int getTopEdge(int y) {
+		return y - (height / 2) - boundsY;
+	}
+	
 	/**
 	 * Draw a String centered in the middle of a Rectangle
 	 *
 	 * @param g    The Graphics instance
-	 * @param text The String to draw
-	 * @param font The Font to use
 	 */
-	private void drawCenteredString(Graphics2D g, String text, Font font) {
-		// Get the FontMetrics
-		FontMetrics metrics = g.getFontMetrics(font);
+	private void drawCenteredString(Graphics2D g) {
 		// Determine the X coordinate for the text
-		int x = (int) pos.x + (width - metrics.stringWidth(text)) / 2;
-		// Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-		int y = (int) pos.y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+		int x = (int) drawPos.x;
+		switch (alignment) {
+			case LEFT:
+				x += boundsX;
+				break;
+			case CENTER:
+				x -= width / 2;
+				break;
+			case RIGHT:
+				x -= width + boundsX;
+				break;
+		}
+		
+		// Determine the Y coordinate for the text
+		int y = (int) drawPos.y + (height / 3);
+		
 		// Set the font
 		g.setFont(font);
 		// Draw the String
-		g.drawString(text, x, y);
+		g.drawString(message, x, y);
+	}
+	
+	public enum Alignment {
+		LEFT, CENTER, RIGHT
 	}
 	
 	/**
