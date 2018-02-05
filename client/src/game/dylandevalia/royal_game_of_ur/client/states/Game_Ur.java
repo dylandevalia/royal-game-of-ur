@@ -137,10 +137,7 @@ public class Game_Ur implements State {
 		
 		/* Button */
 		
-		if (
-			game.isAllowRoll()
-				&& btn_roll.isColliding(mousePos)
-			) {
+		if (game.isAllowRoll() && btn_roll.isColliding(mousePos)) {
 			btn_roll.press();
 			return;
 		}
@@ -165,7 +162,7 @@ public class Game_Ur implements State {
 	 * Calculates if a counter has been click on and checks if it can move
 	 *
 	 * @param mousePos The position vector of the mouse pointer
-	 * @param counter The counter to check and move
+	 * @param counter  The counter to check and move
 	 * @return True if successfully clicked on a counter
 	 */
 	private boolean processClick(Vector2D mousePos, Counter counter) {
@@ -174,15 +171,10 @@ public class Game_Ur implements State {
 		}
 		
 		// Counter was clicked on, in play and can move
-		Tile finalCounter = game
+		Tile finalTile = game
 			.moveCounter(game.getCurrentPlayer(), counter, game.getCurrentRoll());
 		
-		// Check if objects is won
-		if (game.checkIfWon(noCounters)) {
-			return true;
-		}
-		
-		game.nextTurn(finalCounter == null || !finalCounter.isRosette());
+		game.endOfTurn(finalTile);
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them

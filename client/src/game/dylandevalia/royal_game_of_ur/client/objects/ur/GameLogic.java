@@ -8,14 +8,18 @@ import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import javafx.util.Pair;
 
 /**
  * Keeps track of all the objects logic and enums
  */
 public class GameLogic {
 	
+	/** The game board */
 	private Board board;
 	
+	/** The two players */
 	private Player playerOne, playerTwo;
 	
 	/** The current player's turn */
@@ -129,6 +133,10 @@ public class GameLogic {
 		
 		allowMove = false;
 		allowRoll = true;
+		
+		if (currentPlayer.isAI()) {
+			takeAITurn();
+		}
 	}
 	
 	/**
@@ -160,6 +168,20 @@ public class GameLogic {
 		}
 	}
 	
+	private void takeAITurn() {
+		Log.info("GAME", "AI taking turn");
+		
+		// Rolls dice -- handles if there are not possible moves
+		rollDice();
+		
+		ArrayList<Pair<Counter, MoveState>> moves = AIController
+			.getPlayableCounters(currentPlayer, currentRoll);
+		Pair<Counter, MoveState> move = moves.get(0);
+		Tile finalTile = moveCounter(currentPlayer, move.getKey(), currentRoll);
+		
+		endOfTurn(finalTile);
+	}
+	
 	/**
 	 * Checks if the counter can move by checking:
 	 * 1) Did the mouse click on the counter
@@ -181,19 +203,26 @@ public class GameLogic {
 	 * Checks if the objects is won by seeing if either player's end
 	 * cluster is equal to the number of counters
 	 *
-	 * @param noCounters The number of counters that the objects is using
 	 * @return True if the objects is won
 	 */
-	public boolean checkIfWon(int noCounters) {
+	private boolean checkIfWon() {
 		if (
-			playerOne.getEndCluster().getSize() == noCounters
-				|| playerTwo.getEndCluster().getSize() == noCounters
+			playerOne.getEndCluster().getSize() == playerOne.getCounters().length
+				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
 			) {
 			won = true;
 			Log.debug("GAME", "GAME WON!");
 			return true;
 		}
 		return false;
+	}
+	
+	public void endOfTurn(Tile finalTile) {
+		if (checkIfWon()) {
+			return;
+		}
+		
+		nextTurn(finalTile == null || !finalTile.isRosette());
 	}
 	
 	/**
@@ -314,6 +343,11 @@ public class GameLogic {
 			counter.draw(g, interpolate, playerTwo.getColors());
 		}
 	}
+	
+	
+	/* ------- */
+	/* Getters */
+	/* ------- */
 	
 	public Player getCurrentPlayer() {
 		return currentPlayer;

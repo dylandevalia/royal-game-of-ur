@@ -1,5 +1,8 @@
 package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
+import java.util.ArrayList;
+import javafx.util.Pair;
+
 public class AIController {
 	
 	/**
@@ -49,6 +52,18 @@ public class AIController {
 			}
 		}
 		return false;
+	}
+	
+	public static ArrayList<Pair<Counter, MoveState>> getPlayableCounters(Player player,
+		int spaces) {
+		ArrayList<Pair<Counter, MoveState>> moves = new ArrayList<>();
+		for (Counter counter : player.getCounters()) {
+			MoveState state = checkMove(player.getRoute(), counter, spaces);
+			if (state != MoveState.BLOCKED) {
+				moves.add(new Pair<>(counter, state));
+			}
+		}
+		return moves;
 	}
 	
 	/**
