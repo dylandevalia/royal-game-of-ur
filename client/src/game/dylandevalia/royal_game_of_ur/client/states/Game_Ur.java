@@ -134,16 +134,10 @@ public class Game_Ur implements State {
 		// Get mouse position
 		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
 		
-		
-		/* Button */
-		
 		if (game.isAllowRoll() && btn_roll.isColliding(mousePos)) {
 			btn_roll.press();
 			return;
 		}
-		
-		
-		/* Counters */
 		
 		if (!game.isAllowMove()) {
 			// If not allowing moving counters then escape

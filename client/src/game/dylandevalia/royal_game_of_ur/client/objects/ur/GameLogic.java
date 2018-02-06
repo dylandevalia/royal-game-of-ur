@@ -111,34 +111,6 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Swaps the current player
-	 */
-	private void swapPlayers() {
-		if (currentPlayer == playerOne) {
-			currentPlayer = playerTwo;
-		} else if (currentPlayer == playerTwo) {
-			currentPlayer = playerOne;
-		} else {
-			Log.error("GAME", "Trying to swap unknown player");
-		}
-	}
-	
-	/**
-	 * Resets turn and switches players if needed
-	 *
-	 * @param swapPlayers Whether the players should be swapped
-	 */
-	private void nextTurn(boolean swapPlayers) {
-		previousPlayer = currentPlayer;
-		if (swapPlayers) {
-			swapPlayers();
-		}
-		
-		allowMove = false;
-		allowRoll = true;
-	}
-	
-	/**
 	 * Rerolls the dice and resets {@link #allowMove} and {@link #allowRoll} booleans
 	 * Also checks if the next move is possible and resets if required
 	 */
@@ -174,20 +146,6 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Calculates and performs move for the AI
-	 */
-	private void takeAITurn() {
-		Log.info("GAME", "AI taking turn");
-		
-		ArrayList<Pair<Counter, MoveState>> moves = AIController
-			.getPlayableCounters(currentPlayer, currentRoll);
-		Pair<Counter, MoveState> move = moves.get(0);
-		Tile finalTile = moveCounter(currentPlayer, move.getKey(), currentRoll);
-		
-		endOfTurn(finalTile);
-	}
-	
-	/**
 	 * Checks if the counter can move by checking:
 	 * 1) Did the mouse click on the counter
 	 * 2) If the counter is in play (not in end cluster)
@@ -202,54 +160,6 @@ public class GameLogic {
 			&& counter.currentRouteIndex < board.getRouteLength()
 			&& AIController.checkMove(currentPlayer.getRoute(), counter, currentRoll)
 			!= MoveState.BLOCKED;
-	}
-	
-	/**
-	 * Checks if the objects is won by seeing if either player's end
-	 * cluster is equal to the number of counters
-	 *
-	 * @return True if the objects is won
-	 */
-	private boolean checkIfWon() {
-		if (
-			playerOne.getEndCluster().getSize() == playerOne.getCounters().length
-				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
-			) {
-			won = true;
-			Log.debug("GAME", "GAME WON!");
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Runs at the end of a turn - checks if the game is won and
-	 * initiates the next turn
-	 *
-	 * @param finalTile The final tile that the counter just move to that turn
-	 */
-	public void endOfTurn(Tile finalTile) {
-		if (checkIfWon()) {
-			return;
-		}
-		
-		nextTurn(finalTile == null || !finalTile.isRosette());
-	}
-	
-	/**
-	 * Gets the other player that's not the current player
-	 *
-	 * @return The current player's opponent
-	 */
-	private Player getOtherPlayer() {
-		if (currentPlayer == playerOne) {
-			return playerTwo;
-		} else if (currentPlayer == playerTwo) {
-			return playerOne;
-		} else {
-			Log.error("GAME", "Can't find other player");
-			return null;
-		}
 	}
 	
 	/**
@@ -315,6 +225,12 @@ public class GameLogic {
 		return finalTile;
 	}
 	
+	/**
+	 * Moves the counter to the starting cluster along the player's route
+	 *
+	 * @param player  The player who owns the counter
+	 * @param counter The counter to move
+	 */
 	private void moveCounterToStart(Player player, Counter counter) {
 		Tile[] route = player.getRoute();
 		while (AIController.checkMove(route, counter, -1) != MoveState.START) {
@@ -323,6 +239,80 @@ public class GameLogic {
 		}
 		player.getStartCluster().add(counter);
 		counter.currentRouteIndex = -1;
+	}
+	
+	/**
+	 * Runs at the end of a turn - checks if the game is won and
+	 * initiates the next turn
+	 *
+	 * @param finalTile The final tile that the counter just move to that turn
+	 */
+	public void endOfTurn(Tile finalTile) {
+		if (checkIfWon()) {
+			return;
+		}
+		
+		nextTurn(finalTile == null || !finalTile.isRosette());
+	}
+	
+	/**
+	 * Checks if the objects is won by seeing if either player's end
+	 * cluster is equal to the number of counters
+	 *
+	 * @return True if the objects is won
+	 */
+	private boolean checkIfWon() {
+		if (
+			playerOne.getEndCluster().getSize() == playerOne.getCounters().length
+				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
+			) {
+			won = true;
+			Log.debug("GAME", "GAME WON!");
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Resets turn and switches players if needed
+	 *
+	 * @param swapPlayers Whether the players should be swapped
+	 */
+	private void nextTurn(boolean swapPlayers) {
+		previousPlayer = currentPlayer;
+		if (swapPlayers) {
+			swapPlayers();
+		}
+		
+		allowMove = false;
+		allowRoll = true;
+	}
+	
+	/**
+	 * Swaps the current player
+	 */
+	private void swapPlayers() {
+		if (currentPlayer == playerOne) {
+			currentPlayer = playerTwo;
+		} else if (currentPlayer == playerTwo) {
+			currentPlayer = playerOne;
+		} else {
+			Log.error("GAME", "Trying to swap unknown player");
+		}
+	}
+	
+	/**
+	 * Calculates and performs move for the AI
+	 */
+	private void takeAITurn() {
+		Log.info("GAME", "AI taking turn");
+		
+		ArrayList<Pair<Counter, MoveState>> moves = AIController
+			.getPlayableCounters(currentPlayer, currentRoll);
+		Pair<Counter, MoveState> move = moves.get(0);
+		Tile finalTile = moveCounter(currentPlayer, move.getKey(), currentRoll);
+		
+		endOfTurn(finalTile);
 	}
 	
 	public void update(Vector2D mousePos) {
@@ -376,6 +366,22 @@ public class GameLogic {
 	
 	public Player getPreviousPlayer() {
 		return previousPlayer;
+	}
+	
+	/**
+	 * Gets the other player that's not the current player
+	 *
+	 * @return The current player's opponent
+	 */
+	private Player getOtherPlayer() {
+		if (currentPlayer == playerOne) {
+			return playerTwo;
+		} else if (currentPlayer == playerTwo) {
+			return playerOne;
+		} else {
+			Log.error("GAME", "Can't find other player");
+			return null;
+		}
 	}
 	
 	public int getCurrentRoll() {
