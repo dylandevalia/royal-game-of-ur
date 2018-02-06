@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 
+import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
-import javafx.util.Pair;
 
 public class AIController {
 	

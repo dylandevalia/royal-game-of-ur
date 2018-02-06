@@ -5,11 +5,11 @@ import game.dylandevalia.royal_game_of_ur.client.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import javafx.util.Pair;
 
 /**
  * Keeps track of all the objects logic and enums
@@ -39,6 +39,9 @@ public class GameLogic {
 	
 	/** Should the objects be allowed to roll */
 	private boolean allowRoll = true;
+	
+	/** Is the scene animating */
+	private boolean animating = false;
 
 //	/** AI controller */
 //	private AIController ai;
@@ -125,7 +128,7 @@ public class GameLogic {
 	 *
 	 * @param swapPlayers Whether the players should be swapped
 	 */
-	public void nextTurn(boolean swapPlayers) {
+	private void nextTurn(boolean swapPlayers) {
 		previousPlayer = currentPlayer;
 		if (swapPlayers) {
 			swapPlayers();
@@ -133,10 +136,6 @@ public class GameLogic {
 		
 		allowMove = false;
 		allowRoll = true;
-		
-		if (currentPlayer.isAI()) {
-			takeAITurn();
-		}
 	}
 	
 	/**
@@ -148,15 +147,19 @@ public class GameLogic {
 		allowRoll = false;
 		
 		currentRoll = dice.roll();
-		arePossibleMoves();
+		
+		if (arePossibleMoves() && currentPlayer.isAI()) {
+			takeAITurn();
+		}
 	}
 	
 	/**
 	 * Checks if the next move is possible or should swap and reset players
 	 */
-	private void arePossibleMoves() {
+	private boolean arePossibleMoves() {
 		if (currentRoll == 0) {
 			nextTurn(true);
+			return false;
 		} else if (!AIController.arePossibleMoves(currentPlayer, currentRoll)) {
 			Log.debug(
 				"GAME",
@@ -165,14 +168,16 @@ public class GameLogic {
 					+ " - swapping players"
 			);
 			nextTurn(true);
+			return false;
 		}
+		return true;
 	}
 	
+	/**
+	 * Calculates and performs move for the AI
+	 */
 	private void takeAITurn() {
 		Log.info("GAME", "AI taking turn");
-		
-		// Rolls dice -- handles if there are not possible moves
-		rollDice();
 		
 		ArrayList<Pair<Counter, MoveState>> moves = AIController
 			.getPlayableCounters(currentPlayer, currentRoll);
@@ -217,6 +222,12 @@ public class GameLogic {
 		return false;
 	}
 	
+	/**
+	 * Runs at the end of a turn - checks if the game is won and
+	 * initiates the next turn
+	 *
+	 * @param finalTile The final tile that the counter just move to that turn
+	 */
 	public void endOfTurn(Tile finalTile) {
 		if (checkIfWon()) {
 			return;
@@ -318,12 +329,18 @@ public class GameLogic {
 		// Update board (tiles)
 		board.update();
 		
+		animating = false;
+		
 		// Update counters
 		for (Counter counter : playerOne.getCounters()) {
 			counter.update(mousePos,
 				allowMove
 					&& currentPlayer == playerOne
 			);
+			
+			if (counter.isMoving()) {
+				animating = true;
+			}
 		}
 		for (Counter counter : playerTwo.getCounters()) {
 			counter.update(
@@ -331,6 +348,10 @@ public class GameLogic {
 				allowMove
 					&& currentPlayer == playerTwo
 			);
+			
+			if (counter.isMoving()) {
+				animating = true;
+			}
 		}
 	}
 	

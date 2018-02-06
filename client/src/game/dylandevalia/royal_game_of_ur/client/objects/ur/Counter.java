@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.client.objects.ur;
 import game.dylandevalia.royal_game_of_ur.client.gui.Window;
 import game.dylandevalia.royal_game_of_ur.client.objects.base.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.client.objects.ur.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -26,10 +27,10 @@ public class Counter extends AbstractButton {
 	public PlayerID player;
 	
 	/** A stack of targets which the counter will move to in order */
-	private LinkedList<TargetInfo> targets = new LinkedList<>();
+	private LinkedList<Pair<Vector2D, Boolean>> targets = new LinkedList<>();
 	
 	/** The current target */
-	private TargetInfo target;
+	private Pair<Vector2D, Boolean> target;
 	
 	/** Is the counter currently moving */
 	private boolean isMoving = false;
@@ -40,7 +41,7 @@ public class Counter extends AbstractButton {
 	
 	public Counter(int x, int y, PlayerID player) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
-		target = new TargetInfo(pos, false);
+		target = new Pair<>(pos, false);
 		this.player = player;
 	}
 	
@@ -52,15 +53,16 @@ public class Counter extends AbstractButton {
 			return;
 		}
 		
-		double dist = Vector2D.dist(pos, target.getPos());
+		double dist = Vector2D.dist(pos, target.getKey());
 		
 		if (dist > SPEED) { // If more that speed away from the target
 			// Move speed towards target
-			pos.add(Vector2D.sub(target.getPos(), pos).setMag(target.captured ? SPEED * 2 : SPEED));
+			pos.add(
+				Vector2D.sub(target.getKey(), pos).setMag(target.getValue() ? SPEED * 2 : SPEED));
 			isMoving = true;
 		} else {    // Less that speed away from target
 			// So just move to target
-			pos.set(target.getPos());
+			pos.set(target.getKey());
 			isMoving = false;
 			
 			// Target is next target if exists
@@ -79,40 +81,20 @@ public class Counter extends AbstractButton {
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
 	
-	public void setTarget(Vector2D target, boolean captured) {
-		targets.add(new TargetInfo(target, captured));
-	}
-	
 	/**
 	 * If the counter is at the current target
 	 *
 	 * @return Boolean if at the current target position
 	 */
 	private boolean atTarget() {
-		return pos == target.getPos();
+		return pos == target.getKey();
 	}
 	
-	/**
-	 * Holds information about target
-	 */
-	private class TargetInfo {
-		
-		/** The position of the target */
-		private Vector2D target;
-		/** If the target was captured */
-		private boolean captured;
-		
-		public TargetInfo(Vector2D target, boolean captured) {
-			this.target = target;
-			this.captured = captured;
-		}
-		
-		public Vector2D getPos() {
-			return target;
-		}
-		
-		public boolean isCaptured() {
-			return captured;
-		}
+	public void setTarget(Vector2D target, boolean captured) {
+		targets.add(new Pair<>(target, captured));
+	}
+	
+	public boolean isMoving() {
+		return isMoving;
 	}
 }
