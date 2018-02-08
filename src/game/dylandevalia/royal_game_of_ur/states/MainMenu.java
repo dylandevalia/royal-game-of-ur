@@ -6,6 +6,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.ICallback;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
@@ -50,7 +51,7 @@ public class MainMenu implements IState {
 			new Font("TimesRoman", Font.BOLD, 64),
 			Alignment.CENTER,
 			"Play Game",
-			base, hover,
+			base, hover, base,
 			ColorMaterial.INDIGO[0]
 		);
 		btn_play.setOnClickListener(this::loadGame);
@@ -61,7 +62,7 @@ public class MainMenu implements IState {
 			new Font("TimesRoman", Font.PLAIN, 24),
 			Alignment.CENTER,
 			"Quit",
-			base, hover,
+			base, hover, base,
 			ColorMaterial.INDIGO[0]
 		);
 		btn_quit.setOnClickListener(() -> {
@@ -74,6 +75,10 @@ public class MainMenu implements IState {
 		for (Node n : nodes) {
 			n.update();
 		}
+		
+		btn_play.setActive(fade == Fade.NONE);
+		btn_quit.setActive(fade == Fade.NONE);
+		
 		Vector2D mousePos = Framework.getMousePos();
 		btn_play.update(mousePos);
 		btn_quit.update(mousePos);
@@ -123,6 +128,7 @@ public class MainMenu implements IState {
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum <= 0) {
 					fade = Fade.NONE;
+					fadeNum = 0;
 				}
 				break;
 			case UP:
@@ -130,15 +136,16 @@ public class MainMenu implements IState {
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum >= 254) {
 					fade.runCallback();
+					fadeNum = 255;
 				}
 				break;
 		}
 	}
 	
 	private void loadGame() {
-		if (!stateManager.isLoaded(StateManager.GameState.GAME_UR)) {
+		if (!stateManager.isLoaded(GameState.GAME_UR)) {
 			Log.info("MENU", "Loading GAME_UR");
-			stateManager.loadState(StateManager.GameState.GAME_UR);
+			stateManager.loadState(GameState.GAME_UR);
 		}
 		fade = Fade.UP;
 		fade.setCallback(this::startGame);
@@ -146,7 +153,8 @@ public class MainMenu implements IState {
 	
 	private void startGame() {
 		Log.info("MENU", "Starting ur");
-		stateManager.setState(StateManager.GameState.GAME_UR);
+		stateManager.setState(GameState.GAME_UR);
+		stateManager.unloadState(GameState.MAIN_MENU);
 	}
 	
 	public void keyPressed(KeyEvent e) {

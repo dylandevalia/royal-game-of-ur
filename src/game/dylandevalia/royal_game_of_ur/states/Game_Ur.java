@@ -53,7 +53,8 @@ public class Game_Ur implements IState {
 			new Font("TimesRoman", Font.BOLD, 28),
 			Alignment.RIGHT,
 			"Roll",
-			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.GREY[9]
+			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.blueGrey,
+			ColorMaterial.GREY[9]
 		);
 		btn_roll.setOnClickListener(game::rollDice);
 		Log.info("GAME_UR", "Generation completed");

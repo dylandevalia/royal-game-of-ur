@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -29,8 +30,10 @@ public class Pause implements IState {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			stateManager.unloadState(StateManager.GameState.GAME_UR);
-			stateManager.setState(StateManager.GameState.MAIN_MENU);
+			stateManager.unloadState(GameState.GAME_UR);
+			
+			stateManager.loadState(GameState.MAIN_MENU);
+			stateManager.setState(GameState.MAIN_MENU);
 		}
 	}
 	

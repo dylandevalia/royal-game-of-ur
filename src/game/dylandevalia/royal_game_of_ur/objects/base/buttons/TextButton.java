@@ -1,6 +1,5 @@
 package game.dylandevalia.royal_game_of_ur.objects.base.buttons;
 
-import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.utility.ICallback;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
@@ -8,9 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 public class TextButton extends AbstractButton {
-	
-	/** The colour of the button if inactive */
-	private static final Color inactiveColor = ColorMaterial.blueGrey;
 	
 	/** The message that the button will show */
 	private String message;
@@ -22,7 +18,7 @@ public class TextButton extends AbstractButton {
 	private int boundsX, boundsY;
 	
 	/** The colours that the button will turn for each state */
-	private Color baseColor, hoverColor, textColor;
+	private Color baseColor, hoverColor, inactiveColor, textColor;
 	
 	/** The callback interface */
 	private ICallback callback;
@@ -35,7 +31,8 @@ public class TextButton extends AbstractButton {
 		Font font,
 		Alignment alignment,
 		String message,
-		Color baseColor, Color hoverColor, Color textColor
+		Color baseColor, Color hoverColor, Color inactiveColor,
+		Color textColor
 	) {
 		super(x, y, -1, -1, Shape.RECTANGLE);
 		
@@ -49,6 +46,7 @@ public class TextButton extends AbstractButton {
 		
 		this.baseColor = baseColor;
 		this.hoverColor = hoverColor;
+		this.inactiveColor = inactiveColor;
 		this.textColor = textColor;
 	}
 	
@@ -60,6 +58,7 @@ public class TextButton extends AbstractButton {
 		if (width < 0 || height < 0) {
 			return;
 		}
+		
 		super.update(mousePos);
 		isMouseHovering = isColliding(mousePos);
 	}
