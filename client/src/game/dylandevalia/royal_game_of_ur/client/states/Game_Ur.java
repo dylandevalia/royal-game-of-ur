@@ -40,7 +40,10 @@ public class Game_Ur implements State {
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(boardStartLength, boardMidLength, boardEndLength, noCounters);
+		game = new GameLogic(
+			boardStartLength, boardMidLength, boardEndLength,
+			noCounters, true
+		);
 		Log.info("PLAY", "GameLogic created");
 		
 		btn_roll = new TextButton(

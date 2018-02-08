@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class CounterCluster {
 	
+	public static boolean instantAnimate = false;
+	
 	/** The array-list of counters */
 	private ArrayList<Counter> counters = new ArrayList<>();
 	
@@ -61,17 +63,18 @@ public class CounterCluster {
 		// Generate new position and add to end of startPos
 		Vector2D nextPos = getNextPos();
 		startPos.add(nextPos);
+		
 		// Add new counter to the front and set to initialPos
 		counters.add(0, counter);
 		counter.setTarget(initialPos.copy(), false);
+		
 		// Animate counters shifting backwards
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (int i = startPos.size() - 1; i > 0; i--) {
+		new Thread(() -> {
+			for (int i = startPos.size() - 1; i > 0; i--) {
+				if (!instantAnimate) {
 					sleep(200);
-					counters.get(i).setTarget(startPos.get(i), false);
 				}
+				counters.get(i).setTarget(startPos.get(i), false);
 			}
 		}).start();
 	}
@@ -101,13 +104,12 @@ public class CounterCluster {
 		// Removes the last position
 		startPos.remove(startPos.size() - 1);
 		// Moves counters along filling the gap in a nice animation
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				for (int i = 0; i < counters.size(); i++) {
+		new Thread(() -> {
+			for (int i = 0; i < counters.size(); i++) {
+				if (!instantAnimate) {
 					sleep(200);
-					counters.get(i).setTarget(startPos.get(i), false);
 				}
+				counters.get(i).setTarget(startPos.get(i), false);
 			}
 		}).start();
 	}

@@ -42,6 +42,8 @@ public class GameLogic {
 	
 	/** Is the scene animating */
 	private boolean animating = false;
+	
+	private boolean instantAnimate;
 
 //	/** AI controller */
 //	private AIController ai;
@@ -51,7 +53,7 @@ public class GameLogic {
 	
 	public GameLogic(
 		int boardStartLength, int boardMidLength, int boardEndLen,
-		int noCounters
+		int noCounters, boolean instantAnimate
 	) {
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
 		playerOne = new Player(
@@ -75,6 +77,12 @@ public class GameLogic {
 		// Set player to one
 		currentPlayer = playerOne;
 		previousPlayer = playerOne;
+		
+		this.instantAnimate = instantAnimate;
+		if (instantAnimate) {
+			CounterCluster.instantAnimate = true;
+			Counter.instantAnimate = true;
+		}
 	}
 	
 	/**
@@ -193,6 +201,7 @@ public class GameLogic {
 					return null;
 				default:
 					Tile nextTile = board.getNextTile(route, counter, true);
+					animating = true;
 					counter.setTarget(counterInTilePosition(nextTile), false);
 					break;
 			}
@@ -206,18 +215,17 @@ public class GameLogic {
 			// is blocked by player's counter - move back to start
 			final Counter takenCounter = finalTile.getCounter();
 			final Player otherPlayer = getOtherPlayer();
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
+			new Thread(() -> {
+				try {
+					if (!instantAnimate) {
 						int dist = (newRouteIndex - oldRouteIndex) * Tile.WIDTH;
 						int time = (int) Math.ceil((dist * 1.0) / Counter.SPEED);
 						Thread.sleep(time * (int) Framework.GAME_HERTZ);
-						
-						moveCounterToStart(otherPlayer, takenCounter);
-					} catch (InterruptedException e) {
-						Log.error("GAME", "Failed to sleep before moving final tile", e);
 					}
+					
+					moveCounterToStart(otherPlayer, takenCounter);
+				} catch (InterruptedException e) {
+					Log.error("GAME", "Failed to sleep before moving final tile", e);
 				}
 			}).start();
 		}
@@ -235,6 +243,7 @@ public class GameLogic {
 		Tile[] route = player.getRoute();
 		while (AIController.checkMove(route, counter, -1) != MoveState.START) {
 			Tile nextTile = board.getNextTile(route, counter, false);
+			animating = true;
 			counter.setTarget(counterInTilePosition(nextTile), true);
 		}
 		player.getStartCluster().add(counter);

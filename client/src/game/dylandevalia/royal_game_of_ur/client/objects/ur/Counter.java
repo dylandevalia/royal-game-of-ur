@@ -17,6 +17,8 @@ public class Counter extends AbstractButton {
 	/** How quickly the counter will move towards its current target */
 	public static final int SPEED = 8;
 	
+	public static boolean instantAnimate = false;
+	
 	/**
 	 * The current index through the counter's route
 	 * -1 is used to describe a counter not currently on the route
@@ -55,10 +57,15 @@ public class Counter extends AbstractButton {
 		
 		double dist = Vector2D.dist(pos, target.getKey());
 		
-		if (dist > SPEED) { // If more that speed away from the target
+		if (instantAnimate) {
+			pos.set(targets.getLast().getKey());
+			targets.clear();
+		} else if (dist > SPEED) { // If more that speed away from the target
 			// Move speed towards target
 			pos.add(
-				Vector2D.sub(target.getKey(), pos).setMag(target.getValue() ? SPEED * 2 : SPEED));
+				Vector2D.sub(target.getKey(), pos)
+					.setMag(target.getValue() ? SPEED * 2 : SPEED)
+			);
 			isMoving = true;
 		} else {    // Less that speed away from target
 			// So just move to target
