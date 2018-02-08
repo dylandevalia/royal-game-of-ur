@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="onejar">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libraries/kryonet-2.21.zip!/kryonet-2.21/jars/production/onejar" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
