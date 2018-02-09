@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.gui;
 import game.dylandevalia.royal_game_of_ur.states.StateManager;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.IllegalComponentStateException;
 import java.awt.MouseInfo;
@@ -47,7 +48,6 @@ public class Framework extends Canvas {
 		
 		// Creates the main menu state and sets it to the active state
 		stateManager.loadState(StateManager.GameState.MAIN_MENU);
-		
 		stateManager.setState(StateManager.GameState.MAIN_MENU);
 		
 		// Stats the objects loop in its own thread
@@ -148,6 +148,8 @@ public class Framework extends Canvas {
 	 */
 	@Override
 	public void draw(Graphics2D g) {
+		g.setColor(new Color(0, 0, 0));
+		g.drawRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		stateManager.draw(g, interpolate);
 	}
 	

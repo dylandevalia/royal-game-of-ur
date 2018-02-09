@@ -7,6 +7,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -215,19 +216,17 @@ public class GameLogic {
 			// is blocked by player's counter - move back to start
 			final Counter takenCounter = finalTile.getCounter();
 			final Player otherPlayer = getOtherPlayer();
-			new Thread(() -> {
-				try {
-					if (!instantAnimate) {
-						int dist = (newRouteIndex - oldRouteIndex) * Tile.WIDTH;
-						int time = (int) Math.ceil((dist * 1.0) / Counter.SPEED);
-						Thread.sleep(time * (int) Framework.GAME_HERTZ);
-					}
+			if (instantAnimate) {
+				moveCounterToStart(otherPlayer, takenCounter);
+			} else {
+				new Thread(() -> {
+					int dist = (newRouteIndex - oldRouteIndex) * Tile.WIDTH;
+					int time = (int) Math.ceil((dist * 1.0) / Counter.SPEED);
+					Utility.sleep(time * (int) Framework.GAME_HERTZ);
 					
 					moveCounterToStart(otherPlayer, takenCounter);
-				} catch (InterruptedException e) {
-					Log.error("GAME", "Failed to sleep before moving final tile", e);
-				}
-			}).start();
+				}).start();
+			}
 		}
 		finalTile.setCounter(counter);
 		return finalTile;

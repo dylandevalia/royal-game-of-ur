@@ -73,14 +73,20 @@ public class CounterCluster {
 		if (instantAnimate) {
 		
 		} else {
-			new Thread(() -> {
-				for (int i = startPos.size() - 1; i > 0; i--) {
-					if (!instantAnimate) {
-						Utility.sleep(200);
-					}
-					counters.get(i).setTarget(startPos.get(i), false);
-				}
-			}).start();
+			if (instantAnimate) {
+				add_helper(false);
+			} else {
+				new Thread(() -> add_helper(true)).start();
+			}
+		}
+	}
+	
+	private void add_helper(boolean shouldSleep) {
+		for (int i = startPos.size() - 1; i > 0; i--) {
+			if (shouldSleep) {
+				Utility.sleep(200);
+			}
+			counters.get(i).setTarget(startPos.get(i), false);
 		}
 	}
 	
@@ -109,14 +115,20 @@ public class CounterCluster {
 		// Removes the last position
 		startPos.remove(startPos.size() - 1);
 		// Moves counters along filling the gap in a nice animation
-		new Thread(() -> {
-			for (int i = 0; i < counters.size(); i++) {
-				if (!instantAnimate) {
-					Utility.sleep(200);
-				}
-				counters.get(i).setTarget(startPos.get(i), false);
+		if (instantAnimate) {
+			remove_helper(false);
+		} else {
+			new Thread(() -> remove_helper(true)).start();
+		}
+	}
+	
+	private void remove_helper(boolean shouldSleep) {
+		for (int i = 0; i < counters.size(); i++) {
+			if (shouldSleep) {
+				Utility.sleep(200);
 			}
-		}).start();
+			counters.get(i).setTarget(startPos.get(i), false);
+		}
 	}
 	
 	public int getSize() {
