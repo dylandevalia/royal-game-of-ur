@@ -71,13 +71,9 @@ public class CounterCluster {
 		
 		// Animate counters shifting backwards
 		if (instantAnimate) {
-		
+			add_helper(false);
 		} else {
-			if (instantAnimate) {
-				add_helper(false);
-			} else {
-				new Thread(() -> add_helper(true)).start();
-			}
+			new Thread(() -> add_helper(true)).start();
 		}
 	}
 	

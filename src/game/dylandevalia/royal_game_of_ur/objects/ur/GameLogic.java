@@ -2,8 +2,9 @@ package game.dylandevalia.royal_game_of_ur.objects.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
-import game.dylandevalia.royal_game_of_ur.objects.ur.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
@@ -275,7 +276,7 @@ public class GameLogic {
 				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
 			) {
 			won = true;
-			Log.debug("GAME", "GAME WON!");
+			Log.debug("GAME", "GAME WON! - " + currentPlayer.getId());
 			return true;
 		}
 		return false;
@@ -294,6 +295,10 @@ public class GameLogic {
 		
 		allowMove = false;
 		allowRoll = true;
+		
+		if (instantAnimate && currentPlayer.isAI()) {
+			rollDice();
+		}
 	}
 	
 	/**
@@ -313,7 +318,7 @@ public class GameLogic {
 	 * Calculates and performs move for the AI
 	 */
 	private void takeAITurn() {
-		Log.info("GAME", "AI taking turn");
+//		Log.info("GAME", "AI taking turn");
 		
 		ArrayList<Pair<Counter, MoveState>> moves = AIController
 			.getPlayableCounters(currentPlayer, currentRoll);

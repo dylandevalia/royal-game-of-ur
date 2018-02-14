@@ -1,5 +1,8 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur;
+package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
+import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
+import game.dylandevalia.royal_game_of_ur.objects.ur.Player;
+import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
 
