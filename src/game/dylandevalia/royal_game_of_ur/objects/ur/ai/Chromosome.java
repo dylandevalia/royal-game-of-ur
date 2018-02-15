@@ -4,13 +4,8 @@ class Chromosome {
 	
 	private double[] values;
 	
-	Chromosome() {
-	
-	}
-	
-	Chromosome(double value) {
-		values = new double[1];
-		values[0] = value;
+	Chromosome(int noValues) {
+		values = new double[noValues];
 	}
 	
 	double getValue() {
@@ -19,6 +14,10 @@ class Chromosome {
 	
 	double getValue(int index) {
 		return values[index];
+	}
+	
+	void setValue(double value) {
+		values[0] = value;
 	}
 	
 	void setValue(int index, double values) {
