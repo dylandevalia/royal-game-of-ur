@@ -1,40 +1,55 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
+import game.dylandevalia.royal_game_of_ur.states.Game_Ur;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 
 public class DNA {
 	
 	/* Move weights */
 	
-	public static final int ROSETTE = 0;
-	public static final int CAPTURE = 1;
+	/** Landed on a rosette */
+	static final int ROSETTE = 0;
+	/** Captures an enemy */
+	static final int CAPTURE = 1;
 	
-	public static final int ENTER_BOARD = 2;
-	public static final int ENTER_CENTER = 3;
-	public static final int ENTER_END = 4;
-	public static final int EXIT_BOARD = 5;
+	/** Enters the board from off-board */
+	static final int ENTER_BOARD = 2;
+	/** Enters the central (shared) row */
+	static final int ENTER_CENTER = 3;
+	/** Enters the end row */
+	static final int ENTER_END = 4;
+	/** Exits the board (won) */
+	static final int EXIT_BOARD = 5;
 	
-	public static final int FURTHEST_PLACE = 6;
-	public static final int CLOSEST_PLACE = 7;
+	/** Counter moves the furthest up the board */
+	static final int FURTHEST_PLACE = 6;
+	/** Moves the least up the board */
+	static final int CLOSEST_PLACE = 7;
 	
-	public static final int SPACES_IN_FRONT_ENEMY = 8;
+	private static final int SINGLE_CHROMOSOME = 8;
 	
-	public static final int COUNTER_ON_BOARD = 9;
-	public static final int ENEMIES_ON_BOARD = 10;
+	/** Amount of spaces in front of an enemy before move */
+	static final int SPACES_AFTER_ENEMY_PRE = 8;
+	/** Amount of spaces in front of an enemy after move */
+	static final int SPACES_AFTER_ENEMY_POST = 9;
+	
+	/** The number of friendly counters on the board */
+	static final int FRIENDLIES_ON_BOARD = 10;
+	/** The number of hostile counters on the board */
+	static final int HOSTILES_ON_BOARD = 11;
 	
 	/* Meta values */
 	
-	public static final int MUTATION_CHANCE = 11;
+	public static final int MUTATION_CHANCE = 12;
 	
-	public static final int CHROMOSOME_LENGTH = 12;
+	private static final int CHROMOSOME_LENGTH = 13;
 	
-	private Chromosome[] chromosomes = new Chromosome[CHROMOSOME_LENGTH];
+	private Chromosome[] chromosomes;
 	private Crossover crossover;
 	
-	public DNA() {
-		for (int i = 0; i < chromosomes.length; i++) {
-			chromosomes[i] = new Chromosome(Math.random());
-		}
+	DNA() {
+		chromosomes = initialiseChromosomes();
+		
 		int len = Crossover.values().length;
 		this.crossover = Crossover.values()[Utility.randBetween(0, len - 1)];
 	}
@@ -44,9 +59,34 @@ public class DNA {
 		this.crossover = crossoverMethod;
 	}
 	
+	private static Chromosome[] initialiseChromosomes() {
+		Chromosome[] chromosomes = new Chromosome[CHROMOSOME_LENGTH];
+		
+		for (int i = 0; i < SINGLE_CHROMOSOME; i++) {
+			chromosomes[i] = new Chromosome(1);
+			chromosomes[i].setValue(Math.random());
+		}
+		
+		chromosomes[SPACES_AFTER_ENEMY_PRE] = new Chromosome(Game_Ur.noDice);
+		chromosomes[SPACES_AFTER_ENEMY_POST] = new Chromosome(Game_Ur.noDice);
+		for (int i = 0; i < Game_Ur.noDice; i++) {
+			chromosomes[SPACES_AFTER_ENEMY_PRE].setValue(i, Math.random());
+			chromosomes[SPACES_AFTER_ENEMY_POST].setValue(i, Math.random());
+		}
+		
+		chromosomes[FRIENDLIES_ON_BOARD] = new Chromosome(Game_Ur.noCounters);
+		chromosomes[HOSTILES_ON_BOARD] = new Chromosome(Game_Ur.noCounters);
+		for (int i = 0; i < Game_Ur.noCounters; i++) {
+			chromosomes[FRIENDLIES_ON_BOARD].setValue(i, Math.random());
+			chromosomes[HOSTILES_ON_BOARD].setValue(i, Math.random());
+		}
+		
+		return chromosomes;
+	}
+	
 	/**
-	 * Cross-breeds two DNAs to make a new child DNA
-	 * Randomly picks on of the crossover methods of the parent
+	 * Cross-breeds two DNAs to make a new child DNA Randomly picks on of the crossover methods of
+	 * the parent
 	 *
 	 * @param mum Parent DNA A
 	 * @param dad Parent DNA B
@@ -57,15 +97,16 @@ public class DNA {
 		Crossover cross = (Utility.fiftyFifty() ? mum : dad).crossover;
 		
 		// Make child chromosomes and give it the chosen crossover method
-		Chromosome[] child = new Chromosome[CHROMOSOME_LENGTH];
+		Chromosome[] child = initialiseChromosomes();
 		
 		// Pick two points for Crossover.SINGLE_POINT and Crossover.DOUBLE_POINT
 		// methods
 		int pointOne = Utility.randBetween(0, CHROMOSOME_LENGTH - 2);
 		int pointTwo = Utility.randBetween(pointOne + 1, CHROMOSOME_LENGTH - 1);
 		
+		// Go through every chromosome and sub-chromosome and cross
 		for (int i = 0; i < child.length; i++) {
-			Chromosome c = child[i] = new Chromosome();
+			Chromosome c = child[i];
 			for (int j = 0; j < c.getLength(); j++) {
 				c.setValue(j, crossover_helper(
 					cross,
@@ -99,11 +140,11 @@ public class DNA {
 		}
 	}
 	
-	public double getValue(int moveState) {
+	double getValue(int moveState) {
 		return chromosomes[moveState].getValue();
 	}
 	
-	public double getValue(int moveState, int arg) {
+	double getValue(int moveState, int arg) {
 		return chromosomes[moveState].getValue(arg);
 	}
 	

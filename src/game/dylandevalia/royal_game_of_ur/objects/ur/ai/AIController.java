@@ -16,7 +16,7 @@ public class AIController {
 	 * @return The appropriate {@link MoveState} according to the move
 	 */
 	public static MoveState checkMove(Tile[] route, Counter counter, int spaces) {
-		int newIndex = counter.currentRouteIndex + spaces;
+		int newIndex = counter.getCurrentRouteIndex() + spaces;
 		
 		/* Going off the board */
 		if (newIndex < 0) {
@@ -30,7 +30,7 @@ public class AIController {
 		
 		Tile newTile = route[newIndex];
 		if (newTile.hasCounter()) {
-			if (newTile.getCounter().player == counter.player) {
+			if (newTile.getCounter().getPlayer() == counter.getPlayer()) {
 				return MoveState.BLOCKED;
 			} else if (newTile.isRosette()) {
 				return MoveState.BLOCKED;
