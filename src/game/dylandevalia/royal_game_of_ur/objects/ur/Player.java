@@ -50,8 +50,8 @@ public class Player {
 	 * Generates the start/end clusters and initialises all the counters
 	 *
 	 * @param noCounters The number of counters to create
-	 * @param startPos   The position of the start cluster
-	 * @param endPos     The position of the end cluster
+	 * @param startPos The position of the start cluster
+	 * @param endPos The position of the end cluster
 	 */
 	public void generateCounters(int noCounters, Vector2D startPos, Vector2D endPos) {
 		counters = new Counter[noCounters];

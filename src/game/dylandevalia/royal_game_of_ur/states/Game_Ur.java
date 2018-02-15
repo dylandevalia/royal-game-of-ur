@@ -26,7 +26,10 @@ public class Game_Ur implements IState {
 	private int boardStartLength = 4, boardMidLength = 8, boardEndLength = 2;
 	
 	/** The number of counters each player should have */
-	private int noCounters = 6;
+	public static int noCounters = 6;
+	
+	/** The number of dice to be used */
+	public static int noDice = 4;
 	
 	/** Holds the objects logic */
 	private GameLogic game;
@@ -43,7 +46,8 @@ public class Game_Ur implements IState {
 		
 		game = new GameLogic(
 			boardStartLength, boardMidLength, boardEndLength,
-			noCounters, true
+			noCounters, true,
+			noDice
 		);
 		Log.info("GAME_UR", "GameLogic created");
 		

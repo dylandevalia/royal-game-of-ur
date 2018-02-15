@@ -87,13 +87,13 @@ public class Board {
 	 * @return The tile to move to
 	 */
 	public Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
-		counter.currentRouteIndex += forward ? 1 : -1;
-		if (counter.currentRouteIndex < 0) {
+		counter.setCurrentRouteIndex(counter.getCurrentRouteIndex() + (forward ? 1 : -1));
+		if (counter.getCurrentRouteIndex() < 0) {
 			return route[0];
-		} else if (counter.currentRouteIndex >= route.length) {
+		} else if (counter.getCurrentRouteIndex() >= route.length) {
 			return route[route.length - 1];
 		}
-		return route[counter.currentRouteIndex];
+		return route[counter.getCurrentRouteIndex()];
 	}
 	
 	public int getStartLen() {
@@ -109,7 +109,14 @@ public class Board {
 	}
 	
 	public Tile getTile(int index) {
+		if (index < 0 || index >= tiles.length) {
+			return null;
+		}
 		return tiles[index];
+	}
+	
+	public int getNoTiles() {
+		return tiles.length;
 	}
 	
 	public void update() {

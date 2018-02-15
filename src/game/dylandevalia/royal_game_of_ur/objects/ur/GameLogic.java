@@ -45,17 +45,16 @@ public class GameLogic {
 	/** Is the scene animating */
 	private boolean animating = false;
 	
+	/** Should the game skip animations */
 	private boolean instantAnimate;
-
-//	/** AI controller */
-//	private AIController ai;
 	
 	/** The dice controller */
-	private UrDice dice = new UrDice();
+	private UrDice dice;
 	
 	public GameLogic(
 		int boardStartLength, int boardMidLength, int boardEndLen,
-		int noCounters, boolean instantAnimate
+		int noCounters, boolean instantAnimate,
+		int noDice
 	) {
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
 		playerOne = new Player(
@@ -79,6 +78,8 @@ public class GameLogic {
 		// Set player to one
 		currentPlayer = playerOne;
 		previousPlayer = playerOne;
+		
+		dice = new UrDice(noDice);
 		
 		this.instantAnimate = instantAnimate;
 		if (instantAnimate) {
@@ -121,14 +122,15 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Rerolls the dice and resets {@link #allowMove} and {@link #allowRoll} booleans
-	 * Also checks if the next move is possible and resets if required
+	 * Rerolls the dice and resets {@link #allowMove} and {@link #allowRoll} booleans Also checks if
+	 * the next move is possible and resets if required
 	 */
 	public void rollDice() {
 		allowMove = true;
 		allowRoll = false;
 		
 		currentRoll = dice.roll();
+		Log.info("GAME", "Rolled: " + currentRoll);
 		
 		if (arePossibleMoves() && currentPlayer.isAI()) {
 			takeAITurn();
@@ -156,18 +158,16 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Checks if the counter can move by checking:
-	 * 1) Did the mouse click on the counter
-	 * 2) If the counter is in play (not in end cluster)
-	 * and 3) If the move, if played, would it be blocked!
+	 * Checks if the counter can move by checking: 1) Did the mouse click on the counter 2) If the
+	 * counter is in play (not in end cluster) and 3) If the move, if played, would it be blocked!
 	 *
 	 * @param mousePos The position of the mouse
-	 * @param counter  The counter to check if it can move
+	 * @param counter The counter to check if it can move
 	 * @return True if move is possible
 	 */
 	public boolean canCounterMove(Vector2D mousePos, Counter counter) {
 		return counter.isColliding(mousePos)
-			&& counter.currentRouteIndex < board.getRouteLength()
+			&& counter.getCurrentRouteIndex() < board.getRouteLength()
 			&& AIController.checkMove(currentPlayer.getRoute(), counter, currentRoll)
 			!= MoveState.BLOCKED;
 	}
@@ -178,28 +178,28 @@ public class GameLogic {
 	 * the last target
 	 *
 	 * @param counter The counter to move
-	 * @param spaces  The amount of spaces to move the counter along the route
+	 * @param spaces The amount of spaces to move the counter along the route
 	 */
 	public Tile moveCounter(Player player, Counter counter, int spaces) {
 		Tile[] route = player.getRoute();
 		
-		if (counter.currentRouteIndex < 0) {
+		if (counter.getCurrentRouteIndex() < 0) {
 			// Get out of starting cluster
 			CounterCluster cluster = player.getStartCluster();
 			cluster.remove(counter);
 		} else {
 			// Set current tile to not have counter
-			route[counter.currentRouteIndex].setCounter(null);
+			route[counter.getCurrentRouteIndex()].setCounter(null);
 		}
 		
-		final int oldRouteIndex = counter.currentRouteIndex;
+		final int oldRouteIndex = counter.getCurrentRouteIndex();
 		
 		// Go through each tile one by one
 		for (int i = 0; i < spaces; i++) {
 			switch (AIController.checkMove(route, counter, 1)) {
 				case END:
 					player.getEndCluster().add(counter);
-					counter.currentRouteIndex = board.getRouteLength();
+					counter.setCurrentRouteIndex(board.getRouteLength());
 					return null;
 				default:
 					Tile nextTile = board.getNextTile(route, counter, true);
@@ -209,7 +209,7 @@ public class GameLogic {
 			}
 		}
 		
-		final int newRouteIndex = counter.currentRouteIndex;
+		final int newRouteIndex = counter.getCurrentRouteIndex();
 		
 		Tile finalTile = route[newRouteIndex];
 		if (finalTile.hasCounter()) {
@@ -236,7 +236,7 @@ public class GameLogic {
 	/**
 	 * Moves the counter to the starting cluster along the player's route
 	 *
-	 * @param player  The player who owns the counter
+	 * @param player The player who owns the counter
 	 * @param counter The counter to move
 	 */
 	private void moveCounterToStart(Player player, Counter counter) {
@@ -247,12 +247,11 @@ public class GameLogic {
 			counter.setTarget(counterInTilePosition(nextTile), true);
 		}
 		player.getStartCluster().add(counter);
-		counter.currentRouteIndex = -1;
+		counter.setCurrentRouteIndex(-1);
 	}
 	
 	/**
-	 * Runs at the end of a turn - checks if the game is won and
-	 * initiates the next turn
+	 * Runs at the end of a turn - checks if the game is won and initiates the next turn
 	 *
 	 * @param finalTile The final tile that the counter just move to that turn
 	 */
@@ -265,8 +264,8 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Checks if the objects is won by seeing if either player's end
-	 * cluster is equal to the number of counters
+	 * Checks if the objects is won by seeing if either player's end cluster is equal to the number
+	 * of counters
 	 *
 	 * @return True if the objects is won
 	 */
@@ -321,7 +320,8 @@ public class GameLogic {
 		ArrayList<Pair<Counter, MoveState>> moves = AIController
 			.getPlayableCounters(currentPlayer, currentRoll);
 		
-		Counter counterToMove = currentPlayer.getAI().makeMove(board, currentRoll, moves);
+		Counter counterToMove = currentPlayer.getAI()
+			.makeMove(board, currentRoll, dice.getNoDice(), moves);
 		Tile finalTile = moveCounter(currentPlayer, counterToMove, currentRoll);
 		
 		endOfTurn(finalTile);

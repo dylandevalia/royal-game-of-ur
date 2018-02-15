@@ -23,10 +23,10 @@ public class Counter extends AbstractButton {
 	 * The current index through the counter's route
 	 * -1 is used to describe a counter not currently on the route
 	 */
-	public int currentRouteIndex = -1;
+	private int currentRouteIndex = -1;
 	
 	/** The player that the counter belongs to */
-	public PlayerID player;
+	private PlayerID player;
 	
 	/** A stack of targets which the counter will move to in order */
 	private LinkedList<Pair<Vector2D, Boolean>> targets = new LinkedList<>();
@@ -103,5 +103,17 @@ public class Counter extends AbstractButton {
 	
 	public boolean isMoving() {
 		return isMoving;
+	}
+	
+	public int getCurrentRouteIndex() {
+		return currentRouteIndex;
+	}
+	
+	public void setCurrentRouteIndex(int currentRouteIndex) {
+		this.currentRouteIndex = currentRouteIndex;
+	}
+	
+	public PlayerID getPlayer() {
+		return player;
 	}
 }

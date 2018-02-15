@@ -47,6 +47,16 @@ public class UrDice {
 	}
 	
 	/**
+	 * Gets the number of dice
+	 *
+	 * @return The number of dice being used
+	 */
+	public int getNoDice() {
+		return dice.length;
+	}
+	
+	
+	/**
 	 * Die class which can produce a random number between 0 and 1
 	 */
 	private class Die {
