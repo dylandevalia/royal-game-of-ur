@@ -4,74 +4,63 @@ import java.util.Random;
 
 public class UrDice {
 	
-	private Dice dice = new Dice(4, 2);
+	/** Array of dice */
+	private Die[] dice;
 	
-	public void setNoDice(int noDice) {
-		dice = new Dice(noDice, 2);
+	public UrDice(int noDice) {
+		dice = new Die[noDice];
+		for (int i = 0; i < noDice; i++) {
+			dice[i] = new Die();
+			// Sleep for one ms so they get different random seeds
+			Utility.sleep(1);
+		}
 	}
 	
+	/**
+	 * Rolls the dice and returns the sum of the dice
+	 *
+	 * @return The sum of the rolled dice
+	 */
 	public int roll() {
-		int roll = dice.sum();
-		Log.info("Dice", "" + roll);
+		int roll = 0;
+		
+		for (Die die : dice) {
+			roll += die.roll();
+		}
+		
 		return roll;
 	}
 	
-	private class Dice {
+	/**
+	 * Gets all the individual rolls of the dice
+	 *
+	 * @return The rolls of the individual dice
+	 */
+	public int[] getRolls() {
+		int[] rolls = new int[dice.length];
 		
-		private Die[] dice;
-		
-		Dice(int noDice, int sides) {
-			dice = new Die[noDice];
-			for (int i = 0; i < noDice; i++) {
-				dice[i] = new Die(sides);
-				// Sleeps for one millisecond so they all have different seeds
-				sleepForOneMilli();
-			}
+		for (int i = 0; i < dice.length; i++) {
+			rolls[i] = dice[i].value;
 		}
 		
-		/**
-		 * Rolls all the dice and returns the sum of the random numbers
-		 *
-		 * @return The sum of the all random rolls
-		 */
-		int sum() {
-			int sum = 0;
-			for (Die die : dice) {
-				int roll = die.roll();
-				sum += roll;
-			}
-			return sum;
+		return rolls;
+	}
+	
+	/**
+	 * Die class which can produce a random number between 0 and 1
+	 */
+	private class Die {
+		
+		private int value;
+		private Random random;
+		
+		Die() {
+			random = new Random(System.nanoTime());
 		}
 		
-		/**
-		 * Sleeps the thread for one millisecond
-		 */
-		private void sleepForOneMilli() {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				Log.warn("Dice", "Couldn't sleep thread", e);
-			}
-		}
-		
-		/**
-		 * A single die that can roll a random number between 0 and
-		 * noSides - 1
-		 */
-		private class Die {
-			
-			private int noSides;
-			private Random random;
-			
-			Die(int noSides) {
-				this.noSides = noSides;
-				random = new Random(System.nanoTime());
-			}
-			
-			int roll() {
-				// Get a number from 1 to noSides
-				return (random.nextInt(noSides));
-			}
+		int roll() {
+			value = random.nextInt(2);
+			return value;
 		}
 	}
 }
