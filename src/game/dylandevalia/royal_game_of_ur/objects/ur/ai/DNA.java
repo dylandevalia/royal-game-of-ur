@@ -4,30 +4,44 @@ import game.dylandevalia.royal_game_of_ur.utility.Utility;
 
 public class DNA {
 	
-	public static final int ROSSETE = 0;
+	/* Move weights */
 	
-	public static final int ENTER_BOARD = 1;
-	public static final int ENTER_CENTER = 2;
-	public static final int EXIT_BOARD = 3;
-	public static final int EXIT_CENTER = 4;
+	public static final int ROSETTE = 0;
+	public static final int CAPTURE = 1;
 	
-	public static final int FURTHEST_PLACE = 5;
-	public static final int CLOSEST_PLACE = 6;
+	public static final int ENTER_BOARD = 2;
+	public static final int ENTER_CENTER = 3;
+	public static final int ENTER_END = 4;
+	public static final int EXIT_BOARD = 5;
 	
-	public static final int SPACES_IN_FRONT_ENEMY = 7;
+	public static final int FURTHEST_PLACE = 6;
+	public static final int CLOSEST_PLACE = 7;
 	
-	public static final int COUNTER_ON_BOARD = 8;
-	public static final int ENEMIES_ON_BOARD = 9;
+	public static final int SPACES_IN_FRONT_ENEMY = 8;
 	
-	private Chromosome[] chromosomes = new Chromosome[10];
+	public static final int COUNTER_ON_BOARD = 9;
+	public static final int ENEMIES_ON_BOARD = 10;
+	
+	/* Meta values */
+	
+	public static final int MUTATION_CHANCE = 11;
+	
+	public static final int CHROMOSOME_LENGTH = 12;
+	
+	private Chromosome[] chromosomes = new Chromosome[CHROMOSOME_LENGTH];
 	private Crossover crossover;
 	
 	public DNA() {
 		for (int i = 0; i < chromosomes.length; i++) {
 			chromosomes[i] = new Chromosome(Math.random());
 		}
-		int len = Crossover.class.getEnumConstants().length;
-		this.crossover = Crossover.class.getEnumConstants()[Utility.randBetween(0, len - 1)];
+		int len = Crossover.values().length;
+		this.crossover = Crossover.values()[Utility.randBetween(0, len - 1)];
+	}
+	
+	private DNA(Chromosome[] chromosomes, Crossover crossoverMethod) {
+		this.chromosomes = chromosomes;
+		this.crossover = crossoverMethod;
 	}
 	
 	/**
@@ -40,25 +54,20 @@ public class DNA {
 	 */
 	public static DNA crossover(DNA mum, DNA dad) {
 		// Pick one of the two parent's crossover methods
-		Crossover cross;
-		if (Utility.fiftyFifty()) {
-			cross = mum.crossover;
-		} else {
-			cross = dad.crossover;
-		}
+		Crossover cross = (Utility.fiftyFifty() ? mum : dad).crossover;
 		
-		// Make child DNA and give it the chosen crossover method
-		DNA child = new DNA();
-		child.crossover = cross;
+		// Make child chromosomes and give it the chosen crossover method
+		Chromosome[] child = new Chromosome[CHROMOSOME_LENGTH];
 		
 		// Pick two points for Crossover.SINGLE_POINT and Crossover.DOUBLE_POINT
 		// methods
-		int pointOne = Utility.randBetween(0, mum.chromosomes.length - 2);
-		int pointTwo = Utility.randBetween(pointOne + 1, mum.chromosomes.length - 1);
+		int pointOne = Utility.randBetween(0, CHROMOSOME_LENGTH - 2);
+		int pointTwo = Utility.randBetween(pointOne + 1, CHROMOSOME_LENGTH - 1);
 		
-		for (int i = 0; i < mum.chromosomes.length; i++) {
-			for (int j = 0; j < mum.chromosomes[i].getLength(); j++) {
-				child.chromosomes[i].setValue(j, crossover_helper(
+		for (int i = 0; i < child.length; i++) {
+			Chromosome c = child[i] = new Chromosome();
+			for (int j = 0; j < c.getLength(); j++) {
+				c.setValue(j, crossover_helper(
 					cross,
 					mum.chromosomes[i].getValue(j),
 					dad.chromosomes[i].getValue(j),
@@ -68,7 +77,7 @@ public class DNA {
 			}
 		}
 		
-		return child;
+		return new DNA(child, cross);
 	}
 	
 	private static double crossover_helper(
@@ -85,24 +94,23 @@ public class DNA {
 				return (!beforePointOne && beforePointTwo) ? dad : mum;
 			case FIFTY_FIFTY:
 				return (Utility.fiftyFifty()) ? mum : dad;
-			case WEIGHTED_FIFTY:
+			default:
 				return 0;
 		}
-		return 0;
 	}
 	
-	public Chromosome getChromosomes(int index) {
-		return chromosomes[index];
+	public double getValue(int moveState) {
+		return chromosomes[moveState].getValue();
 	}
 	
-	public void setChromosome(int index, double value) {
-		this.chromosomes[index].setValue(value);
+	public double getValue(int moveState, int arg) {
+		return chromosomes[moveState].getValue(arg);
 	}
 	
 	private enum Crossover {
 		AVERAGE,
 		SINGLE_POINT, DOUBLE_POINT,
-		FIFTY_FIFTY, WEIGHTED_FIFTY
+		FIFTY_FIFTY
 	}
 	
 	private enum Mutation {

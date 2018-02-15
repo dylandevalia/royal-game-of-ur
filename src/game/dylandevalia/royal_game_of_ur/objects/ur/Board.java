@@ -96,8 +96,20 @@ public class Board {
 		return route[counter.currentRouteIndex];
 	}
 	
+	public int getStartLen() {
+		return startingTilesLen;
+	}
+	
+	public int getMidLen() {
+		return startingTilesLen + middleTilesLen;
+	}
+	
 	public int getRouteLength() {
 		return startingTilesLen + middleTilesLen + endTilesLen;
+	}
+	
+	public Tile getTile(int index) {
+		return tiles[index];
 	}
 	
 	public void update() {

@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 
@@ -33,14 +34,16 @@ public class Player {
 	private Color[] colors;
 	
 	/** Is the player AI controlled */
-	private boolean isAI;
+	private AI ai = null;
 	
 	public Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
 		this.id = id;
 		this.name = name;
 		this.colors = colors;
 		route = new Tile[routeLength];
-		this.isAI = isAI;
+		if (isAI) {
+			ai = new AI();
+		}
 	}
 	
 	/**
@@ -94,7 +97,11 @@ public class Player {
 	}
 	
 	public boolean isAI() {
-		return isAI;
+		return ai != null;
+	}
+	
+	public AI getAI() {
+		return ai;
 	}
 	
 	/**

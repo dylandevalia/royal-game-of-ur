@@ -318,12 +318,11 @@ public class GameLogic {
 	 * Calculates and performs move for the AI
 	 */
 	private void takeAITurn() {
-//		Log.info("GAME", "AI taking turn");
-		
 		ArrayList<Pair<Counter, MoveState>> moves = AIController
 			.getPlayableCounters(currentPlayer, currentRoll);
-		Pair<Counter, MoveState> move = moves.get(0);
-		Tile finalTile = moveCounter(currentPlayer, move.getKey(), currentRoll);
+		
+		Counter counterToMove = currentPlayer.getAI().makeMove(board, currentRoll, moves);
+		Tile finalTile = moveCounter(currentPlayer, counterToMove, currentRoll);
 		
 		endOfTurn(finalTile);
 	}
