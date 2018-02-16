@@ -124,7 +124,10 @@ public class MainMenu implements IState {
 			case NONE:
 				break;
 			case DOWN:
-				g.setColor(new Color(0, 0, 0, fadeNum--));
+				if (--fadeNum < 0) {
+					fadeNum = 0;
+				}
+				g.setColor(new Color(0, 0, 0, fadeNum));
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum <= 0) {
 					fade = Fade.NONE;
@@ -132,7 +135,10 @@ public class MainMenu implements IState {
 				}
 				break;
 			case UP:
-				g.setColor(new Color(0, 0, 0, fadeNum += 2));
+				if ((fadeNum += 5) > 255) {
+					fadeNum = 255;
+				}
+				g.setColor(new Color(0, 0, 0, fadeNum));
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum >= 254) {
 					fade.runCallback();

@@ -57,6 +57,13 @@ public class AIController {
 		return false;
 	}
 	
+	/**
+	 * Returns an array list of possible moves that the player can perform
+	 *
+	 * @param player The player whose turn it is
+	 * @param spaces The amount of spaces the counter will move (dice roll)
+	 * @return The list of possible moves
+	 */
 	public static ArrayList<Pair<Counter, MoveState>> getPlayableCounters(Player player,
 		int spaces) {
 		ArrayList<Pair<Counter, MoveState>> moves = new ArrayList<>();

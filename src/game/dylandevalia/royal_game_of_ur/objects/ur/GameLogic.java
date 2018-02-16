@@ -321,7 +321,7 @@ public class GameLogic {
 			.getPlayableCounters(currentPlayer, currentRoll);
 		
 		Counter counterToMove = currentPlayer.getAI()
-			.makeMove(board, currentRoll, dice.getNoDice(), moves);
+			.makeMove(this, moves);
 		Tile finalTile = moveCounter(currentPlayer, counterToMove, currentRoll);
 		
 		endOfTurn(finalTile);
@@ -385,7 +385,7 @@ public class GameLogic {
 	 *
 	 * @return The current player's opponent
 	 */
-	private Player getOtherPlayer() {
+	public Player getOtherPlayer() {
 		if (currentPlayer == playerOne) {
 			return playerTwo;
 		} else if (currentPlayer == playerTwo) {
@@ -410,5 +410,13 @@ public class GameLogic {
 	
 	public boolean isAllowRoll() {
 		return allowRoll;
+	}
+	
+	public Board getBoard() {
+		return board;
+	}
+	
+	public UrDice getDice() {
+		return dice;
 	}
 }

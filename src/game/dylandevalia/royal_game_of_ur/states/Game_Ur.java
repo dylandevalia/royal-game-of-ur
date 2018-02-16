@@ -46,7 +46,7 @@ public class Game_Ur implements IState {
 		
 		game = new GameLogic(
 			boardStartLength, boardMidLength, boardEndLength,
-			noCounters, true,
+			noCounters, false,
 			noDice
 		);
 		Log.info("GAME_UR", "GameLogic created");

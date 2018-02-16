@@ -1,7 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
-import game.dylandevalia.royal_game_of_ur.objects.ur.Board;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
+import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
@@ -17,14 +17,13 @@ public class AI {
 	}
 	
 	public Counter makeMove(
-		Board board,
-		int diceRoll, int noDice,
+		GameLogic game,
 		ArrayList<Pair<Counter, MoveState>> moves
 	) {
 		
 		double[] scores = new double[moves.size()];
 		Pair<Integer, Integer>
-			min = new Pair<>(0, board.getRouteLength()),
+			min = new Pair<>(0, game.getBoard().getRouteLength()),
 			max = new Pair<>(0, -1);
 		PlayerID currentPlayer = moves.get(0).getKey().getPlayer();
 		
@@ -33,29 +32,29 @@ public class AI {
 			MoveState ms = moves.get(i).getValue();
 			scores[i] = 0;
 			int currentPos = counter.getCurrentRouteIndex();
-			int nextPos = currentPos + diceRoll;
+			int nextPos = currentPos + game.getCurrentRoll();
 			
 			/* Entering board segments*/
 			
 			if (currentPos < 0) {
 				scores[i] += dna.getValue(DNA.ENTER_BOARD);
 			} else if (
-				currentPos < board.getStartLen()
-					&& nextPos >= board.getStartLen()
-					&& nextPos < board.getMidLen()
+				currentPos < game.getBoard().getStartLen()
+					&& nextPos >= game.getBoard().getStartLen()
+					&& nextPos < game.getBoard().getMidLen()
 				) {
 				scores[i] += dna.getValue(DNA.ENTER_CENTER);
 			} else if (
-				currentPos < board.getMidLen()
-					&& nextPos >= board.getMidLen()
-					&& nextPos < board.getRouteLength()
+				currentPos < game.getBoard().getMidLen()
+					&& nextPos >= game.getBoard().getMidLen()
+					&& nextPos < game.getBoard().getRouteLength()
 				) {
 				scores[i] += dna.getValue(DNA.ENTER_END);
 			}
 			
 			/* Rosette */
 			
-			if (board.getTile(nextPos).isRosette()) {
+			if (game.getBoard().getTile(nextPos).isRosette()) {
 				scores[i] += dna.getValue(DNA.ROSETTE);
 			}
 			
@@ -82,11 +81,11 @@ public class AI {
 			/* Spaces after enemy */
 			// TODO: Check down correct route (enemy route)
 			
-			for (int j = 1; j <= noDice; j++) {
-				Tile t = board.getTile(currentPos - j);
-				if (t == null) {
+			for (int j = 1; j <= game.getDice().getNoDice(); j++) {
+				if (currentPos - j < 0) {
 					continue;
 				}
+				Tile t = game.getOtherPlayer().getRoute()[currentPos - j];
 				
 				Counter c = t.getCounter();
 				if (c == null) {
@@ -98,11 +97,11 @@ public class AI {
 				}
 			}
 			
-			for (int j = 1; j <= noDice; j++) {
-				Tile t = board.getTile(nextPos - j);
-				if (t == null) {
+			for (int j = 1; j <= game.getDice().getNoDice(); j++) {
+				if (nextPos - j < 0) {
 					continue;
 				}
+				Tile t = game.getOtherPlayer().getRoute()[nextPos - j];
 				
 				Counter c = t.getCounter();
 				if (c == null) {
