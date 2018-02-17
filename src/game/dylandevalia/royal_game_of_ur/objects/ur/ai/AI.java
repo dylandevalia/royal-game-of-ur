@@ -20,11 +20,17 @@ public class AI {
 		GameLogic game,
 		ArrayList<Pair<Counter, MoveState>> moves
 	) {
+		// If only one possible move, return counter
+		if (moves.size() == 1) {
+			return moves.get(0).getKey();
+		}
 		
 		double[] scores = new double[moves.size()];
-		Pair<Integer, Integer>
-			min = new Pair<>(0, game.getBoard().getRouteLength()),
-			max = new Pair<>(0, -1);
+		// Pair<counter index, position>
+		Pair<Integer, Integer> min, max = min = new Pair<>(
+			0,
+			moves.get(0).getKey().getCurrentRouteIndex()
+		);
 		PlayerID currentPlayer = moves.get(0).getKey().getPlayer();
 		
 		for (int i = 0; i < moves.size(); i++) {
@@ -33,6 +39,7 @@ public class AI {
 			scores[i] = 0;
 			int currentPos = counter.getCurrentRouteIndex();
 			int nextPos = currentPos + game.getCurrentRoll();
+			
 			
 			/* Entering board segments*/
 			
@@ -52,11 +59,13 @@ public class AI {
 				scores[i] += dna.getValue(DNA.ENTER_END);
 			}
 			
+			
 			/* Rosette */
 			
 			if (game.getBoard().getTile(nextPos).isRosette()) {
 				scores[i] += dna.getValue(DNA.ROSETTE);
 			}
+			
 			
 			/* Capture or exit board */
 			
@@ -78,8 +87,8 @@ public class AI {
 				max.setValue(nextPos);
 			}
 			
+			
 			/* Spaces after enemy */
-			// TODO: Check down correct route (enemy route)
 			
 			for (int j = 1; j <= game.getDice().getNoDice(); j++) {
 				if (currentPos - j < 0) {
@@ -113,13 +122,14 @@ public class AI {
 				}
 			}
 			
+			
 			/* Counters on the board */
 			// TODO: Can cache these values
 			
 			int friendly = 0, hostile = 0;
-			for (int j = 0; j < board.getNoTiles(); j++) {
-				if (board.getTile(j).hasCounter()) {
-					Counter c = board.getTile(j).getCounter();
+			for (int j = 0; j < game.getBoard().getNoTiles(); j++) {
+				if (game.getBoard().getTile(j).hasCounter()) {
+					Counter c = game.getBoard().getTile(j).getCounter();
 					if (c.getPlayer() == currentPlayer) {
 						friendly++;
 					} else {
@@ -135,6 +145,7 @@ public class AI {
 		scores[min.getKey()] += dna.getValue(DNA.CLOSEST_PLACE);
 		scores[max.getKey()] += dna.getValue(DNA.FURTHEST_PLACE);
 		
+		// Pick highest score counter
 		double maxScore = 0;
 		int index = 0;
 		for (int i = 0; i < scores.length; i++) {
@@ -144,6 +155,7 @@ public class AI {
 			}
 		}
 		
+		// Return highest scoring counter
 		return moves.get(index).getKey();
 	}
 }

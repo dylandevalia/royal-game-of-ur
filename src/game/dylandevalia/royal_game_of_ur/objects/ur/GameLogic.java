@@ -62,7 +62,7 @@ public class GameLogic {
 			"Amy",
 			ColorMaterial.PURPLE,
 			board.getRouteLength(),
-			false
+			true
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
