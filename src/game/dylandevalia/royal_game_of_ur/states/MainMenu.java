@@ -40,10 +40,8 @@ public class MainMenu implements IState {
 			);
 		}
 		
-		Color base = ColorMaterial.INDIGO[8];
-		Color hover = ColorMaterial.INDIGO[8];
-		base = new Color(base.getRed(), base.getGreen(), base.getBlue(), 100);
-		hover = new Color(hover.getRed(), hover.getGreen(), hover.getBlue(), 200);
+		Color base = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 100);
+		Color hover = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 200);
 		
 		btn_play = new TextButton(
 			(Window.WIDTH / 2), (Window.HEIGHT / 2),
@@ -89,12 +87,12 @@ public class MainMenu implements IState {
 		GradientPaint gradientPaint = new GradientPaint(
 			-100, -100,
 			ColorMaterial.INDIGO[4],
-			Window.WIDTH + 200, Window.HEIGHT + 200,
+			Window.WIDTH + 100, Window.HEIGHT + 100,
 			ColorMaterial.INDIGO[9]
 		);
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-		g.setPaint(oldPaint);
+		//g.setPaint(oldPaint);
 		
 		Vector2D mousePos = Framework.getMousePos();
 		for (int i = 0; i < nodes.length; i++) {
@@ -105,8 +103,8 @@ public class MainMenu implements IState {
 			if (dist < 300) {
 				Color c = ColorMaterial.INDIGO[3];
 				g.setColor(
-					new Color(
-						c.getRed(), c.getGreen(), c.getBlue(),
+					ColorMaterial.withAlpha(
+						ColorMaterial.INDIGO[3],
 						(int) Utility.map(dist, 0, 300, 255, 0)
 					)
 				);
@@ -138,7 +136,18 @@ public class MainMenu implements IState {
 				if ((fadeNum += 5) > 255) {
 					fadeNum = 255;
 				}
-				g.setColor(new Color(0, 0, 0, fadeNum));
+				
+				GradientPaint gradient = new GradientPaint(
+					-100, -100,
+					ColorMaterial.withAlpha(ColorMaterial.PURPLE[1], fadeNum),
+					Window.WIDTH + 100, Window.HEIGHT + 100,
+					ColorMaterial.withAlpha(ColorMaterial.PURPLE[4], fadeNum)
+				);
+				
+				g.setPaint(
+					/*new Color(0, 0, 0, fadeNum)*/
+					gradient
+				);
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum >= 254) {
 					fade.runCallback();

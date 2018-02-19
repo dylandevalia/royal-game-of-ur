@@ -36,7 +36,7 @@ public class Player {
 	/** Is the player AI controlled */
 	private AI ai = null;
 	
-	public Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
+	Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
 		this.id = id;
 		this.name = name;
 		this.colors = colors;
@@ -53,18 +53,18 @@ public class Player {
 	 * @param startPos The position of the start cluster
 	 * @param endPos The position of the end cluster
 	 */
-	public void generateCounters(int noCounters, Vector2D startPos, Vector2D endPos) {
+	void generateCounters(int noCounters, Vector2D startPos, Vector2D endPos) {
 		counters = new Counter[noCounters];
 		
 		startCluster = new CounterCluster(startPos, true);
 		endCluster = new CounterCluster(endPos, false);
 		
 		for (int i = 0; i < noCounters; i++) {
-			counters[i] = startCluster.addNew(id);
+			counters[i] = startCluster.addNew(id, colors);
 		}
 	}
 	
-	public PlayerID getId() {
+	PlayerID getId() {
 		return id;
 	}
 	
@@ -80,11 +80,11 @@ public class Player {
 		return route;
 	}
 	
-	public CounterCluster getStartCluster() {
+	CounterCluster getStartCluster() {
 		return startCluster;
 	}
 	
-	public CounterCluster getEndCluster() {
+	CounterCluster getEndCluster() {
 		return endCluster;
 	}
 	
@@ -96,11 +96,11 @@ public class Player {
 		return colors[5];
 	}
 	
-	public boolean isAI() {
+	boolean isAI() {
 		return ai != null;
 	}
 	
-	public AI getAI() {
+	AI getAI() {
 		return ai;
 	}
 	

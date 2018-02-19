@@ -59,17 +59,17 @@ public class GameLogic {
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
 		playerOne = new Player(
 			PlayerID.ONE,
-			"Amy",
+			"Pritz",
 			ColorMaterial.PURPLE,
 			board.getRouteLength(),
-			true
+			false
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
-			"Bert",
+			"Dipz",
 			ColorMaterial.GREEN,
 			board.getRouteLength(),
-			true
+			false
 		);
 		
 		board.generate(playerOne.getRoute(), playerTwo.getRoute());
@@ -359,12 +359,34 @@ public class GameLogic {
 	
 	public void draw(Graphics2D g, double interpolate) {
 		board.draw(g, interpolate);
+//		drawCounters(g, interpolate);
 		for (Counter counter : playerOne.getCounters()) {
-			counter.draw(g, interpolate, playerOne.getColors());
+			counter.draw(g, interpolate);
 		}
 		for (Counter counter : playerTwo.getCounters()) {
-			counter.draw(g, interpolate, playerTwo.getColors());
+			counter.draw(g, interpolate);
 		}
+	}
+	
+	private void drawCounters(Graphics2D g, double interpolate) {
+		ArrayList<Counter> still = new ArrayList<>(),
+			cluster = new ArrayList<>(),
+			moving = new ArrayList<>();
+		
+		Counter[] one = playerOne.getCounters(), two = playerTwo.getCounters();
+		for (int i = 0; i < playerOne.getCounters().length; i++) {
+			if (!one[i].isMoving()) {
+				still.add(one[i]);
+			} else if (one[i].getCurrentRouteIndex() < 0
+				|| one[i].getCurrentRouteIndex() >= board.getRouteLength()
+				) {
+				
+			}
+			
+		}
+		
+		still.forEach(c -> c.draw(g, interpolate));
+		
 	}
 	
 	

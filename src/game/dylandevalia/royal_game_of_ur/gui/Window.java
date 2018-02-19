@@ -9,11 +9,11 @@ import javax.swing.WindowConstants;
  */
 public class Window extends JFrame {
 	
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
+	public static final int WIDTH = 1920;
+	public static final int HEIGHT = 1080;
 	
 	// Should the window run is fullscreen or windowed
-	private final boolean fullscreen = false;
+	private final boolean fullscreen = true;
 	
 	public Window() {
 		this.setTitle("The Royal Game of Ur");

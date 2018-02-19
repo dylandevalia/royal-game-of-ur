@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.gui;
 
 import java.awt.Color;
+import org.jetbrains.annotations.NotNull;
 
 public class ColorMaterial {
 	
@@ -268,4 +269,13 @@ public class ColorMaterial {
 		new Color(38, 50, 56)
 	};
 	public static final Color blueGrey = BLUE_GREY[5];
+	
+	@NotNull
+	public static Color withAlpha(Color c, int alpha) {
+		if (alpha < 0 || alpha > 255) {
+			throw new IllegalArgumentException("Invalid alpha value");
+		}
+		
+		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);
+	}
 }

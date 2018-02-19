@@ -4,6 +4,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  */
 public class CounterCluster {
 	
-	public static boolean instantAnimate = false;
+	static boolean instantAnimate = false;
 	
 	/** The array-list of counters */
 	private ArrayList<Counter> counters = new ArrayList<>();
@@ -32,7 +33,7 @@ public class CounterCluster {
 	 * @param initialPos The initial position for the first counter
 	 * @param goLeft     Should the counters stack left or right
 	 */
-	public CounterCluster(Vector2D initialPos, boolean goLeft) {
+	CounterCluster(Vector2D initialPos, boolean goLeft) {
 		this.initialPos = initialPos;
 		this.goLeft = goLeft;
 	}
@@ -43,11 +44,11 @@ public class CounterCluster {
 	 * @param player The player/owner of the counter ({@link PlayerID})
 	 * @return A reference to the newly created counter
 	 */
-	public Counter addNew(PlayerID player) {
+	Counter addNew(PlayerID player, Color[] colors) {
 		Vector2D nextPos = getNextPos();
 		Counter counter = new Counter(
 			(int) nextPos.x, (int) nextPos.y,
-			player
+			player, colors
 		);
 		startPos.add(nextPos);
 		counters.add(counter);
@@ -60,7 +61,7 @@ public class CounterCluster {
 	 *
 	 * @param counter Reference to the counter to add to the cluster
 	 */
-	public void add(Counter counter) {
+	void add(Counter counter) {
 		// Generate new position and add to end of startPos
 		Vector2D nextPos = getNextPos();
 		startPos.add(nextPos);
@@ -104,7 +105,7 @@ public class CounterCluster {
 	 *
 	 * @param counter The counter to remove from the cluster
 	 */
-	public void remove(Counter counter) {
+	void remove(Counter counter) {
 		if (!counters.remove(counter)) {
 			Log.error("COUNTER_CLUSTER", "Counter doesn't belong to this cluster");
 		}
@@ -127,7 +128,7 @@ public class CounterCluster {
 		}
 	}
 	
-	public int getSize() {
+	int getSize() {
 		return counters.size();
 	}
 }

@@ -15,9 +15,9 @@ public class Counter extends AbstractButton {
 	public static final int WIDTH = Window.WIDTH / 15;
 	
 	/** How quickly the counter will move towards its current target */
-	public static final int SPEED = 8;
+	static final int SPEED = 16;
 	
-	public static boolean instantAnimate = false;
+	static boolean instantAnimate = false;
 	
 	/**
 	 * The current index through the counter's route
@@ -27,6 +27,9 @@ public class Counter extends AbstractButton {
 	
 	/** The player that the counter belongs to */
 	private PlayerID player;
+	
+	/** Player's colours */
+	private Color[] colors;
 	
 	/** A stack of targets which the counter will move to in order */
 	private LinkedList<Pair<Vector2D, Boolean>> targets = new LinkedList<>();
@@ -40,11 +43,11 @@ public class Counter extends AbstractButton {
 	/** Allow hovering over counter */
 	private boolean allowHover = true;
 	
-	
-	public Counter(int x, int y, PlayerID player) {
+	public Counter(int x, int y, PlayerID player, Color[] colors) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new Pair<>(pos, false);
 		this.player = player;
+		this.colors = colors;
 	}
 	
 	public void update(Vector2D mousePos, boolean allowHover) {
@@ -80,10 +83,10 @@ public class Counter extends AbstractButton {
 		}
 	}
 	
-	public void draw(Graphics2D g, double interpolate, Color[] colors) {
+	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
-		int shade = (allowHover && isMouseHovering) ? 3 : 5;
+		int shade = 5 - ((allowHover && isMouseHovering) ? 2 : 0);
 		g.setColor(colors[shade]);
 		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
 	}
@@ -97,11 +100,11 @@ public class Counter extends AbstractButton {
 		return pos == target.getKey();
 	}
 	
-	public void setTarget(Vector2D target, boolean captured) {
+	void setTarget(Vector2D target, boolean captured) {
 		targets.add(new Pair<>(target, captured));
 	}
 	
-	public boolean isMoving() {
+	boolean isMoving() {
 		return isMoving;
 	}
 	
@@ -109,7 +112,7 @@ public class Counter extends AbstractButton {
 		return currentRouteIndex;
 	}
 	
-	public void setCurrentRouteIndex(int currentRouteIndex) {
+	void setCurrentRouteIndex(int currentRouteIndex) {
 		this.currentRouteIndex = currentRouteIndex;
 	}
 	

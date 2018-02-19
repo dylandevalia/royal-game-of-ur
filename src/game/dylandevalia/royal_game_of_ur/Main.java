@@ -10,11 +10,6 @@ public class Main {
 		Log.SET_DEBUG();
 		
 		// Start running the gui in its own thread
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new Window();
-			}
-		});
+		SwingUtilities.invokeLater(Window::new);
 	}
 }

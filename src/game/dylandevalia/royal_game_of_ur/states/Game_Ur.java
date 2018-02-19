@@ -13,7 +13,9 @@ import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -54,7 +56,7 @@ public class Game_Ur implements IState {
 		btn_roll = new TextButton(
 			Window.WIDTH - 20, (Window.HEIGHT / 2),
 			20, 10,
-			new Font("TimesRoman", Font.BOLD, 28),
+			new Font("TimesRoman", Font.BOLD, 56),
 			Alignment.RIGHT,
 			"Roll",
 			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.blueGrey,
@@ -78,8 +80,18 @@ public class Game_Ur implements IState {
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
-		g.setColor(ColorMaterial.GREY[2]);
+		//g.setColor(ColorMaterial.GREY[2]);
+		Paint oldPaint = g.getPaint();
+		
+		GradientPaint gradientPaint = new GradientPaint(
+			-100, -100,
+			game.getCurrentPlayer().getColors()[1],
+			Window.WIDTH + 100, Window.HEIGHT + 100,
+			game.getCurrentPlayer().getColors()[4]
+		);
+		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+		g.setPaint(oldPaint);
 		
 		game.draw(g, interpolate);
 		
@@ -88,11 +100,11 @@ public class Game_Ur implements IState {
 		
 		/* Text */
 		
-		g.setFont(new Font("TimesRoman", Font.BOLD, 32));
+		g.setFont(new Font("TimesRoman", Font.BOLD, 64));
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Current player
-		g.setColor(game.getCurrentPlayer().getMainColor());
+		g.setColor(game.getCurrentPlayer().getColors()[9]);
 		String turn = "Player: " + game.getCurrentPlayer().getName();
 		g.drawString(turn, (Window.WIDTH - 20) - fm.stringWidth(turn), fm.getHeight());
 		
@@ -102,7 +114,7 @@ public class Game_Ur implements IState {
 			String roll = Integer.toString(game.getCurrentRoll());
 			if (game.isAllowRoll()) {
 				// Previous player rolled last
-				g.setColor(game.getPreviousPlayer().getMainColor());
+				g.setColor(game.getPreviousPlayer().getColors()[9]);
 				roll = "Previous Roll: " + roll;
 			} else {
 				// Else use current player colour
