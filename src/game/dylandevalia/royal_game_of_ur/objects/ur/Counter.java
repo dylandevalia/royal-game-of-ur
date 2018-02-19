@@ -4,6 +4,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,7 +16,7 @@ public class Counter extends AbstractButton {
 	public static final int WIDTH = Window.WIDTH / 15;
 	
 	/** How quickly the counter will move towards its current target */
-	static final int SPEED = 16;
+	static final double SPEED = Utility.mapWidth(8, 16);
 	
 	static boolean instantAnimate = false;
 	

@@ -10,6 +10,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -21,18 +22,14 @@ import java.awt.event.MouseEvent;
 
 public class Game_Ur implements IState {
 	
-	/** Reference to the state manager */
-	private StateManager stateManager;
-	
-	/** Board lengths */
-	private int boardStartLength = 4, boardMidLength = 8, boardEndLength = 2;
-	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;
-	
 	/** The number of dice to be used */
 	public static int noDice = 4;
-	
+	/** Reference to the state manager */
+	private StateManager stateManager;
+	/** Board lengths */
+	private int boardStartLength = 4, boardMidLength = 8, boardEndLength = 2;
 	/** Holds the objects logic */
 	private GameLogic game;
 	
@@ -56,7 +53,9 @@ public class Game_Ur implements IState {
 		btn_roll = new TextButton(
 			Window.WIDTH - 20, (Window.HEIGHT / 2),
 			20, 10,
-			new Font("TimesRoman", Font.BOLD, 56),
+			new Font("TimesRoman", Font.BOLD,
+				(int) Utility.mapWidth(28, 56)
+			),
 			Alignment.RIGHT,
 			"Roll",
 			ColorMaterial.AMBER[5], ColorMaterial.AMBER[3], ColorMaterial.blueGrey,
@@ -100,7 +99,9 @@ public class Game_Ur implements IState {
 		
 		/* Text */
 		
-		g.setFont(new Font("TimesRoman", Font.BOLD, 64));
+		g.setFont(new Font("TimesRoman", Font.BOLD,
+			(int) Utility.mapWidth(32, 64)
+		));
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Current player

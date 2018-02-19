@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.gui;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -8,23 +9,28 @@ import javax.swing.WindowConstants;
  * The main window of the program
  */
 public class Window extends JFrame {
+
+//	public static int WIDTH = 1280;
+//	public static int HEIGHT = 720;
 	
-	public static final int WIDTH = 1920;
-	public static final int HEIGHT = 1080;
+	public static int WIDTH = 1920;
+	public static int HEIGHT = 1080;
 	
 	// Should the window run is fullscreen or windowed
-	private final boolean fullscreen = true;
+	private final boolean fullscreen = false;
 	
 	public Window() {
 		this.setTitle("The Royal Game of Ur");
 		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setContentPane(new Framework());
 		
 		// Sets size of window
 		if (fullscreen) {
 			setUndecorated(true);
 			setExtendedState(MAXIMIZED_BOTH);
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			WIDTH = screenSize.width;
+			HEIGHT = screenSize.height;
 		} else {
 			pack();
 			// Insets insets = getInsets();
@@ -36,6 +42,7 @@ public class Window extends JFrame {
 			setResizable(false);
 		}
 		
+		setContentPane(new Framework());
 		setVisible(true);
 	}
 }

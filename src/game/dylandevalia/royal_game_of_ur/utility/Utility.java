@@ -1,5 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
+import game.dylandevalia.royal_game_of_ur.gui.Window;
+
 public class Utility {
 	
 	/**
@@ -39,6 +41,17 @@ public class Utility {
 	 */
 	public static double map(double n, double start1, double stop1, double start2, double stop2) {
 		return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
+	}
+	
+	/**
+	 * Maps a value based on the window's width
+	 *
+	 * @param sevenTwenty Value at 720p
+	 * @param tenEighty   Value at 1080p
+	 * @return The mapped value based on the window's width
+	 */
+	public static double mapWidth(double sevenTwenty, double tenEighty) {
+		return map(Window.WIDTH, 1280, 1920, sevenTwenty, tenEighty);
 	}
 	
 	/**

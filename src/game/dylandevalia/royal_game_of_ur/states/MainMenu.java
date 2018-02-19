@@ -15,7 +15,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -32,7 +31,7 @@ public class MainMenu implements IState {
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		nodes = new Node[150];
+		nodes = new Node[(int) Utility.mapWidth(150, 300)];
 		for (int i = 0; i < nodes.length; i++) {
 			nodes[i] = new Node(
 				Utility.randBetween(-200, Window.WIDTH + 200),
@@ -46,7 +45,9 @@ public class MainMenu implements IState {
 		btn_play = new TextButton(
 			(Window.WIDTH / 2), (Window.HEIGHT / 2),
 			25, 25,
-			new Font("TimesRoman", Font.BOLD, 64),
+			new Font("TimesRoman", Font.BOLD,
+				(int) Utility.mapWidth(64, 128)
+			),
 			Alignment.CENTER,
 			"Play Game",
 			base, hover, base,
@@ -57,7 +58,9 @@ public class MainMenu implements IState {
 		btn_quit = new TextButton(
 			(Window.WIDTH / 2), 3 * (Window.HEIGHT / 4),
 			25, 25,
-			new Font("TimesRoman", Font.PLAIN, 24),
+			new Font("TimesRoman", Font.PLAIN,
+				(int) Utility.mapWidth(24, 48)
+			),
 			Alignment.CENTER,
 			"Quit",
 			base, hover, base,
@@ -83,7 +86,6 @@ public class MainMenu implements IState {
 	}
 	
 	public void draw(Graphics2D g, double interpolate) {
-		Paint oldPaint = g.getPaint();
 		GradientPaint gradientPaint = new GradientPaint(
 			-100, -100,
 			ColorMaterial.INDIGO[4],
