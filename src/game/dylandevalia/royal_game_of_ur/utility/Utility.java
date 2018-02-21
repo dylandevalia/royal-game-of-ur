@@ -66,4 +66,24 @@ public class Utility {
 			Log.error("COUNTER_CLUSTER", "Failed to sleep");
 		}
 	}
+	
+	public static int clamp(int n, int min, int max) {
+		if (n < min) {
+			n = min;
+		} else if (n > max) {
+			n = max;
+		}
+		
+		return n;
+	}
+	
+	public static double clamp(double n, double min, double max) {
+		if (n < min) {
+			n = min;
+		} else if (n > max) {
+			n = max;
+		}
+		
+		return n;
+	}
 }

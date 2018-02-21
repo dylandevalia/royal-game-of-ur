@@ -12,6 +12,7 @@ import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
@@ -33,11 +34,12 @@ public class Game_Ur implements IState {
 	/** Holds the objects logic */
 	private GameLogic game;
 	
-	
 	/* Buttons */
-	
 	/** Reroll button */
 	private TextButton btn_roll;
+	
+	private int fadeInNum = 256;
+	private double fadeBgRatio = 0;
 	
 	@Override
 	public void initialise(StateManager stateManager) {
@@ -79,18 +81,7 @@ public class Game_Ur implements IState {
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
-		//g.setColor(ColorMaterial.GREY[2]);
-		Paint oldPaint = g.getPaint();
-		
-		GradientPaint gradientPaint = new GradientPaint(
-			-100, -100,
-			game.getCurrentPlayer().getColors()[1],
-			Window.WIDTH + 100, Window.HEIGHT + 100,
-			game.getCurrentPlayer().getColors()[4]
-		);
-		g.setPaint(gradientPaint);
-		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-		g.setPaint(oldPaint);
+		drawBackground(g);
 		
 		game.draw(g, interpolate);
 		
@@ -127,6 +118,49 @@ public class Game_Ur implements IState {
 				Window.HEIGHT - fm.getHeight()
 			);
 		}
+		
+		if (--fadeInNum > 0) {
+			g.setColor(new Color(0, 0, 0, fadeInNum));
+			g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+		}
+	}
+	
+	private void drawBackground(Graphics2D g) {
+		Paint oldPaint = g.getPaint();
+		
+		fadeBgRatio = Utility.clamp(fadeBgRatio += 0.05, 0.0, 1.0);
+		
+		Color bright = new Color(
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getRed(),
+				game.getPreviousPlayer().getColors()[1].getRed()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getGreen(),
+				game.getPreviousPlayer().getColors()[1].getGreen()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getBlue(),
+				game.getPreviousPlayer().getColors()[1].getBlue())
+		);
+		
+		Color dark = new Color(
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getRed(),
+				game.getPreviousPlayer().getColors()[4].getRed()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getGreen(),
+				game.getPreviousPlayer().getColors()[4].getGreen()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getBlue(),
+				game.getPreviousPlayer().getColors()[4].getBlue())
+		);
+		
+		GradientPaint gradientPaint = new GradientPaint(
+			-100, -100,
+			bright,
+			Window.WIDTH + 100, Window.HEIGHT + 100,
+			dark
+		);
+		g.setPaint(gradientPaint);
+		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+		g.setPaint(oldPaint);
+	}
+	
+	private int tweenColor(double ratio, int near, int far) {
+		return (int) (Math.abs((ratio * near)) + ((1 - ratio) * far));
 	}
 	
 	@Override
@@ -194,6 +228,8 @@ public class Game_Ur implements IState {
 			.moveCounter(game.getCurrentPlayer(), counter, game.getCurrentRoll());
 		
 		game.endOfTurn(finalTile);
+		
+		fadeBgRatio = 0;
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them

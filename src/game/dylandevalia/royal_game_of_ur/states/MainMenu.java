@@ -39,8 +39,8 @@ public class MainMenu implements IState {
 			);
 		}
 		
-		Color base = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 100);
-		Color hover = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 200);
+		Color base = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 50);
+		Color hover = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 150);
 		
 		btn_play = new TextButton(
 			(Window.WIDTH / 2), (Window.HEIGHT / 2),
@@ -76,9 +76,9 @@ public class MainMenu implements IState {
 		for (Node n : nodes) {
 			n.update();
 		}
-		
-		btn_play.setActive(fade == Fade.NONE);
-		btn_quit.setActive(fade == Fade.NONE);
+
+//		btn_play.setActive(fade == Fade.NONE);
+//		btn_quit.setActive(fade == Fade.NONE);
 		
 		Vector2D mousePos = Framework.getMousePos();
 		btn_play.update(mousePos);
@@ -103,7 +103,6 @@ public class MainMenu implements IState {
 			Vector2D nPos = nodes[i].getPos();
 			double dist = Vector2D.dist(mousePos, nPos);
 			if (dist < 300) {
-				Color c = ColorMaterial.INDIGO[3];
 				g.setColor(
 					ColorMaterial.withAlpha(
 						ColorMaterial.INDIGO[3],
@@ -120,6 +119,10 @@ public class MainMenu implements IState {
 		btn_play.draw(g, interpolate);
 		btn_quit.draw(g, interpolate);
 		
+		drawFade(g);
+	}
+	
+	private void drawFade(Graphics2D g) {
 		switch (fade) {
 			case NONE:
 				break;
@@ -135,21 +138,25 @@ public class MainMenu implements IState {
 				}
 				break;
 			case UP:
-				if ((fadeNum += 5) > 255) {
+				if ((++fadeNum /*+= 5*/) > 255) {
 					fadeNum = 255;
 				}
+
+//				GradientPaint gradient = new GradientPaint(
+//					-100, -100,
+//					ColorMaterial.withAlpha(ColorMaterial.PURPLE[1], fadeNum),
+//					Window.WIDTH + 100, Window.HEIGHT + 100,
+//					ColorMaterial.withAlpha(ColorMaterial.PURPLE[4], fadeNum)
+//				);
+//
+//				g.setPaint(
+//					/*new Color(0, 0, 0, fadeNum)*/
+//					gradient
+//				);
 				
-				GradientPaint gradient = new GradientPaint(
-					-100, -100,
-					ColorMaterial.withAlpha(ColorMaterial.PURPLE[1], fadeNum),
-					Window.WIDTH + 100, Window.HEIGHT + 100,
-					ColorMaterial.withAlpha(ColorMaterial.PURPLE[4], fadeNum)
-				);
+				g.setColor(new Color(0, 0, 0, fadeNum));
+				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				
-				g.setPaint(
-					/*new Color(0, 0, 0, fadeNum)*/
-					gradient
-				);
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum >= 254) {
 					fade.runCallback();
@@ -166,6 +173,7 @@ public class MainMenu implements IState {
 		}
 		fade = Fade.UP;
 		fade.setCallback(this::startGame);
+		
 	}
 	
 	private void startGame() {
@@ -199,7 +207,8 @@ public class MainMenu implements IState {
 	private enum Fade {
 		DOWN(), NONE(), UP();
 		
-		ICallback callback;
+		private ICallback callback;
+		private Color color;
 		
 		void setCallback(ICallback callback) {
 			this.callback = callback;
@@ -207,6 +216,14 @@ public class MainMenu implements IState {
 		
 		void runCallback() {
 			callback.callback();
+		}
+		
+		public Color getColor() {
+			return color;
+		}
+		
+		public void setColor(Color color) {
+			this.color = color;
 		}
 	}
 }

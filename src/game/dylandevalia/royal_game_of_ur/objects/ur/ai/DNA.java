@@ -45,18 +45,18 @@ public class DNA {
 	private static final int CHROMOSOME_LENGTH = 13;
 	
 	private Chromosome[] chromosomes;
-	private Crossover crossover;
+	private CrossoverMethod crossoverMethod;
 	
 	DNA() {
 		chromosomes = initialiseChromosomes();
 		
-		int len = Crossover.values().length;
-		this.crossover = Crossover.values()[Utility.randBetween(0, len - 1)];
+		int len = CrossoverMethod.values().length;
+		this.crossoverMethod = CrossoverMethod.values()[Utility.randBetween(0, len - 1)];
 	}
 	
-	private DNA(Chromosome[] chromosomes, Crossover crossoverMethod) {
+	private DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethodMethod) {
 		this.chromosomes = chromosomes;
-		this.crossover = crossoverMethod;
+		this.crossoverMethod = crossoverMethodMethod;
 	}
 	
 	private static Chromosome[] initialiseChromosomes() {
@@ -85,7 +85,7 @@ public class DNA {
 	}
 	
 	/**
-	 * Cross-breeds two DNAs to make a new child DNA Randomly picks on of the crossover methods of
+	 * Cross-breeds two DNAs to make a new child DNA Randomly picks on of the crossoverMethod methods of
 	 * the parent
 	 *
 	 * @param mum Parent DNA A
@@ -93,13 +93,13 @@ public class DNA {
 	 * @return The child DNA of the parents
 	 */
 	public static DNA crossover(DNA mum, DNA dad) {
-		// Pick one of the two parent's crossover methods
-		Crossover cross = (Utility.fiftyFifty() ? mum : dad).crossover;
+		// Pick one of the two parent's crossoverMethod methods
+		CrossoverMethod cross = (Utility.fiftyFifty() ? mum : dad).crossoverMethod;
 		
-		// Make child chromosomes and give it the chosen crossover method
+		// Make child chromosomes and give it the chosen crossoverMethod method
 		Chromosome[] child = initialiseChromosomes();
 		
-		// Pick two points for Crossover.SINGLE_POINT and Crossover.DOUBLE_POINT
+		// Pick two points for CrossoverMethod.SINGLE_POINT and CrossoverMethod.DOUBLE_POINT
 		// methods
 		int pointOne = Utility.randBetween(0, CHROMOSOME_LENGTH - 2);
 		int pointTwo = Utility.randBetween(pointOne + 1, CHROMOSOME_LENGTH - 1);
@@ -122,7 +122,7 @@ public class DNA {
 	}
 	
 	private static double crossover_helper(
-		Crossover c,
+		CrossoverMethod c,
 		double mum, double dad,
 		boolean beforePointOne, boolean beforePointTwo
 	) {
@@ -148,7 +148,7 @@ public class DNA {
 		return chromosomes[moveState].getValue(arg);
 	}
 	
-	private enum Crossover {
+	private enum CrossoverMethod {
 		AVERAGE,
 		SINGLE_POINT, DOUBLE_POINT,
 		FIFTY_FIFTY
