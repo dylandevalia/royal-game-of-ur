@@ -30,6 +30,7 @@ public class StateManager {
 			int index = state.getIndex();
 			loadedStates[index] = (IState) state.getObj().newInstance();
 			loadedStates[index].initialise(this);
+			Log.info("STATE MANAGER", "Loaded " + state);
 		} catch (Exception e) {
 			Log.error("STATE MANAGER", "Error trying to create new instance of state", e);
 		}
@@ -46,6 +47,7 @@ public class StateManager {
 			return;
 		}
 		currentState = loadedStates[state.getIndex()];
+		Log.info("STATE MANAGER", "Set " + state);
 	}
 	
 	/**
@@ -55,6 +57,7 @@ public class StateManager {
 	 */
 	public void unloadState(GameState state) {
 		loadedStates[state.getIndex()] = null;
+		Log.info("STATE MANAGER", "Unloaded " + state);
 	}
 	
 	/**
@@ -69,6 +72,7 @@ public class StateManager {
 	
 	public void reinitialise() {
 		currentState.initialise(this);
+		Log.info("STATE MANAGER", "Re-Initialised " + currentState);
 	}
 	
 	/*              Passers             */

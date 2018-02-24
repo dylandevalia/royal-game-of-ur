@@ -59,14 +59,14 @@ public class GameLogic {
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
 		playerOne = new Player(
 			PlayerID.ONE,
-			"Pritz",
+			"Ed",
 			ColorMaterial.PURPLE,
 			board.getRouteLength(),
 			false
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
-			"Dipz",
+			"Dylan",
 			ColorMaterial.GREEN,
 			board.getRouteLength(),
 			false

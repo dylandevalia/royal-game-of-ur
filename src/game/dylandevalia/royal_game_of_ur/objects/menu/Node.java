@@ -48,7 +48,7 @@ public class Node extends BaseEntity {
 	public void draw(Graphics2D g, double interpolate, Node[] nodes, int i) {
 		super.draw(g, interpolate);
 		
-		Color c = ColorMaterial.INDIGO[3];
+		Color c = ColorMaterial.GREY[3];
 		int noConnections = 0;
 		// Check all nodes after this node's index
 		for (int j = i + 1; j < nodes.length; j++) {
@@ -61,9 +61,9 @@ public class Node extends BaseEntity {
 				
 				// Draw line more transparent the further away
 				g.setColor(
-					new Color(
-						c.getRed(), c.getGreen(), c.getBlue(),
-						(int) Utility.map(dist, 0, 200, 255, 0)
+					ColorMaterial.withAlpha(
+						c,
+						(int) Utility.map(dist, 0, 200, 127, 0)
 					)
 				);
 				g.drawLine(
@@ -74,11 +74,11 @@ public class Node extends BaseEntity {
 		}
 		
 		// More opaque the more connections
-		c = ColorMaterial.INDIGO[1];
+		c = ColorMaterial.GREY[1];
 		g.setColor(
-			new Color(
-				c.getRed(), c.getGreen(), c.getBlue(),
-				(int) Utility.map(noConnections, 0, nodes.length, 150, 250)
+			ColorMaterial.withAlpha(
+				c,
+				(int) Utility.map(noConnections, 0, nodes.length, 100, 200)
 			)
 		);
 		// Wider the more connections -- edit: doesn't look all that great

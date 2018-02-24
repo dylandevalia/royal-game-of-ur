@@ -5,6 +5,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
+import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
@@ -41,6 +42,8 @@ public class Game_Ur implements IState {
 	private int fadeInNum = 256;
 	private double fadeBgRatio = 0;
 	
+	private Node[] nodes;
+	
 	@Override
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
@@ -65,6 +68,14 @@ public class Game_Ur implements IState {
 		);
 		btn_roll.setOnClickListener(game::rollDice);
 		Log.info("GAME_UR", "Generation completed");
+		
+		nodes = new Node[(int) Utility.mapWidth(150, 300)];
+		for (int i = 0; i < nodes.length; i++) {
+			nodes[i] = new Node(
+				Utility.randBetween(-200, Window.WIDTH + 200),
+				Utility.randBetween(-200, Window.HEIGHT + 200)
+			);
+		}
 	}
 	
 	@Override
@@ -77,11 +88,19 @@ public class Game_Ur implements IState {
 		// Update buttons
 		btn_roll.setActive(game.isAllowRoll());
 		btn_roll.update(mousePos);
+		
+		for (Node n : nodes) {
+			n.update();
+		}
 	}
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		drawBackground(g);
+		
+		for (int i = 0; i < nodes.length; i++) {
+			nodes[i].draw(g, interpolate, nodes, i);
+		}
 		
 		game.draw(g, interpolate);
 		
@@ -96,7 +115,7 @@ public class Game_Ur implements IState {
 		FontMetrics fm = g.getFontMetrics();
 		
 		// Current player
-		g.setColor(game.getCurrentPlayer().getColors()[9]);
+		g.setColor(game.getCurrentPlayer().getColors()[3]);
 		String turn = "Player: " + game.getCurrentPlayer().getName();
 		g.drawString(turn, (Window.WIDTH - 20) - fm.stringWidth(turn), fm.getHeight());
 		
@@ -106,7 +125,7 @@ public class Game_Ur implements IState {
 			String roll = Integer.toString(game.getCurrentRoll());
 			if (game.isAllowRoll()) {
 				// Previous player rolled last
-				g.setColor(game.getPreviousPlayer().getColors()[9]);
+				g.setColor(game.getPreviousPlayer().getColors()[3]);
 				roll = "Previous Roll: " + roll;
 			} else {
 				// Else use current player colour
@@ -130,22 +149,24 @@ public class Game_Ur implements IState {
 		
 		fadeBgRatio = Utility.clamp(fadeBgRatio += 0.05, 0.0, 1.0);
 		
+		int brightShade = 4;
 		Color bright = new Color(
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getRed(),
-				game.getPreviousPlayer().getColors()[1].getRed()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getGreen(),
-				game.getPreviousPlayer().getColors()[1].getGreen()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[1].getBlue(),
-				game.getPreviousPlayer().getColors()[1].getBlue())
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getRed(),
+				game.getPreviousPlayer().getColors()[brightShade].getRed()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getGreen(),
+				game.getPreviousPlayer().getColors()[brightShade].getGreen()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getBlue(),
+				game.getPreviousPlayer().getColors()[brightShade].getBlue())
 		);
 		
+		int darkShade = 9;
 		Color dark = new Color(
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getRed(),
-				game.getPreviousPlayer().getColors()[4].getRed()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getGreen(),
-				game.getPreviousPlayer().getColors()[4].getGreen()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[4].getBlue(),
-				game.getPreviousPlayer().getColors()[4].getBlue())
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getRed(),
+				game.getPreviousPlayer().getColors()[darkShade].getRed()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getGreen(),
+				game.getPreviousPlayer().getColors()[darkShade].getGreen()),
+			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getBlue(),
+				game.getPreviousPlayer().getColors()[darkShade].getBlue())
 		);
 		
 		GradientPaint gradientPaint = new GradientPaint(
@@ -229,7 +250,11 @@ public class Game_Ur implements IState {
 		
 		game.endOfTurn(finalTile);
 		
-		fadeBgRatio = 0;
+		if (game.getCurrentRoll() > 0) {
+			fadeBgRatio = 0;
+		} else {
+			fadeBgRatio = 1;
+		}
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them

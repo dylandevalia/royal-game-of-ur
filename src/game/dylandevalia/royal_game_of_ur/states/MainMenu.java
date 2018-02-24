@@ -138,7 +138,7 @@ public class MainMenu implements IState {
 				}
 				break;
 			case UP:
-				if ((++fadeNum /*+= 5*/) > 255) {
+				if ((fadeNum += 3) > 255) {
 					fadeNum = 255;
 				}
 
