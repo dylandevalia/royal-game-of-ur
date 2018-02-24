@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
 import java.awt.Graphics2D;
 
 public class Board {
@@ -119,9 +120,12 @@ public class Board {
 		return tiles.length;
 	}
 	
-	public void update() {
+	public void update(MoveState moveState, Tile hoveringTile) {
 		for (Tile tile : tiles) {
 			tile.update();
+			if (tile == hoveringTile) {
+				tile.setHoverMode(moveState);
+			}
 		}
 	}
 	

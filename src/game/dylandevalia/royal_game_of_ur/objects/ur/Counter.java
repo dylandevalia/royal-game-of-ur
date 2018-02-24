@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur;
 
+import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.AbstractButton;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
@@ -44,6 +45,9 @@ public class Counter extends AbstractButton {
 	/** Allow hovering over counter */
 	private boolean allowHover = true;
 	
+	/** Used to offset the dots on the counter design */
+	private double dotOffset = Utility.randBetween(0, Math.PI / 2);
+	
 	public Counter(int x, int y, PlayerID player, Color[] colors) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new Pair<>(pos, false);
@@ -71,7 +75,7 @@ public class Counter extends AbstractButton {
 					.setMag(target.getValue() ? SPEED * 2 : SPEED)
 			);
 			isMoving = true;
-		} else {    // Less that speed away from target
+		} else {// Less that speed away from target
 			// So just move to target
 			pos.set(target.getKey());
 			isMoving = false;
@@ -86,10 +90,33 @@ public class Counter extends AbstractButton {
 	
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
+		int drawX = (int) drawPos.x, drawY = (int) drawPos.y;
+		
+		g.setColor(ColorMaterial.withAlpha(colors[9], 100));
+		g.fillOval(drawX + 5, drawY + 5, width, height);
 		
 		int shade = 5 - ((allowHover && isMouseHovering) ? 2 : 0);
 		g.setColor(colors[shade]);
-		g.fillOval((int) drawPos.x, (int) drawPos.y, width, height);
+		g.fillOval(drawX, drawY, width, height);
+		
+		/* Dots */
+		g.setColor(colors[shade - 2]);
+		g.fillOval(
+			(drawX + width / 2) - width / 16,
+			(drawY + width / 2) - width / 16,
+			width / 8,
+			height / 8
+		);
+		for (int i = 0; i < 4; i++) {
+			int x = (int) ((width / 4) * Math.cos(dotOffset + ((Math.PI / 2) * i)));
+			int y = (int) ((height / 4) * Math.sin(dotOffset + ((Math.PI / 2) * i)));
+			g.fillOval(
+				((drawX + width / 2) + x) - width / 16,
+				((drawY + width / 2) + y) - width / 16,
+				width / 8,
+				height / 8
+			);
+		}
 	}
 	
 	/**
@@ -115,6 +142,10 @@ public class Counter extends AbstractButton {
 	
 	void setCurrentRouteIndex(int currentRouteIndex) {
 		this.currentRouteIndex = currentRouteIndex;
+	}
+	
+	public boolean isMouseHovering() {
+		return allowHover && isMouseHovering;
 	}
 	
 	public PlayerID getPlayer() {

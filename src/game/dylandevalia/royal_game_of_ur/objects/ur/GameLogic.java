@@ -162,7 +162,7 @@ public class GameLogic {
 	 * counter is in play (not in end cluster) and 3) If the move, if played, would it be blocked!
 	 *
 	 * @param mousePos The position of the mouse
-	 * @param counter The counter to check if it can move
+	 * @param counter  The counter to check if it can move
 	 * @return True if move is possible
 	 */
 	public boolean canCounterMove(Vector2D mousePos, Counter counter) {
@@ -178,7 +178,7 @@ public class GameLogic {
 	 * the last target
 	 *
 	 * @param counter The counter to move
-	 * @param spaces The amount of spaces to move the counter along the route
+	 * @param spaces  The amount of spaces to move the counter along the route
 	 */
 	public Tile moveCounter(Player player, Counter counter, int spaces) {
 		Tile[] route = player.getRoute();
@@ -236,7 +236,7 @@ public class GameLogic {
 	/**
 	 * Moves the counter to the starting cluster along the player's route
 	 *
-	 * @param player The player who owns the counter
+	 * @param player  The player who owns the counter
 	 * @param counter The counter to move
 	 */
 	private void moveCounterToStart(Player player, Counter counter) {
@@ -328,33 +328,69 @@ public class GameLogic {
 	}
 	
 	public void update(Vector2D mousePos) {
-		// Update board (tiles)
-		board.update();
-		
 		animating = false;
 		
 		// Update counters
-		for (Counter counter : playerOne.getCounters()) {
-			counter.update(mousePos,
-				allowMove
-					&& currentPlayer == playerOne
-			);
-			
-			if (counter.isMoving()) {
-				animating = true;
-			}
+		Counter hoveringCounter = updateCounters(
+			mousePos,
+			null,
+			playerOne.getCounters(),
+			currentPlayer == playerOne
+		);
+		hoveringCounter = updateCounters(
+			mousePos,
+			hoveringCounter,
+			playerTwo.getCounters(),
+			currentPlayer == playerTwo
+		);
+		
+		MoveState moveState = null;
+		Tile hoveringTile = null;
+		if (hoveringCounter != null) {
+			moveState = AIController
+				.checkMove(currentPlayer.getRoute(), hoveringCounter, currentRoll);
+			int index = hoveringCounter.getCurrentRouteIndex() + currentRoll;
+			hoveringTile = currentPlayer.getRoute()[
+				(index >= board.getRouteLength()) ? index - currentRoll : index
+				];
 		}
-		for (Counter counter : playerTwo.getCounters()) {
+		
+		// Update board (tiles)
+		board.update(moveState, hoveringTile);
+	}
+	
+	/**
+	 * Goes through a counter set and updates all the pieces. If mouse is hovering over
+	 * a counter, returns that counter
+	 *
+	 * @param mousePos        The position of the mouse
+	 * @param hoveringCounter Counter the mouse is hovering over (else {@code null})
+	 * @param counters        The array of counters
+	 * @param isCurrentPlayer Does the counter set belong to the current player
+	 * @return The counter the mouse is hovering over or {@code null}
+	 */
+	private Counter updateCounters(
+		Vector2D mousePos,
+		Counter hoveringCounter,
+		Counter[] counters,
+		boolean isCurrentPlayer
+	) {
+		for (Counter counter : counters) {
 			counter.update(
 				mousePos,
-				allowMove
-					&& currentPlayer == playerTwo
+				allowMove && isCurrentPlayer
+					&& counter.getCurrentRouteIndex() < board.getRouteLength()
 			);
 			
 			if (counter.isMoving()) {
 				animating = true;
 			}
+			
+			if (hoveringCounter == null && counter.isMouseHovering()) {
+				hoveringCounter = counter;
+			}
 		}
+		return hoveringCounter;
 	}
 	
 	public void draw(Graphics2D g, double interpolate) {
