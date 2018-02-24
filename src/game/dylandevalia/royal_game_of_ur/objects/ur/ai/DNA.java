@@ -6,7 +6,6 @@ import game.dylandevalia.royal_game_of_ur.utility.Utility;
 public class DNA {
 	
 	/* Move weights */
-	
 	/** Landed on a rosette */
 	static final int ROSETTE = 0;
 	/** Captures an enemy */
@@ -26,8 +25,6 @@ public class DNA {
 	/** Moves the least up the board */
 	static final int CLOSEST_PLACE = 7;
 	
-	private static final int SINGLE_CHROMOSOME = 8;
-	
 	/** Amount of spaces in front of an enemy before move */
 	static final int SPACES_AFTER_ENEMY_PRE = 8;
 	/** Amount of spaces in front of an enemy after move */
@@ -38,15 +35,23 @@ public class DNA {
 	/** The number of hostile counters on the board */
 	static final int HOSTILES_ON_BOARD = 11;
 	
+	/** The chance a chromosome will mutate */
+	private static final int MUTATION_CHANCE = 12;
+	
 	/* Meta values */
-	
-	public static final int MUTATION_CHANCE = 12;
-	
+	/** All chromosomes before this only have a single value */
+	private static final int SINGLE_CHROMOSOME = 8;
+	/** The number of chromosomes */
 	private static final int CHROMOSOME_LENGTH = 13;
 	
+	/** The array of chromosomes */
 	private Chromosome[] chromosomes;
+	/** The DNAs method to preform crossover */
 	private CrossoverMethod crossoverMethod;
 	
+	/**
+	 * Used to create a brand new DNA structure with random values
+	 */
 	DNA() {
 		chromosomes = initialiseChromosomes();
 		
@@ -54,11 +59,23 @@ public class DNA {
 		this.crossoverMethod = CrossoverMethod.values()[Utility.randBetween(0, len - 1)];
 	}
 	
-	private DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethodMethod) {
+	/**
+	 * Uses to create a DNA structure with premade values
+	 *
+	 * @param chromosomes     The array of chromosomes. Use {@link #initialiseChromosomes()}
+	 *                        to generate correct structure
+	 * @param crossoverMethod The method that the DNA will use to preform crossover
+	 */
+	private DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethod) {
 		this.chromosomes = chromosomes;
-		this.crossoverMethod = crossoverMethodMethod;
+		this.crossoverMethod = crossoverMethod;
 	}
 	
+	/**
+	 * Creates an array of chromosomes with the correct structure that all DNAs will use
+	 *
+	 * @return An array of Chromosomes initialised with random values (double 0-1)
+	 */
 	private static Chromosome[] initialiseChromosomes() {
 		Chromosome[] chromosomes = new Chromosome[CHROMOSOME_LENGTH];
 		
@@ -80,6 +97,9 @@ public class DNA {
 			chromosomes[FRIENDLIES_ON_BOARD].setValue(i, Math.random());
 			chromosomes[HOSTILES_ON_BOARD].setValue(i, Math.random());
 		}
+		
+		chromosomes[MUTATION_CHANCE] = new Chromosome(1);
+		chromosomes[MUTATION_CHANCE].setValue(Math.random());
 		
 		return chromosomes;
 	}
@@ -121,6 +141,18 @@ public class DNA {
 		return new DNA(child, cross);
 	}
 	
+	/**
+	 * Small helper function used by {@link #crossover(DNA, DNA)}
+	 * Used to crossover two values depending on the crossover method
+	 *
+	 * @param c              The crossover method to use
+	 * @param mum            The first value to crossover
+	 * @param dad            The second value to crossover
+	 * @param beforePointOne Some random point in the length of the chromosome size
+	 * @param beforePointTwo Another random point <em>after</em> {@code beforePointOne}
+	 *                       and before chromosome size
+	 * @return The crossover value
+	 */
 	private static double crossover_helper(
 		CrossoverMethod c,
 		double mum, double dad,
@@ -140,12 +172,28 @@ public class DNA {
 		}
 	}
 	
-	double getValue(int moveState) {
-		return chromosomes[moveState].getValue();
+	/**
+	 * Randomly mutates the {@link DNA} based on its {@link #chromosomes}[{@link #MUTATION_CHANCE}]
+	 *
+	 * @param dna The DNA after mutation
+	 */
+	public static void mutate(DNA dna) {
+		for (int i = 0; i < dna.chromosomes.length; i++) {
+			for (int j = 0; j < dna.chromosomes[i].getLength(); j++) {
+				// If mutation chance successful, change to new random value
+				if (Math.random() < dna.chromosomes[MUTATION_CHANCE].getValue()) {
+					dna.chromosomes[i].setValue(j, Math.random());
+				}
+			}
+		}
 	}
 	
-	double getValue(int moveState, int arg) {
-		return chromosomes[moveState].getValue(arg);
+	double getValue(int chromosome) {
+		return chromosomes[chromosome].getValue();
+	}
+	
+	double getValue(int chromosome, int arg) {
+		return chromosomes[chromosome].getValue(arg);
 	}
 	
 	private enum CrossoverMethod {
