@@ -13,11 +13,11 @@ import java.awt.event.MouseEvent;
  */
 public class StateManager {
 	
-	// Static to give all states a new id in array
+	/** Static to give all states a new id in array */
 	private static int stateIndexCounter = 0;
-	// Array of loaded states
+	/** Array of loaded states */
 	private final IState[] loadedStates = new IState[GameState.values().length];
-	// The currently active state
+	/** The currently active state */
 	private IState currentState;
 	
 	/**

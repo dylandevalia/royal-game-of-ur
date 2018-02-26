@@ -6,6 +6,9 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
 
+/**
+ * Static AI class which performs various {@link Counter} calculations on the game board
+ */
 public class AIController {
 	
 	/**

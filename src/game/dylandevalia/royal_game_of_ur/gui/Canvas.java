@@ -16,7 +16,7 @@ import javax.swing.JPanel;
  */
 public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
 	
-	public Canvas() {
+	Canvas() {
 		setDoubleBuffered(true);
 		setFocusable(true);
 		setBackground(Color.BLACK);
@@ -25,6 +25,11 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 		addMouseListener(this);
 	}
 	
+	/**
+	 * Call this class to draw to the canvas using the {@link Graphics2D} object
+	 *
+	 * @param g The graphics object used to draw to the canvas
+	 */
 	public abstract void draw(Graphics2D g);
 	
 	@Override
@@ -77,10 +82,21 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
+	
 	}
 	
+	/**
+	 * Callback function called when a key is pressed
+	 *
+	 * @param e The {@link KeyEvent} when the key was pressed
+	 */
 	public abstract void keyPressedFramework(KeyEvent e);
 	
+	/**
+	 * Callback function called when a key is released
+	 *
+	 * @param e The {@link KeyEvent} when the key was released
+	 */
 	public abstract void keyReleasedFramework(KeyEvent e);
 	
 	
@@ -141,8 +157,18 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	public void mouseExited(MouseEvent e) {
 	}
 	
+	/**
+	 * Callback function called when a mouse button is pressed
+	 *
+	 * @param e The {@link MouseEvent} when the button was pressed
+	 */
 	public abstract void mousePressedFramework(MouseEvent e);
 	
+	/**
+	 * Callback function called when a mouse button is released
+	 *
+	 * @param e The {@link KeyEvent} when the key was released
+	 */
 	public abstract void mouseReleasedFramework(MouseEvent e);
 	
 	

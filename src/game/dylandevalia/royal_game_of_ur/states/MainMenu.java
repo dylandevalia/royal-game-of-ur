@@ -18,14 +18,23 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * The main menu of the Royal Game of Ur
+ */
 public class MainMenu implements IState {
 	
+	/** Reference to the state manager */
 	private StateManager stateManager;
+	
+	/** The array of nodes used for the background */
 	private Node[] nodes;
 	
-	private Fade fade = Fade.DOWN;
+	/** The state of the fadeState */
+	private FadeState fadeState = FadeState.DOWN;
+	/** The number used to control the alpha of the fadeState */
 	private int fadeNum = 255;
 	
+	/** The buttons on the screen */
 	private TextButton btn_play, btn_quit;
 	
 	public void initialise(StateManager stateManager) {
@@ -67,8 +76,8 @@ public class MainMenu implements IState {
 			ColorMaterial.INDIGO[0]
 		);
 		btn_quit.setOnClickListener(() -> {
-			fade = Fade.UP;
-			fade.setCallback(() -> System.exit(0));
+			fadeState = FadeState.UP;
+			fadeState.setCallback(() -> System.exit(0));
 		});
 	}
 	
@@ -76,9 +85,6 @@ public class MainMenu implements IState {
 		for (Node n : nodes) {
 			n.update();
 		}
-
-//		btn_play.setActive(fade == Fade.NONE);
-//		btn_quit.setActive(fade == Fade.NONE);
 		
 		Vector2D mousePos = Framework.getMousePos();
 		btn_play.update(mousePos);
@@ -122,8 +128,15 @@ public class MainMenu implements IState {
 		drawFade(g);
 	}
 	
+	/**
+	 * Draws the fadeState to black over the screen depending on the state
+	 *
+	 * @see #fadeState
+	 * @see #fadeNum
+	 * @see FadeState
+	 */
 	private void drawFade(Graphics2D g) {
-		switch (fade) {
+		switch (fadeState) {
 			case NONE:
 				break;
 			case DOWN:
@@ -133,7 +146,7 @@ public class MainMenu implements IState {
 				g.setColor(new Color(0, 0, 0, fadeNum));
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum <= 0) {
-					fade = Fade.NONE;
+					fadeState = FadeState.NONE;
 					fadeNum = 0;
 				}
 				break;
@@ -141,41 +154,34 @@ public class MainMenu implements IState {
 				if ((fadeNum += 3) > 255) {
 					fadeNum = 255;
 				}
-
-//				GradientPaint gradient = new GradientPaint(
-//					-100, -100,
-//					ColorMaterial.withAlpha(ColorMaterial.PURPLE[1], fadeNum),
-//					Window.WIDTH + 100, Window.HEIGHT + 100,
-//					ColorMaterial.withAlpha(ColorMaterial.PURPLE[4], fadeNum)
-//				);
-//
-//				g.setPaint(
-//					/*new Color(0, 0, 0, fadeNum)*/
-//					gradient
-//				);
 				
 				g.setColor(new Color(0, 0, 0, fadeNum));
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum >= 254) {
-					fade.runCallback();
+					fadeState.runCallback();
 					fadeNum = 255;
 				}
 				break;
 		}
 	}
 	
+	/**
+	 * Loads the Royal Game of Ur state and starts the fade
+	 */
 	private void loadGame() {
 		if (!stateManager.isLoaded(GameState.GAME_UR)) {
 			Log.info("MENU", "Loading GAME_UR");
 			stateManager.loadState(GameState.GAME_UR);
 		}
-		fade = Fade.UP;
-		fade.setCallback(this::startGame);
-		
+		fadeState = FadeState.UP;
+		fadeState.setCallback(this::startGame);
 	}
 	
+	/**
+	 * Loads sets the state to the Royal Game of Ur and unloads this state
+	 */
 	private void startGame() {
 		Log.info("MENU", "Starting ur");
 		stateManager.setState(GameState.GAME_UR);
@@ -204,7 +210,11 @@ public class MainMenu implements IState {
 		}
 	}
 	
-	private enum Fade {
+	/**
+	 * Holds the state of the fade in and out
+	 * Also uses a callback function to execute when a fade is complete
+	 */
+	private enum FadeState {
 		DOWN(), NONE(), UP();
 		
 		private ICallback callback;

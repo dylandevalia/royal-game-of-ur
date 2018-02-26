@@ -3,6 +3,9 @@ package game.dylandevalia.royal_game_of_ur.gui;
 import java.awt.Color;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Small library class that has all colors in the <a href="https://material.io/guidelines/style/color.html">Google Material Colours</a> guide
+ */
 public class ColorMaterial {
 	
 	public static final Color[] RED = {
@@ -270,6 +273,13 @@ public class ColorMaterial {
 	};
 	public static final Color blueGrey = BLUE_GREY[5];
 	
+	/**
+	 * Helper function which allows a colour to be returned with an alpha value
+	 *
+	 * @param c     The colour to make transparent
+	 * @param alpha The alpha value of the new colour
+	 * @return The colour with an alpha value
+	 */
 	@NotNull
 	public static Color withAlpha(Color c, int alpha) {
 		if (alpha < 0 || alpha > 255) {

@@ -2,8 +2,12 @@ package game.dylandevalia.royal_game_of_ur.objects.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
+import game.dylandevalia.royal_game_of_ur.utility.Log;
 import java.awt.Graphics2D;
 
+/**
+ * The game board for the Royal Game of Ur
+ */
 public class Board {
 	
 	/** The lengths of each segment of the board */
@@ -22,7 +26,12 @@ public class Board {
 	 * @param middleTilesLen   The length of the middle segment
 	 * @param endTilesLen      The length of the end segment
 	 */
-	public Board(int startingTilesLen, int middleTilesLen, int endTilesLen) {
+	Board(int startingTilesLen, int middleTilesLen, int endTilesLen) {
+		if (middleTilesLen < startingTilesLen + endTilesLen) {
+			Log.error("BOARD", "Middle length is less than start and end lengths");
+			throw new IllegalArgumentException();
+		}
+		
 		this.startingTilesLen = startingTilesLen;
 		this.middleTilesLen = middleTilesLen;
 		this.endTilesLen = endTilesLen;

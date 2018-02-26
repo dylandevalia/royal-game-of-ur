@@ -51,12 +51,23 @@ public class GameLogic {
 	/** The dice controller */
 	private UrDice dice;
 	
+	/**
+	 * @param boardStartLength The length of the board's starting area
+	 * @param boardMidLength   The length of the board's middle area
+	 * @param boardEndLen      The length of the board's end area
+	 * @param noCounters       The number of counters each player has
+	 * @param animateGame      Should the game use animations
+	 * @param noDice           The number of dice the board will use
+	 */
 	public GameLogic(
 		int boardStartLength, int boardMidLength, int boardEndLen,
-		int noCounters, boolean instantAnimate,
+		int noCounters, boolean animateGame,
 		int noDice
 	) {
+		// Create board
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
+		
+		// Create players
 		playerOne = new Player(
 			PlayerID.ONE,
 			"Ed",
@@ -72,6 +83,7 @@ public class GameLogic {
 			false
 		);
 		
+		// Generate board and counters
 		board.generate(playerOne.getRoute(), playerTwo.getRoute());
 		generateCounters(noCounters);
 		
@@ -79,10 +91,12 @@ public class GameLogic {
 		currentPlayer = playerOne;
 		previousPlayer = playerOne;
 		
+		// Create dice
 		dice = new UrDice(noDice);
 		
-		this.instantAnimate = instantAnimate;
-		if (instantAnimate) {
+		// Should animate game
+		this.instantAnimate = animateGame;
+		if (animateGame) {
 			CounterCluster.instantAnimate = true;
 			Counter.instantAnimate = true;
 		}
@@ -404,6 +418,9 @@ public class GameLogic {
 		}
 	}
 	
+	/**
+	 * Draws the counters in the correct order
+	 */
 	private void drawCounters(Graphics2D g, double interpolate) {
 		ArrayList<Counter> still = new ArrayList<>(),
 			cluster = new ArrayList<>(),

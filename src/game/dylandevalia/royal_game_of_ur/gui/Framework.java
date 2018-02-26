@@ -18,32 +18,39 @@ import java.awt.event.MouseEvent;
 public class Framework extends Canvas {
 	
 	/* Constants */
-	private static final long NS_A_SEC = 1000000000;
-	private static final long MS_A_SEC = 1000000;
 	
-	// How often the objects should update a second
+	/** The number of nanoseconds in a second */
+	private static final long NS_A_SEC = 1000000000;
+	
+	/** How often the objects should update a second */
 	public static final double GAME_HERTZ = 30.0;
-	// How many times the objects should render a second
+	/** How many times the objects should render a second */
 	private static final double TARGET_FPS = 60.0;
-	// How many nanoseconds it should take to reach the target speed
+	/** How many nanoseconds it should take to reach the target speed */
 	private static final double TIME_BETWEEN_UPDATES = NS_A_SEC / GAME_HERTZ;
-	// How many nanoseconds it should take to render our target FPS
+	/** How many nanoseconds it should take to render our target FPS */
 	private static final double TARGET_TIME_BETWEEN_RENDERS = NS_A_SEC / TARGET_FPS;
-	// Maximum number of updates before forced render
-	// Set to `1` for perfect rendering
+	/**
+	 * Maximum number of updates before forced render
+	 * Set to {@code 1} for perfect rendering
+	 */
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
 	
+	/** The manager which handles the states of the program */
 	private StateManager stateManager = new StateManager();
 	
+	/** Position of the mouse - updated in {@link #update()} */
 	private static Vector2D mousePos = new Vector2D();
 	
+	
 	/* Game updates */
-	// Should the objects loop run
+	
+	/** Should the objects loop run */
 	private boolean runGame = true;
-	//  Used to calculate positions for rendering (ie. deltaTime)
+	/**  Used to calculate positions for rendering (ie. deltaTime) */
 	private double interpolate;
 	
-	public Framework() {
+	Framework() {
 		super();
 		
 		// Creates the main menu state and sets it to the active state
@@ -65,7 +72,7 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Runs the main objects loop. The loop tries to keep
+	 * Runs the main objects (game) loop
 	 */
 	private void gameLoop() {
 		int fps = 0;
@@ -96,6 +103,7 @@ public class Framework extends Canvas {
 			if (now - lastUpdateTime > TIME_BETWEEN_UPDATES) {
 				lastUpdateTime = now - TIME_BETWEEN_UPDATES;
 			}
+			
 			
 			/* Render objects */
 			

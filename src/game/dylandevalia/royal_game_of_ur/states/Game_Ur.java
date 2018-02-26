@@ -22,6 +22,9 @@ import java.awt.Paint;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * State which plays the Royal Game of Ur
+ */
 public class Game_Ur implements IState {
 	
 	/** The number of counters each player should have */
@@ -30,18 +33,18 @@ public class Game_Ur implements IState {
 	public static int noDice = 4;
 	/** Reference to the state manager */
 	private StateManager stateManager;
-	/** Board lengths */
-	private int boardStartLength = 4, boardMidLength = 8, boardEndLength = 2;
 	/** Holds the objects logic */
 	private GameLogic game;
 	
-	/* Buttons */
 	/** Reroll button */
 	private TextButton btn_roll;
 	
+	/** The number used to control the alpha of the fade */
 	private int fadeInNum = 256;
+	/** The lerp between the fade and the normal screen */
 	private double fadeBgRatio = 0;
 	
+	/** The array of nodes used in the background */
 	private Node[] nodes;
 	
 	@Override
@@ -49,7 +52,7 @@ public class Game_Ur implements IState {
 		this.stateManager = stateManager;
 		
 		game = new GameLogic(
-			boardStartLength, boardMidLength, boardEndLength,
+			4, 8, 2,
 			noCounters, false,
 			noDice
 		);
@@ -144,6 +147,10 @@ public class Game_Ur implements IState {
 		}
 	}
 	
+	/**
+	 * Draws the background as a gradient based on the current player's colours
+	 * Also fades between the previous and current players' colours on a new turn
+	 */
 	private void drawBackground(Graphics2D g) {
 		Paint oldPaint = g.getPaint();
 		
@@ -151,21 +158,34 @@ public class Game_Ur implements IState {
 		
 		int brightShade = 4;
 		Color bright = new Color(
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getRed(),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[brightShade].getRed(),
 				game.getPreviousPlayer().getColors()[brightShade].getRed()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getGreen(),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[brightShade].getGreen(),
 				game.getPreviousPlayer().getColors()[brightShade].getGreen()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[brightShade].getBlue(),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[brightShade].getBlue(),
 				game.getPreviousPlayer().getColors()[brightShade].getBlue())
 		);
 		
 		int darkShade = 9;
 		Color dark = new Color(
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getRed(),
-				game.getPreviousPlayer().getColors()[darkShade].getRed()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getGreen(),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[darkShade].getRed(),
+				game.getPreviousPlayer().getColors()[darkShade].getRed()
+			),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[darkShade].getGreen(),
 				game.getPreviousPlayer().getColors()[darkShade].getGreen()),
-			tweenColor(fadeBgRatio, game.getCurrentPlayer().getColors()[darkShade].getBlue(),
+			(int) Utility.lerp(
+				fadeBgRatio,
+				game.getCurrentPlayer().getColors()[darkShade].getBlue(),
 				game.getPreviousPlayer().getColors()[darkShade].getBlue())
 		);
 		
@@ -178,10 +198,6 @@ public class Game_Ur implements IState {
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		g.setPaint(oldPaint);
-	}
-	
-	private int tweenColor(double ratio, int near, int far) {
-		return (int) (Math.abs((ratio * near)) + ((1 - ratio) * far));
 	}
 	
 	@Override

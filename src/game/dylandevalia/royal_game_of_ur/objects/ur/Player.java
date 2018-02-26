@@ -5,12 +5,14 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 
+/**
+ * The player class which holds the player's counters, counter
+ * route and AI
+ */
 public class Player {
 	
 	/**
 	 * The id of the player
-	 *
-	 * @see PlayerID
 	 */
 	private PlayerID id;
 	
@@ -36,6 +38,13 @@ public class Player {
 	/** Is the player AI controlled */
 	private AI ai = null;
 	
+	/**
+	 * @param id          The ID of the player
+	 * @param name        The name of the player
+	 * @param colors      The colour space that the player will use ({@link ColorMaterial})
+	 * @param routeLength The length of the board's route for each player
+	 * @param isAI        True if the player should be controlled by an AI
+	 */
 	Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
 		this.id = id;
 		this.name = name;
@@ -50,8 +59,8 @@ public class Player {
 	 * Generates the start/end clusters and initialises all the counters
 	 *
 	 * @param noCounters The number of counters to create
-	 * @param startPos The position of the start cluster
-	 * @param endPos The position of the end cluster
+	 * @param startPos   The position of the start cluster
+	 * @param endPos     The position of the end cluster
 	 */
 	void generateCounters(int noCounters, Vector2D startPos, Vector2D endPos) {
 		counters = new Counter[noCounters];
@@ -90,10 +99,6 @@ public class Player {
 	
 	public Color[] getColors() {
 		return colors;
-	}
-	
-	public Color getMainColor() {
-		return colors[5];
 	}
 	
 	boolean isAI() {

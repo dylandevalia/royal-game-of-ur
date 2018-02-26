@@ -7,6 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+/**
+ * Pause state for the game
+ */
 public class Pause implements IState {
 	
 	private StateManager stateManager;

@@ -8,14 +8,26 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
 
+/**
+ * The AI component of a player which is used to calculate the
+ * player's best available move
+ */
 public class AI {
 	
+	/** The AI's {@link DNA} */
 	private DNA dna;
 	
 	public AI() {
 		dna = new DNA();
 	}
 	
+	/**
+	 * Calculates a move based on the AI's {@link DNA} and {@link Chromosome} values
+	 *
+	 * @param game  The game logic object which contains the rest of the game information
+	 * @param moves The list of moves that the AI can make
+	 * @return The best move according to the AI's DNA
+	 */
 	public Counter makeMove(
 		GameLogic game,
 		ArrayList<Pair<Counter, MoveState>> moves

@@ -3,6 +3,10 @@ package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 import game.dylandevalia.royal_game_of_ur.states.Game_Ur;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 
+/**
+ * Holds an {@link AI}'s chromosomes and has crossover and mutation
+ * methods for genetic evolution
+ */
 public class DNA {
 	
 	/* Move weights */
@@ -80,7 +84,7 @@ public class DNA {
 		Chromosome[] chromosomes = new Chromosome[CHROMOSOME_LENGTH];
 		
 		for (int i = 0; i < SINGLE_CHROMOSOME; i++) {
-			chromosomes[i] = new Chromosome(1);
+			chromosomes[i] = new Chromosome();
 			chromosomes[i].setValue(Math.random());
 		}
 		
@@ -98,7 +102,7 @@ public class DNA {
 			chromosomes[HOSTILES_ON_BOARD].setValue(i, Math.random());
 		}
 		
-		chromosomes[MUTATION_CHANCE] = new Chromosome(1);
+		chromosomes[MUTATION_CHANCE] = new Chromosome();
 		chromosomes[MUTATION_CHANCE].setValue(Math.random());
 		
 		return chromosomes;
@@ -196,13 +200,12 @@ public class DNA {
 		return chromosomes[chromosome].getValue(arg);
 	}
 	
+	/**
+	 * The list of methods that a DNA can crossover
+	 */
 	private enum CrossoverMethod {
 		AVERAGE,
 		SINGLE_POINT, DOUBLE_POINT,
 		FIFTY_FIFTY
-	}
-	
-	private enum Mutation {
-	
 	}
 }

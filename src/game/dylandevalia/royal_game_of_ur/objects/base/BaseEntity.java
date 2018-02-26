@@ -4,7 +4,11 @@ import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 
-public class BaseEntity {
+/**
+ * Base entity which should be extended by other entities
+ * Has a position and calculates the drawable position
+ */
+public abstract class BaseEntity {
 	
 	/** The current position of the entity */
 	protected Vector2D pos = new Vector2D();
@@ -27,12 +31,21 @@ public class BaseEntity {
 	 */
 	private Vector2D lastPos = new Vector2D();
 	
+	/**
+	 * @param x      The top left x coordinate of the entity
+	 * @param y      The top left y coordinate of the entity
+	 * @param width  The entity's width
+	 * @param height The entity's height
+	 */
 	protected BaseEntity(int x, int y, int width, int height) {
 		this.pos.set(x, y);
 		this.width = width;
 		this.height = height;
 	}
 	
+	/**
+	 * Use if the width and height is the same size
+	 */
 	protected BaseEntity(int x, int y, int size) {
 		this(x, y, size, size);
 	}
@@ -72,7 +85,7 @@ public class BaseEntity {
 	/**
 	 * Checks if the drawable object is on the screen
 	 */
-	protected boolean isOnScreen(Vector2D pos) {
+	private boolean isOnScreen(Vector2D pos) {
 		return !(pos.x + width < 0 || pos.x > Window.WIDTH
 			|| pos.y + height < 0 || pos.y > Window.HEIGHT);
 	}

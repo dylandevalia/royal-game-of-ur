@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * Interface used to create a state for the state manager
+ * Interface used to create a state for the {@link StateManager}
  */
 public interface IState {
 	

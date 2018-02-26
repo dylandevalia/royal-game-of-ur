@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class CounterCluster {
 	
+	/** Should the animations be instantaneous */
 	static boolean instantAnimate = false;
 	
 	/** The array-list of counters */
@@ -78,6 +79,12 @@ public class CounterCluster {
 		}
 	}
 	
+	/**
+	 * Helper function for {@link #add(Counter)}
+	 * Moves the counters to the next position
+	 *
+	 * @param shouldSleep Should there be a delay between each counter move
+	 */
 	private void add_helper(boolean shouldSleep) {
 		for (int i = startPos.size() - 1; i > 0; i--) {
 			if (shouldSleep) {
@@ -119,6 +126,12 @@ public class CounterCluster {
 		}
 	}
 	
+	/**
+	 * Helper function for {@link #remove(Counter)}
+	 * Moves the counters to the next position
+	 *
+	 * @param shouldSleep Should there be a delay between each counter move
+	 */
 	private void remove_helper(boolean shouldSleep) {
 		for (int i = 0; i < counters.size(); i++) {
 			if (shouldSleep) {

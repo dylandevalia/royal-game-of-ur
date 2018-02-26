@@ -11,6 +11,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
+/**
+ * The game pieces that the game uses
+ */
 public class Counter extends AbstractButton {
 	
 	/** The width of a counter scales to the window width */
@@ -48,6 +51,14 @@ public class Counter extends AbstractButton {
 	/** Used to offset the dots on the counter design */
 	private double dotOffset = Utility.randBetween(0, Math.PI / 2);
 	
+	// TODO: Have the counter hold a reference to the player?
+	
+	/**
+	 * @param x      The x coordinate of the piece
+	 * @param y      The y coordinate of the piece
+	 * @param player The ID of the player that owns the counter
+	 * @param colors The colour set that the counter should draw with
+	 */
 	public Counter(int x, int y, PlayerID player, Color[] colors) {
 		super(x, y, WIDTH, WIDTH, Shape.CIRCLE);
 		target = new Pair<>(pos, false);
@@ -55,6 +66,10 @@ public class Counter extends AbstractButton {
 		this.colors = colors;
 	}
 	
+	/**
+	 * @param mousePos   The position of the mouse
+	 * @param allowHover Is the counter allowed to be hovered over
+	 */
 	public void update(Vector2D mousePos, boolean allowHover) {
 		super.update(mousePos);
 		this.allowHover = allowHover;
@@ -122,7 +137,7 @@ public class Counter extends AbstractButton {
 	/**
 	 * If the counter is at the current target
 	 *
-	 * @return Boolean if at the current target position
+	 * @return True if at the current target position
 	 */
 	private boolean atTarget() {
 		return pos == target.getKey();

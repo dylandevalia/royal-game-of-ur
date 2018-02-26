@@ -8,10 +8,21 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+/**
+ * A node which draws lines to other nodes in range. Wraps around the screen
+ * if it goes off the edge
+ */
 public class Node extends BaseEntity {
 	
+	/** The velocity that the node travels at */
 	private Vector2D vel;
 	
+	/**
+	 * Creates a node at the given position
+	 *
+	 * @param x The x coordinate of the node's initial position
+	 * @param y The y coordinate of the node's initial position
+	 */
 	public Node(int x, int y) {
 		super(x, y, Utility.randBetween(0, 5));
 		

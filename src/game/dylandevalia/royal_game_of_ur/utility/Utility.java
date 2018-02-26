@@ -67,7 +67,7 @@ public class Utility {
 		}
 	}
 	
-	public static int clamp(int n, int min, int max) {
+	public static double clamp(double n, double min, double max) {
 		if (n < min) {
 			n = min;
 		} else if (n > max) {
@@ -77,13 +77,17 @@ public class Utility {
 		return n;
 	}
 	
-	public static double clamp(double n, double min, double max) {
-		if (n < min) {
-			n = min;
-		} else if (n > max) {
-			n = max;
-		}
-		
-		return n;
+	/**
+	 * Takes two numbers and linearly interpolates a middle values depending on the ratio value
+	 * At {@code ratio = 0} returns {@code near}
+	 * At {@code ratio = 0.5} returns {@code (near + far) / 2} (ie. mid point)
+	 * At {@code ratio = 1} returns {@code far}
+	 *
+	 * @param ratio The ratio value -- min: 0, max: 1
+	 * @param near  The first value when ratio is 0
+	 * @param far   The second value when ratio is 1
+	 */
+	public static double lerp(double ratio, double near, double far) {
+		return (int) (Math.abs((ratio * near)) + ((1 - ratio) * far));
 	}
 }

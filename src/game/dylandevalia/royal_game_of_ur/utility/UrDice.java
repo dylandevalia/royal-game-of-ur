@@ -2,6 +2,9 @@ package game.dylandevalia.royal_game_of_ur.utility;
 
 import java.util.Random;
 
+/**
+ * Dice class used by the Royal Game of Ur
+ */
 public class UrDice {
 	
 	/** Array of dice */

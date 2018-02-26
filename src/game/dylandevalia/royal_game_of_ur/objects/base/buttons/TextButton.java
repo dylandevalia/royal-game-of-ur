@@ -6,28 +6,46 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
+/**
+ * Button that has text in it. Size is determined by size of text and font
+ * as well as {@link #paddingX} and {@link #paddingY} which adds area around
+ * the text
+ */
 public class TextButton extends AbstractButton {
 	
 	/** The message that the button will show */
 	private String message;
-	
+	/** The font that the button should use */
 	private Font font;
-	
+	/** The {@link Alignment} of the button */
 	private Alignment alignment;
-	
-	private int boundsX, boundsY;
+	/** The padding around the text */
+	private int paddingX, paddingY;
 	
 	/** The colours that the button will turn for each state */
 	private Color baseColor, hoverColor, inactiveColor, textColor;
 	
-	/** The callback interface */
+	/** The callback interface called when the button is pressed */
 	private ICallback callback;
 	
 	/** Is the button currently active */
 	private boolean active = true;
 	
+	/**
+	 * @param x             The x coordinate of the centre where the button should be placed
+	 * @param y             The y coordinate of the centre where the button should be placed
+	 * @param paddingX      Padding to add left and right of the text
+	 * @param paddingY      Padding to add top and bottom of the text
+	 * @param font          The font that the button should use
+	 * @param alignment     The alignment of the button
+	 * @param message       The text message that the button should read
+	 * @param baseColor     The colour that the button should be under normal conditions
+	 * @param hoverColor    The colour that the button should be when the mouse is hovering over it
+	 * @param inactiveColor The colour that the button should be when inactive
+	 * @param textColor     The colour that the message should be
+	 */
 	public TextButton(
-		int x, int y, int boundsX, int boundsY,
+		int x, int y, int paddingX, int paddingY,
 		Font font,
 		Alignment alignment,
 		String message,
@@ -38,8 +56,8 @@ public class TextButton extends AbstractButton {
 		
 		this.message = message;
 		
-		this.boundsX = boundsX;
-		this.boundsY = boundsY;
+		this.paddingX = paddingX;
+		this.paddingY = paddingY;
 		
 		this.font = font;
 		this.alignment = alignment;
@@ -50,10 +68,23 @@ public class TextButton extends AbstractButton {
 		this.textColor = textColor;
 	}
 	
+	/**
+	 * Used to set the callback method that the button will execute
+	 * when pressed
+	 *
+	 * @param callback The callback method
+	 */
 	public void setOnClickListener(ICallback callback) {
 		this.callback = callback;
 	}
 	
+	/**
+	 * On the first tick the button won't have a width or height as
+	 * the {@link Graphics2D} object is needed to calculate the text dimensions
+	 * so just return on the first tick
+	 *
+	 * @param mousePos The position of the mouse
+	 */
 	public void update(Vector2D mousePos) {
 		if (width < 0 || height < 0) {
 			return;
@@ -63,6 +94,9 @@ public class TextButton extends AbstractButton {
 		isMouseHovering = isColliding(mousePos);
 	}
 	
+	/**
+	 * Calculates the text message dimensions and the draws the button
+	 */
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
@@ -78,7 +112,7 @@ public class TextButton extends AbstractButton {
 		int x = getLeftEdge((int) drawPos.x);
 		int y = getTopEdge((int) drawPos.y);
 		
-		g.fillRect(x, y, width + (boundsX * 2), height + (boundsY * 2));
+		g.fillRect(x, y, width + (paddingX * 2), height + (paddingY * 2));
 		g.setColor(textColor);
 		
 		drawCenteredString(g);
@@ -102,31 +136,50 @@ public class TextButton extends AbstractButton {
 		this.active = active;
 	}
 	
+	/**
+	 * Calculates if one position vector is colliding with the button
+	 *
+	 * @param other The other position
+	 * @return True if the other position vector is colliding with the button
+	 */
 	@Override
 	public boolean isColliding(Vector2D other) {
 		int x = getLeftEdge((int) pos.x);
 		int y = getTopEdge((int) pos.y);
 		
-		return (other.x > x && other.x < x + width + (boundsX * 2))
-			&& (other.y > y && other.y < y + height + (boundsY * 2));
+		return (other.x > x && other.x < x + width + (paddingX * 2))
+			&& (other.y > y && other.y < y + height + (paddingY * 2));
 	}
 	
+	/**
+	 * Used to calculate the left edge of the button depending on its
+	 * {@link #alignment}
+	 *
+	 * @param x The x coordinate where the button should be positioned
+	 * @return The x coordinate where the button should be drawn
+	 */
 	private int getLeftEdge(int x) {
 		switch (alignment) {
 			case LEFT:
 				break;
 			case CENTER:
-				x -= (width / 2) + boundsX;
+				x -= (width / 2) + paddingX;
 				break;
 			case RIGHT:
-				x -= width + boundsX * 2;
+				x -= width + paddingX * 2;
 				break;
 		}
 		return x;
 	}
 	
+	/**
+	 * Calculates the top of the button based on the text size
+	 *
+	 * @param y The y coordinate where the button should be positioned
+	 * @return The y coordinate where the button should be drawn
+	 */
 	private int getTopEdge(int y) {
-		return y - (height / 2) - boundsY;
+		return y - (height / 2) - paddingY;
 	}
 	
 	/**
@@ -139,13 +192,13 @@ public class TextButton extends AbstractButton {
 		int x = (int) drawPos.x;
 		switch (alignment) {
 			case LEFT:
-				x += boundsX;
+				x += paddingX;
 				break;
 			case CENTER:
 				x -= width / 2;
 				break;
 			case RIGHT:
-				x -= width + boundsX;
+				x -= width + paddingX;
 				break;
 		}
 		
@@ -158,6 +211,10 @@ public class TextButton extends AbstractButton {
 		g.drawString(message, x, y);
 	}
 	
+	/**
+	 * Used to determine if the button should be drawn left or middle or right of
+	 * the given position
+	 */
 	public enum Alignment {
 		LEFT, CENTER, RIGHT
 	}
