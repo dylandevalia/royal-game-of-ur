@@ -56,7 +56,7 @@ public class Log {
 	 * @param message  The message to log
 	 * @param ex       Throwable exception
 	 */
-	private static void log(int level, String category, String message, Throwable ex) {
+	private static void log(int level, String category, Object message, Throwable ex) {
 		// Builds final message
 		Date date = new Date();
 		StringBuilder builder = new StringBuilder(255);
@@ -102,47 +102,47 @@ public class Log {
 		}
 	}
 	
-	public static void log(int level, String category, String message) {
+	private static void log(int level, String category, Object message) {
 		log(level, category, message, null);
 	}
 	
-	public static void trace(String category, String message, Throwable ex) {
+	public static void trace(String category, Object message, Throwable ex) {
 		log(LEVEL_TRACE, category, message, ex);
 	}
 	
-	public static void trace(String category, String message) {
+	public static void trace(String category, Object message) {
 		trace(category, message, null);
 	}
 	
-	public static void debug(String category, String message, Throwable ex) {
+	public static void debug(String category, Object message, Throwable ex) {
 		log(LEVEL_DEBUG, category, message, ex);
 	}
 	
-	public static void debug(String category, String message) {
+	public static void debug(String category, Object message) {
 		debug(category, message, null);
 	}
 	
-	public static void info(String category, String message, Throwable ex) {
+	public static void info(String category, Object message, Throwable ex) {
 		log(LEVEL_INFO, category, message, ex);
 	}
 	
-	public static void info(String category, String message) {
+	public static void info(String category, Object message) {
 		info(category, message, null);
 	}
 	
-	public static void warn(String category, String message, Throwable ex) {
+	public static void warn(String category, Object message, Throwable ex) {
 		log(LEVEL_WARN, category, message, ex);
 	}
 	
-	public static void warn(String category, String message) {
+	public static void warn(String category, Object message) {
 		warn(category, message, null);
 	}
 	
-	public static void error(String category, String message, Throwable ex) {
+	public static void error(String category, Object message, Throwable ex) {
 		log(LEVEL_ERROR, category, message, ex);
 	}
 	
-	public static void error(String category, String message) {
+	public static void error(String category, Object message) {
 		error(category, message, null);
 	}
 }
