@@ -148,8 +148,8 @@ public class Game_Ur implements IState {
 	}
 	
 	/**
-	 * Draws the background as a gradient based on the current player's colours
-	 * Also fades between the previous and current players' colours on a new turn
+	 * Draws the background as a gradient based on the current player's colours Also fades between
+	 * the previous and current players' colours on a new turn
 	 */
 	private void drawBackground(Graphics2D g) {
 		Paint oldPaint = g.getPaint();

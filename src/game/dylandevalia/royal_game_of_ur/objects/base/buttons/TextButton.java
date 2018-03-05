@@ -7,9 +7,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 /**
- * Button that has text in it. Size is determined by size of text and font
- * as well as {@link #paddingX} and {@link #paddingY} which adds area around
- * the text
+ * Button that has text in it. Size is determined by size of text and font as well as {@link
+ * #paddingX} and {@link #paddingY} which adds area around the text
  */
 public class TextButton extends AbstractButton {
 	
@@ -69,8 +68,7 @@ public class TextButton extends AbstractButton {
 	}
 	
 	/**
-	 * Used to set the callback method that the button will execute
-	 * when pressed
+	 * Used to set the callback method that the button will execute when pressed
 	 *
 	 * @param callback The callback method
 	 */
@@ -79,9 +77,8 @@ public class TextButton extends AbstractButton {
 	}
 	
 	/**
-	 * On the first tick the button won't have a width or height as
-	 * the {@link Graphics2D} object is needed to calculate the text dimensions
-	 * so just return on the first tick
+	 * On the first tick the button won't have a width or height as the {@link Graphics2D} object is
+	 * needed to calculate the text dimensions so just return on the first tick
 	 *
 	 * @param mousePos The position of the mouse
 	 */
@@ -119,8 +116,7 @@ public class TextButton extends AbstractButton {
 	}
 	
 	/**
-	 * Call this function when the button is pressed
-	 * Runs callback function
+	 * Call this function when the button is pressed Runs callback function
 	 */
 	public void press() {
 		if (active) {
@@ -152,8 +148,7 @@ public class TextButton extends AbstractButton {
 	}
 	
 	/**
-	 * Used to calculate the left edge of the button depending on its
-	 * {@link #alignment}
+	 * Used to calculate the left edge of the button depending on its {@link #alignment}
 	 *
 	 * @param x The x coordinate where the button should be positioned
 	 * @return The x coordinate where the button should be drawn
@@ -212,8 +207,8 @@ public class TextButton extends AbstractButton {
 	}
 	
 	/**
-	 * Used to determine if the button should be drawn left or middle or right of
-	 * the given position
+	 * Used to determine if the button should be drawn left or middle or right of the given
+	 * position
 	 */
 	public enum Alignment {
 		LEFT, CENTER, RIGHT

@@ -211,8 +211,8 @@ public class MainMenu implements IState {
 	}
 	
 	/**
-	 * Holds the state of the fade in and out
-	 * Also uses a callback function to execute when a fade is complete
+	 * Holds the state of the fade in and out Also uses a callback function to execute when a fade
+	 * is complete
 	 */
 	private enum FadeState {
 		DOWN(), NONE(), UP();

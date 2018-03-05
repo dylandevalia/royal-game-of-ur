@@ -6,8 +6,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 
 /**
- * The player class which holds the player's counters, counter
- * route and AI
+ * The player class which holds the player's counters, counter route and AI
  */
 public class Player {
 	

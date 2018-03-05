@@ -12,8 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * The main logic of the window, implementing the objects loop and calls
- * for the updates and draws which are passed onto the state manager
+ * The main logic of the window, implementing the objects loop and calls for the updates and draws
+ * which are passed onto the state manager
  */
 public class Framework extends Canvas {
 	
@@ -31,8 +31,7 @@ public class Framework extends Canvas {
 	/** How many nanoseconds it should take to render our target FPS */
 	private static final double TARGET_TIME_BETWEEN_RENDERS = NS_A_SEC / TARGET_FPS;
 	/**
-	 * Maximum number of updates before forced render
-	 * Set to {@code 1} for perfect rendering
+	 * Maximum number of updates before forced render Set to {@code 1} for perfect rendering
 	 */
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
 	
@@ -47,7 +46,7 @@ public class Framework extends Canvas {
 	
 	/** Should the objects loop run */
 	private boolean runGame = true;
-	/**  Used to calculate positions for rendering (ie. deltaTime) */
+	/** Used to calculate positions for rendering (ie. deltaTime) */
 	private double interpolate;
 	
 	Framework() {
@@ -62,8 +61,8 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Simple getter to return the mouse position which is calculated in update.
-	 * Returns a copy so functions don't accidentally change the value
+	 * Simple getter to return the mouse position which is calculated in update. Returns a copy so
+	 * functions don't accidentally change the value
 	 *
 	 * @return The mouse position
 	 */
@@ -132,8 +131,8 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Update state and mouse position
-	 * Try catch used as location on screen might not have been instantiated yet
+	 * Update state and mouse position Try catch used as location on screen might not have been
+	 * instantiated yet
 	 */
 	private void update() {
 		try {
@@ -149,8 +148,7 @@ public class Framework extends Canvas {
 	}
 	
 	/**
-	 * Draw state
-	 * Passes in interpolate value as well to allow smooth motion
+	 * Draw state Passes in interpolate value as well to allow smooth motion
 	 *
 	 * @param g The graphics2d object to draw onto
 	 */

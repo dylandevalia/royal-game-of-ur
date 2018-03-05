@@ -374,8 +374,8 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Goes through a counter set and updates all the pieces. If mouse is hovering over
-	 * a counter, returns that counter
+	 * Goes through a counter set and updates all the pieces. If mouse is hovering over a counter,
+	 * returns that counter
 	 *
 	 * @param mousePos        The position of the mouse
 	 * @param hoveringCounter Counter the mouse is hovering over (else {@code null})

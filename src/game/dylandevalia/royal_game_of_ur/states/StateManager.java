@@ -6,10 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * Controls the creation, initialising, activating/swapping and destroying of states.
- * Passes functions onto the currently active state.
- * IState objects are implemented from the 'IState' interface
- * {@link IState}
+ * Controls the creation, initialising, activating/swapping and destroying of states. Passes
+ * functions onto the currently active state. IState objects are implemented from the 'IState'
+ * interface {@link IState}
  */
 public class StateManager {
 	
@@ -103,9 +102,8 @@ public class StateManager {
 	}
 	
 	/**
-	 * Enum used to store states. Takes the state class in constructor and
-	 * generates its own id from the static {@code stateIndexCounter} to be used
-	 * in the array of states {@code loadedStates}
+	 * Enum used to store states. Takes the state class in constructor and generates its own id from
+	 * the static {@code stateIndexCounter} to be used in the array of states {@code loadedStates}
 	 *
 	 * @see #stateIndexCounter
 	 * @see IState

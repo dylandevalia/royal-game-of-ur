@@ -28,8 +28,7 @@ public class CounterCluster {
 	private boolean goLeft;
 	
 	/**
-	 * Constructor which takes the initial position and if the stack
-	 * should go left or right
+	 * Constructor which takes the initial position and if the stack should go left or right
 	 *
 	 * @param initialPos The initial position for the first counter
 	 * @param goLeft     Should the counters stack left or right
@@ -80,8 +79,7 @@ public class CounterCluster {
 	}
 	
 	/**
-	 * Helper function for {@link #add(Counter)}
-	 * Moves the counters to the next position
+	 * Helper function for {@link #add(Counter)} Moves the counters to the next position
 	 *
 	 * @param shouldSleep Should there be a delay between each counter move
 	 */
@@ -107,8 +105,8 @@ public class CounterCluster {
 	}
 	
 	/**
-	 * Removes a counter from the array-list and moves all the other counters
-	 * along to fill the gap <tt>What does this do</tt>
+	 * Removes a counter from the array-list and moves all the other counters along to fill the gap
+	 * <tt>What does this do</tt>
 	 *
 	 * @param counter The counter to remove from the cluster
 	 */
@@ -127,8 +125,7 @@ public class CounterCluster {
 	}
 	
 	/**
-	 * Helper function for {@link #remove(Counter)}
-	 * Moves the counters to the next position
+	 * Helper function for {@link #remove(Counter)} Moves the counters to the next position
 	 *
 	 * @param shouldSleep Should there be a delay between each counter move
 	 */

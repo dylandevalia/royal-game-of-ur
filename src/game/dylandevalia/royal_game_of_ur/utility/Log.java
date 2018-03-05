@@ -51,10 +51,10 @@ public class Log {
 	/**
 	 * Logs a message to file and console
 	 *
-	 * @param level The log level (eg. LEVEL_TRACE or LEVEL_INFO)
+	 * @param level    The log level (eg. LEVEL_TRACE or LEVEL_INFO)
 	 * @param category Category of the log
-	 * @param message The message to log
-	 * @param ex Throwable exception
+	 * @param message  The message to log
+	 * @param ex       Throwable exception
 	 */
 	private static void log(int level, String category, String message, Throwable ex) {
 		// Builds final message

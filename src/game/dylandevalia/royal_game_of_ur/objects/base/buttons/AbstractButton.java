@@ -4,8 +4,7 @@ import game.dylandevalia.royal_game_of_ur.objects.base.BaseEntity;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 
 /**
- * The foundations of a button to be used in canvas
- * Extends the base entity class
+ * The foundations of a button to be used in canvas Extends the base entity class
  */
 public abstract class AbstractButton extends BaseEntity {
 	

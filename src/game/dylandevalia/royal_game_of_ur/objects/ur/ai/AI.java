@@ -9,8 +9,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
 
 /**
- * The AI component of a player which is used to calculate the
- * player's best available move
+ * The AI component of a player which is used to calculate the player's best available move
  */
 public class AI {
 	

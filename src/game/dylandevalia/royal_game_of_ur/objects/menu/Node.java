@@ -9,8 +9,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * A node which draws lines to other nodes in range. Wraps around the screen
- * if it goes off the edge
+ * A node which draws lines to other nodes in range. Wraps around the screen if it goes off the
+ * edge
  */
 public class Node extends BaseEntity {
 	

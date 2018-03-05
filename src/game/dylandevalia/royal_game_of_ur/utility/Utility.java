@@ -28,9 +28,8 @@ public class Utility {
 	}
 	
 	/**
-	 * Remaps the given number from one linear range to another
-	 * eg - map(5, 0, 10, 0, 20) = 10
-	 * -- - map(8, 0, 19, 0 100) = 42.1052...(%)
+	 * Remaps the given number from one linear range to another eg - map(5, 0, 10, 0, 20) = 10 -- -
+	 * map(8, 0, 19, 0 100) = 42.1052...(%)
 	 *
 	 * @param n      The number to remap
 	 * @param start1 The initial range's minimum value
@@ -78,10 +77,9 @@ public class Utility {
 	}
 	
 	/**
-	 * Takes two numbers and linearly interpolates a middle values depending on the ratio value
-	 * At {@code ratio = 0} returns {@code near}
-	 * At {@code ratio = 0.5} returns {@code (near + far) / 2} (ie. mid point)
-	 * At {@code ratio = 1} returns {@code far}
+	 * Takes two numbers and linearly interpolates a middle values depending on the ratio value At
+	 * {@code ratio = 0} returns {@code near} At {@code ratio = 0.5} returns {@code (near + far) /
+	 * 2} (ie. mid point) At {@code ratio = 1} returns {@code far}
 	 *
 	 * @param ratio The ratio value -- min: 0, max: 1
 	 * @param near  The first value when ratio is 0

@@ -11,8 +11,8 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 
 /**
- * Abstract class which implements both the keyboard and mouse listeners as itself
- * Calls the child's draw function
+ * Abstract class which implements both the keyboard and mouse listeners as itself Calls the child's
+ * draw function
  */
 public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
 	
@@ -53,9 +53,8 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	private static HashMap<Integer, Boolean> keyboardStates = new HashMap<>();
 	
 	/**
-	 * Checks if a given key is being held down
-	 * Returns false on NullPointerException as key hasn't been pressed yet
-	 * so there's no value for it in the map
+	 * Checks if a given key is being held down Returns false on NullPointerException as key hasn't
+	 * been pressed yet so there's no value for it in the map
 	 *
 	 * @param key The keycode of the key to check
 	 * @return Whether the given key is held down
@@ -107,10 +106,8 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	private static boolean[] mouseStates = new boolean[3];
 	
 	/**
-	 * Returns if the mouse button given is being pressed down
-	 * 1 - Left click
-	 * 2 - Middle click (scroll wheel)
-	 * 3 - Right click
+	 * Returns if the mouse button given is being pressed down 1 - Left click 2 - Middle click
+	 * (scroll wheel) 3 - Right click
 	 *
 	 * @param button Value of the button to check
 	 * @return Boolean if the mouse button is held down

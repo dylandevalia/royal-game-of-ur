@@ -1,8 +1,8 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
 /**
- * A 2 dimensional vector object.
- * Based on the <a href="https://p5js.org/">p5.js</a> and <a href="https://processing.org/">Processing</a> vector libraries
+ * A 2 dimensional vector object. Based on the <a href="https://p5js.org/">p5.js</a> and <a
+ * href="https://processing.org/">Processing</a> vector libraries
  */
 public class Vector2D {
 	
@@ -357,10 +357,9 @@ public class Vector2D {
 	}
 	
 	/**
-	 * Preforms a linear interpolation between this vector and the given values
-	 * At {@code amount = 0} returns this vector
-	 * At {@code amount = 0.5} returns the mid point
-	 * At {@code amount = 1} returns the given values
+	 * Preforms a linear interpolation between this vector and the given values At {@code amount =
+	 * 0} returns this vector At {@code amount = 0.5} returns the mid point At {@code amount = 1}
+	 * returns the given values
 	 *
 	 * @param x      The x component
 	 * @param y      The y component
@@ -374,10 +373,9 @@ public class Vector2D {
 	}
 	
 	/**
-	 * Preforms a linear interpolation between this vector and the given vector
-	 * At {@code amount = 0} returns this vector
-	 * At {@code amount = 0.5} returns the mid point
-	 * At {@code amount = 1} returns the given vector
+	 * Preforms a linear interpolation between this vector and the given vector At {@code amount =
+	 * 0} returns this vector At {@code amount = 0.5} returns the mid point At {@code amount = 1}
+	 * returns the given vector
 	 *
 	 * @param other  The other vector
 	 * @param amount The amount to linearly interpolate between the two values

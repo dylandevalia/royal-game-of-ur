@@ -25,8 +25,8 @@ public class Counter extends AbstractButton {
 	static boolean instantAnimate = false;
 	
 	/**
-	 * The current index through the counter's route
-	 * -1 is used to describe a counter not currently on the route
+	 * The current index through the counter's route -1 is used to describe a counter not currently
+	 * on the route
 	 */
 	private int currentRouteIndex = -1;
 	

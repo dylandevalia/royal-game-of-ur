@@ -4,7 +4,8 @@ import java.awt.Color;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Small library class that has all colors in the <a href="https://material.io/guidelines/style/color.html">Google Material Colours</a> guide
+ * Small library class that has all colors in the <a href="https://material.io/guidelines/style/color.html">Google
+ * Material Colours</a> guide
  */
 public class ColorMaterial {
 	

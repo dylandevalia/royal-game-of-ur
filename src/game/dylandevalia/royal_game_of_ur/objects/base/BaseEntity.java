@@ -5,8 +5,8 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Graphics2D;
 
 /**
- * Base entity which should be extended by other entities
- * Has a position and calculates the drawable position
+ * Base entity which should be extended by other entities Has a position and calculates the drawable
+ * position
  */
 public abstract class BaseEntity {
 	
@@ -20,14 +20,12 @@ public abstract class BaseEntity {
 	protected int width, height;
 	
 	/**
-	 * If the entity is currently on screen
-	 * Calculated in {@link #isOnScreen(Vector2D)}
+	 * If the entity is currently on screen Calculated in {@link #isOnScreen(Vector2D)}
 	 */
 	protected boolean shouldDraw;
 	
 	/**
-	 * The previous position of the entity used to
-	 * calculate {@link #drawPos}
+	 * The previous position of the entity used to calculate {@link #drawPos}
 	 */
 	private Vector2D lastPos = new Vector2D();
 	

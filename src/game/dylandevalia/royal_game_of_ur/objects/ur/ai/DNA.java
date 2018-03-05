@@ -4,8 +4,7 @@ import game.dylandevalia.royal_game_of_ur.states.Game_Ur;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 
 /**
- * Holds an {@link AI}'s chromosomes and has crossover and mutation
- * methods for genetic evolution
+ * Holds an {@link AI}'s chromosomes and has crossover and mutation methods for genetic evolution
  */
 public class DNA {
 	
@@ -66,8 +65,8 @@ public class DNA {
 	/**
 	 * Uses to create a DNA structure with premade values
 	 *
-	 * @param chromosomes     The array of chromosomes. Use {@link #initialiseChromosomes()}
-	 *                        to generate correct structure
+	 * @param chromosomes     The array of chromosomes. Use {@link #initialiseChromosomes()} to
+	 *                        generate correct structure
 	 * @param crossoverMethod The method that the DNA will use to preform crossover
 	 */
 	private DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethod) {
@@ -109,8 +108,8 @@ public class DNA {
 	}
 	
 	/**
-	 * Cross-breeds two DNAs to make a new child DNA Randomly picks on of the crossoverMethod methods of
-	 * the parent
+	 * Cross-breeds two DNAs to make a new child DNA Randomly picks on of the crossoverMethod
+	 * methods of the parent
 	 *
 	 * @param mum Parent DNA A
 	 * @param dad Parent DNA B
@@ -146,15 +145,15 @@ public class DNA {
 	}
 	
 	/**
-	 * Small helper function used by {@link #crossover(DNA, DNA)}
-	 * Used to crossover two values depending on the crossover method
+	 * Small helper function used by {@link #crossover(DNA, DNA)} Used to crossover two values
+	 * depending on the crossover method
 	 *
 	 * @param c              The crossover method to use
 	 * @param mum            The first value to crossover
 	 * @param dad            The second value to crossover
 	 * @param beforePointOne Some random point in the length of the chromosome size
-	 * @param beforePointTwo Another random point <em>after</em> {@code beforePointOne}
-	 *                       and before chromosome size
+	 * @param beforePointTwo Another random point <em>after</em> {@code beforePointOne} and before
+	 *                       chromosome size
 	 * @return The crossover value
 	 */
 	private static double crossover_helper(

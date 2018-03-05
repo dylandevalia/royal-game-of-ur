@@ -1,8 +1,8 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
 /**
- * A single chromosome that holds an array of values. Can be used and
- * access with a single value also
+ * A single chromosome that holds an array of values. Can be used and access with a single value
+ * also
  */
 class Chromosome {
 	

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="royal-game-of-ur:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/royal_game_of_ur_jar</output-path>
+    <root id="archive" name="royal-game-of-ur.jar">
+      <element id="module-output" name="royal-game-of-ur" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/redist/annotations-java8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
