@@ -109,7 +109,8 @@ public class StateManager {
 	 * @see IState
 	 */
 	public enum GameState {
-		MAIN_MENU(MainMenu.class), GAME_UR(Game_Ur.class), PAUSE(Pause.class);
+		MAIN_MENU(MainMenu.class), GAME_UR(GameUr.class),
+		GAME_UR_SIMULATE(GameUrSimulate.class), PAUSE(Pause.class);
 		
 		private int index;
 		private Class obj;

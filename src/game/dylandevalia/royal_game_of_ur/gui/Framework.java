@@ -19,27 +19,24 @@ public class Framework extends Canvas {
 	
 	/* Constants */
 	
-	/** The number of nanoseconds in a second */
-	private static final long NS_A_SEC = 1000000000;
-	
 	/** How often the objects should update a second */
 	public static final double GAME_HERTZ = 30.0;
+	/** The number of nanoseconds in a second */
+	private static final long NS_A_SEC = 1000000000;
 	/** How many times the objects should render a second */
 	private static final double TARGET_FPS = 60.0;
 	/** How many nanoseconds it should take to reach the target speed */
 	private static final double TIME_BETWEEN_UPDATES = NS_A_SEC / GAME_HERTZ;
 	/** How many nanoseconds it should take to render our target FPS */
 	private static final double TARGET_TIME_BETWEEN_RENDERS = NS_A_SEC / TARGET_FPS;
-	/**
-	 * Maximum number of updates before forced render Set to {@code 1} for perfect rendering
-	 */
+	/** Maximum number of updates before forced render Set to {@code 1} for perfect rendering */
 	private static final int MAX_UPDATES_BEFORE_RENDER = 5;
-	
-	/** The manager which handles the states of the program */
-	private StateManager stateManager = new StateManager();
-	
 	/** Position of the mouse - updated in {@link #update()} */
 	private static Vector2D mousePos = new Vector2D();
+	/** Number of frames since start of loop */
+	private static int frameCount = 0;
+	/** The manager which handles the states of the program */
+	private StateManager stateManager = new StateManager();
 	
 	
 	/* Game updates */
@@ -68,6 +65,15 @@ public class Framework extends Canvas {
 	 */
 	public static Vector2D getMousePos() {
 		return mousePos.copy();
+	}
+	
+	/**
+	 * Returns the number of frames since the start of the program
+	 *
+	 * @return Number of frames since beginning of canvas
+	 */
+	public static int getFrameCount() {
+		return frameCount;
 	}
 	
 	/**
@@ -135,6 +141,7 @@ public class Framework extends Canvas {
 	 * instantiated yet
 	 */
 	private void update() {
+		frameCount++;
 		try {
 			Point mouse = MouseInfo.getPointerInfo().getLocation();
 			mousePos.set(
@@ -142,7 +149,7 @@ public class Framework extends Canvas {
 				mouse.y - getLocationOnScreen().y
 			);
 		} catch (IllegalComponentStateException | NullPointerException e) {
-			Log.error("Framework", "Couldn't get mouse position"/*, e*/);
+			Log.error("FRAMEWORK", "Couldn't get mouse position"/*, e*/);
 		}
 		stateManager.update();
 	}

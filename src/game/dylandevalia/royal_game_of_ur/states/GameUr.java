@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
 /**
  * State which plays the Royal Game of Ur
  */
-public class Game_Ur implements IState {
+public class GameUr implements IState {
 	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;
@@ -51,11 +51,7 @@ public class Game_Ur implements IState {
 	public void initialise(StateManager stateManager) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(
-			4, 8, 2,
-			noCounters, false,
-			noDice
-		);
+		game = new GameLogic(false, null, null);
 		Log.info("GAME_UR", "GameLogic created");
 		
 		btn_roll = new TextButton(
@@ -89,7 +85,7 @@ public class Game_Ur implements IState {
 		game.update(mousePos);
 		
 		// Update buttons
-		btn_roll.setActive(game.isAllowRoll());
+		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
 		btn_roll.update(mousePos);
 		
 		for (Node n : nodes) {

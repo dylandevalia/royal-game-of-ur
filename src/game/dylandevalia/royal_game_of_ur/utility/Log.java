@@ -58,9 +58,8 @@ public class Log {
 	 */
 	private static void log(int level, String category, Object message, Throwable ex) {
 		// Builds final message
-		Date date = new Date();
 		StringBuilder builder = new StringBuilder(255);
-		builder.append(new SimpleDateFormat("HH:mm:ss").format(date));
+		builder.append(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 		builder.append(' ');
 		switch (level) {
 			case 5:
@@ -85,7 +84,7 @@ public class Log {
 		builder.append(" [");
 		builder.append(category.toUpperCase());
 		builder.append("] ");
-		builder.append(message);
+		builder.append(message.toString());
 		if (ex != null) {
 			builder.append("\u001B[31m");
 			StringWriter writer = new StringWriter(255);

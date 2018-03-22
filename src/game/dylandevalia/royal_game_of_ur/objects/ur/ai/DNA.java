@@ -1,6 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
-import game.dylandevalia.royal_game_of_ur.states.Game_Ur;
+import game.dylandevalia.royal_game_of_ur.states.GameUr;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 
 /**
@@ -87,16 +87,16 @@ public class DNA {
 			chromosomes[i].setValue(Math.random());
 		}
 		
-		chromosomes[SPACES_AFTER_ENEMY_PRE] = new Chromosome(Game_Ur.noDice);
-		chromosomes[SPACES_AFTER_ENEMY_POST] = new Chromosome(Game_Ur.noDice);
-		for (int i = 0; i < Game_Ur.noDice; i++) {
+		chromosomes[SPACES_AFTER_ENEMY_PRE] = new Chromosome(GameUr.noDice);
+		chromosomes[SPACES_AFTER_ENEMY_POST] = new Chromosome(GameUr.noDice);
+		for (int i = 0; i < GameUr.noDice; i++) {
 			chromosomes[SPACES_AFTER_ENEMY_PRE].setValue(i, Math.random());
 			chromosomes[SPACES_AFTER_ENEMY_POST].setValue(i, Math.random());
 		}
 		
-		chromosomes[FRIENDLIES_ON_BOARD] = new Chromosome(Game_Ur.noCounters);
-		chromosomes[HOSTILES_ON_BOARD] = new Chromosome(Game_Ur.noCounters);
-		for (int i = 0; i < Game_Ur.noCounters; i++) {
+		chromosomes[FRIENDLIES_ON_BOARD] = new Chromosome(GameUr.noCounters + 1);
+		chromosomes[HOSTILES_ON_BOARD] = new Chromosome(GameUr.noCounters + 1);
+		for (int i = 0; i < GameUr.noCounters + 1; i++) {
 			chromosomes[FRIENDLIES_ON_BOARD].setValue(i, Math.random());
 			chromosomes[HOSTILES_ON_BOARD].setValue(i, Math.random());
 		}
@@ -177,15 +177,13 @@ public class DNA {
 	
 	/**
 	 * Randomly mutates the {@link DNA} based on its {@link #chromosomes}[{@link #MUTATION_CHANCE}]
-	 *
-	 * @param dna The DNA after mutation
 	 */
-	public static void mutate(DNA dna) {
-		for (int i = 0; i < dna.chromosomes.length; i++) {
-			for (int j = 0; j < dna.chromosomes[i].getLength(); j++) {
+	public void mutate() {
+		for (Chromosome chromosome : chromosomes) {
+			for (int j = 0; j < chromosome.getLength(); j++) {
 				// If mutation chance successful, change to new random value
-				if (Math.random() < dna.chromosomes[MUTATION_CHANCE].getValue()) {
-					dna.chromosomes[i].setValue(j, Math.random());
+				if (Math.random() < 0.01 /*chromosomes[MUTATION_CHANCE].getValue()*/) {
+					chromosome.setValue(j, Math.random());
 				}
 			}
 		}
@@ -197,6 +195,73 @@ public class DNA {
 	
 	double getValue(int chromosome, int arg) {
 		return chromosomes[chromosome].getValue(arg);
+	}
+	
+	@Override
+	public String toString() {
+		return "\n        rosette: " + chromosomes[ROSETTE].getValue()
+			+ "\n        capture: " + chromosomes[CAPTURE].getValue()
+			+ "\n    enter board: " + chromosomes[ENTER_BOARD].getValue()
+			+ "\n   enter centre: " + chromosomes[ENTER_CENTER].getValue()
+			+ "\n      enter end: " + chromosomes[ENTER_END].getValue()
+			+ "\n     exit board: " + chromosomes[EXIT_BOARD].getValue()
+			+ "\n       furthest: " + chromosomes[FURTHEST_PLACE].getValue()
+			+ "\n        closest: " + chromosomes[CLOSEST_PLACE].getValue()
+			+ "\n spaces pre (1): " + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(0)
+			+ "\n spaces pre (2): " + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(1)
+			+ "\n spaces pre (3): " + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(2)
+			+ "\n spaces pre (4): " + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(3)
+			+ "\nspaces post (1): " + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(0)
+			+ "\nspaces post (2): " + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(1)
+			+ "\nspaces post (3): " + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(2)
+			+ "\nspaces post (4): " + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(3)
+			+ "\n friendlies (0): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(0)
+			+ "\n friendlies (1): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(1)
+			+ "\n friendlies (2): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(2)
+			+ "\n friendlies (3): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(3)
+			+ "\n friendlies (4): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(4)
+			+ "\n friendlies (5): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(5)
+			+ "\n friendlies (6): " + chromosomes[FRIENDLIES_ON_BOARD].getValue(6)
+			+ "\n   hostiles (0): " + chromosomes[HOSTILES_ON_BOARD].getValue(0)
+			+ "\n   hostiles (1): " + chromosomes[HOSTILES_ON_BOARD].getValue(1)
+			+ "\n   hostiles (2): " + chromosomes[HOSTILES_ON_BOARD].getValue(2)
+			+ "\n   hostiles (3): " + chromosomes[HOSTILES_ON_BOARD].getValue(3)
+			+ "\n   hostiles (4): " + chromosomes[HOSTILES_ON_BOARD].getValue(4)
+			+ "\n   hostiles (5): " + chromosomes[HOSTILES_ON_BOARD].getValue(5)
+			+ "\n   hostiles (6): " + chromosomes[HOSTILES_ON_BOARD].getValue(6);
+	}
+	
+	public String getValues() {
+		return "" + chromosomes[ROSETTE].getValue()
+			+ "," + chromosomes[CAPTURE].getValue()
+			+ "," + chromosomes[ENTER_BOARD].getValue()
+			+ "," + chromosomes[ENTER_CENTER].getValue()
+			+ "," + chromosomes[ENTER_END].getValue()
+			+ "," + chromosomes[EXIT_BOARD].getValue()
+			+ "," + chromosomes[FURTHEST_PLACE].getValue()
+			+ "," + chromosomes[CLOSEST_PLACE].getValue()
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(0)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(1)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(2)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_PRE].getValue(3)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(0)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(1)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(2)
+			+ "," + chromosomes[SPACES_AFTER_ENEMY_POST].getValue(3)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(0)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(1)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(2)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(3)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(4)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(5)
+			+ "," + chromosomes[FRIENDLIES_ON_BOARD].getValue(6)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(0)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(1)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(2)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(3)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(4)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(5)
+			+ "," + chromosomes[HOSTILES_ON_BOARD].getValue(6);
 	}
 	
 	/**

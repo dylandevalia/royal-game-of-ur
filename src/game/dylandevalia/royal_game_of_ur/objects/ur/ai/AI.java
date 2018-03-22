@@ -16,8 +16,14 @@ public class AI {
 	/** The AI's {@link DNA} */
 	private DNA dna;
 	
+	private int fitness = 0;
+	
 	public AI() {
 		dna = new DNA();
+	}
+	
+	public AI(DNA dna) {
+		this.dna = dna;
 	}
 	
 	/**
@@ -168,5 +174,26 @@ public class AI {
 		
 		// Return highest scoring counter
 		return moves.get(index).getKey();
+	}
+	
+	public int getFitness() {
+		return fitness;
+	}
+	
+	public void setFitness(int fitness) {
+		this.fitness = fitness;
+	}
+	
+	public DNA getDna() {
+		return dna;
+	}
+	
+	@Override
+	public String toString() {
+		return dna.toString();
+	}
+	
+	public String getDNAValues() {
+		return dna.getValues();
 	}
 }

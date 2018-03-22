@@ -35,23 +35,21 @@ public class Player {
 	private Color[] colors;
 	
 	/** Is the player AI controlled */
-	private AI ai = null;
+	private AI ai;
 	
 	/**
 	 * @param id          The ID of the player
 	 * @param name        The name of the player
 	 * @param colors      The colour space that the player will use ({@link ColorMaterial})
 	 * @param routeLength The length of the board's route for each player
-	 * @param isAI        True if the player should be controlled by an AI
+	 * @param ai          The {@link AI} the player should use. {@code null} if human player
 	 */
-	Player(PlayerID id, String name, Color[] colors, int routeLength, boolean isAI) {
+	Player(PlayerID id, String name, Color[] colors, int routeLength, AI ai) {
 		this.id = id;
 		this.name = name;
 		this.colors = colors;
 		route = new Tile[routeLength];
-		if (isAI) {
-			ai = new AI();
-		}
+		this.ai = ai;
 	}
 	
 	/**

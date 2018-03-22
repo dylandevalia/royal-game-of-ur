@@ -75,6 +75,7 @@ public class Counter extends AbstractButton {
 		this.allowHover = allowHover;
 		
 		if (atTarget() && targets.isEmpty()) {
+			isMoving = false;
 			return;
 		}
 		
@@ -83,7 +84,8 @@ public class Counter extends AbstractButton {
 		if (instantAnimate) {
 			pos.set(targets.getLast().getKey());
 			targets.clear();
-		} else if (dist > SPEED) { // If more that speed away from the target
+		} else if (dist > SPEED) {
+			// If more that speed away from the target
 			// Move speed towards target
 			pos.add(
 				Vector2D.sub(target.getKey(), pos)
@@ -91,9 +93,10 @@ public class Counter extends AbstractButton {
 			);
 			isMoving = true;
 		} else {// Less that speed away from target
-			// So just move to target
-			pos.set(target.getKey());
-			isMoving = false;
+			if (!atTarget()) {
+				// So just move to target
+				pos.set(target.getKey());
+			}
 			
 			// Target is next target if exists
 			if (!targets.isEmpty()) {
@@ -140,11 +143,17 @@ public class Counter extends AbstractButton {
 	 * @return True if at the current target position
 	 */
 	private boolean atTarget() {
-		return pos == target.getKey();
+		return pos.equals(target.getKey());
 	}
 	
 	void setTarget(Vector2D target, boolean captured) {
-		targets.add(new Pair<>(target, captured));
+		Pair<Vector2D, Boolean> pair = new Pair<>(target, captured);
+		
+		if (!instantAnimate && atTarget() && targets.isEmpty()) {
+			this.target = pair;
+		} else {
+			targets.add(pair);
+		}
 	}
 	
 	boolean isMoving() {

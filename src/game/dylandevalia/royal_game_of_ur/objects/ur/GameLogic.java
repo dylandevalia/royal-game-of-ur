@@ -3,6 +3,7 @@ package game.dylandevalia.royal_game_of_ur.objects.ur;
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
@@ -34,7 +35,7 @@ public class GameLogic {
 	private int currentRoll = -1;
 	
 	/** Has the objects been won */
-	private boolean won = false;
+	private Player won = null;
 	
 	/** Should the objects allow counters to be moved */
 	private boolean allowMove = false;
@@ -62,7 +63,8 @@ public class GameLogic {
 	public GameLogic(
 		int boardStartLength, int boardMidLength, int boardEndLen,
 		int noCounters, boolean animateGame,
-		int noDice
+		int noDice,
+		AI playerOneAI, AI playerTwoAI
 	) {
 		// Create board
 		board = new Board(boardStartLength, boardMidLength, boardEndLen);
@@ -73,14 +75,14 @@ public class GameLogic {
 			"Ed",
 			ColorMaterial.PURPLE,
 			board.getRouteLength(),
-			false
+			playerOneAI
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
 			"Dylan",
 			ColorMaterial.GREEN,
 			board.getRouteLength(),
-			false
+			playerTwoAI
 		);
 		
 		// Generate board and counters
@@ -95,11 +97,20 @@ public class GameLogic {
 		dice = new UrDice(noDice);
 		
 		// Should animate game
-		this.instantAnimate = animateGame;
-		if (animateGame) {
+		this.instantAnimate = !animateGame;
+		if (!animateGame) {
 			CounterCluster.instantAnimate = true;
 			Counter.instantAnimate = true;
 		}
+	}
+	
+	public GameLogic(boolean animateGame, AI playerOneAI, AI playerTwoAI) {
+		this(
+			4, 8, 2,
+			6, animateGame,
+			4,
+			playerOneAI, playerTwoAI
+		);
 	}
 	
 	/**
@@ -144,7 +155,7 @@ public class GameLogic {
 		allowRoll = false;
 		
 		currentRoll = dice.roll();
-		Log.info("GAME", "Rolled: " + currentRoll);
+		Log.trace("GAME", "Rolled: " + currentRoll);
 		
 		if (arePossibleMoves() && currentPlayer.isAI()) {
 			takeAITurn();
@@ -288,8 +299,8 @@ public class GameLogic {
 			playerOne.getEndCluster().getSize() == playerOne.getCounters().length
 				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
 			) {
-			won = true;
-			Log.debug("GAME", "GAME WON! - " + currentPlayer.getId());
+			won = currentPlayer;
+			Log.debug("GAME", "GAME WON! - " + won.getId());
 			return true;
 		}
 		return false;
@@ -308,10 +319,6 @@ public class GameLogic {
 		
 		allowMove = false;
 		allowRoll = true;
-		
-		if (instantAnimate && currentPlayer.isAI()) {
-			rollDice();
-		}
 	}
 	
 	/**
@@ -342,6 +349,10 @@ public class GameLogic {
 	}
 	
 	public void update(Vector2D mousePos) {
+		if (isWon()) {
+			return;
+		}
+		
 		animating = false;
 		
 		// Update counters
@@ -371,6 +382,10 @@ public class GameLogic {
 		
 		// Update board (tiles)
 		board.update(moveState, hoveringTile);
+		
+		if (!animating && currentPlayer.isAI()) {
+			rollDice();
+		}
 	}
 	
 	/**
@@ -396,7 +411,7 @@ public class GameLogic {
 					&& counter.getCurrentRouteIndex() < board.getRouteLength()
 			);
 			
-			if (counter.isMoving()) {
+			if (!animating && counter.isMoving()) {
 				animating = true;
 			}
 			
@@ -409,7 +424,8 @@ public class GameLogic {
 	
 	public void draw(Graphics2D g, double interpolate) {
 		board.draw(g, interpolate);
-//		drawCounters(g, interpolate);
+		
+		// drawCounters(g, interpolate);
 		for (Counter counter : playerOne.getCounters()) {
 			counter.draw(g, interpolate);
 		}
@@ -476,6 +492,10 @@ public class GameLogic {
 	}
 	
 	public boolean isWon() {
+		return won != null;
+	}
+	
+	public Player getWon() {
 		return won;
 	}
 	
@@ -493,5 +513,15 @@ public class GameLogic {
 	
 	public UrDice getDice() {
 		return dice;
+	}
+	
+	public boolean isAnimating() {
+		return animating;
+	}
+	
+	public int playerFitness(PlayerID id) {
+		Player player = (id == PlayerID.ONE) ? playerOne : playerTwo;
+		Player other = (id == PlayerID.ONE) ? playerTwo : playerOne;
+		return player.getEndCluster().getSize() - other.getEndCluster().getSize();
 	}
 }
