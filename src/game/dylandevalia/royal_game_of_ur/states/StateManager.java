@@ -5,6 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+// TODO: Bundle system to pass data between states
+// TODO: Asynchronous state loading with callback when completed initialisation
+
 /**
  * Controls the creation, initialising, activating/swapping and destroying of states. Passes
  * functions onto the currently active state. IState objects are implemented from the 'IState'
