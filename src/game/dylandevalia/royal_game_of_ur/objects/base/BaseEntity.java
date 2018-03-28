@@ -73,7 +73,7 @@ public abstract class BaseEntity {
 	 * Uses the interpolation value to calculate a draw position
 	 */
 	private void calculateDrawPos(double interpolate) {
-		if (pos == lastPos) {
+		if (pos.equals(lastPos)) {
 			drawPos = pos;
 		}
 		drawPos.x = ((pos.x - lastPos.x) * interpolate + lastPos.x);
