@@ -10,6 +10,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The main logic of the window, implementing the objects loop and calls for the updates and draws
@@ -80,28 +81,32 @@ public class Framework extends Canvas {
 	 * Runs the main objects (game) loop
 	 */
 	private void gameLoop() {
-		int fps = 0;
-		int frameCount = 0;
+		AtomicInteger fps = new AtomicInteger();
+		AtomicInteger frameCount = new AtomicInteger();
 		
 		// Last time the objects was updated/rendered
 		double lastUpdateTime = System.nanoTime();
-		double lastRenderTime = System.nanoTime();
+		long lastRenderTime = System.nanoTime();
 		
 		// Simple way to find fps
-		int lastSecondTime = (int) (lastUpdateTime / NS_A_SEC);
+		AtomicInteger lastSecondTime = new AtomicInteger((int) (lastUpdateTime / NS_A_SEC));
 		
 		while (runGame) {
+			
+			
 			/* Update objects */
 			
-			double now = System.nanoTime();
-			int updateCount = 0;
+			long now = System.nanoTime();
+			AtomicInteger updateCount = new AtomicInteger();
 			
 			// Do as many updates as required - may need to play catchup
-			while (now - lastUpdateTime > TIME_BETWEEN_UPDATES
-				&& updateCount < MAX_UPDATES_BEFORE_RENDER) {
+			while (
+				now - lastUpdateTime > TIME_BETWEEN_UPDATES
+					&& updateCount.get() < MAX_UPDATES_BEFORE_RENDER
+				) {
 				update();
 				lastUpdateTime += TIME_BETWEEN_UPDATES;
-				updateCount++;
+				updateCount.getAndIncrement();
 			}
 			
 			// If an update takes a long time, skip ahead to avoid lots of catchup
@@ -116,15 +121,15 @@ public class Framework extends Canvas {
 			interpolate = Math.min(1.0, (now - lastUpdateTime) / TIME_BETWEEN_UPDATES);
 			repaint();
 			lastRenderTime = now;
-			frameCount++;
+			frameCount.getAndIncrement();
 			
 			// Update frame
-			int curSecond = (int) (lastUpdateTime / NS_A_SEC);
-			if (curSecond > lastSecondTime) {
+			AtomicInteger curSecond = new AtomicInteger((int) (lastUpdateTime / NS_A_SEC));
+			if (curSecond.get() > lastSecondTime.get()) {
 				Log.trace("objects loop", "FPS: " + fps);
-				fps = frameCount;
-				frameCount = 0;
-				lastSecondTime = curSecond;
+				fps.set(frameCount.get());
+				frameCount.set(0);
+				lastSecondTime.set(curSecond.get());
 			}
 			
 			// Yield CPU time so that we don't take up all the processing time
