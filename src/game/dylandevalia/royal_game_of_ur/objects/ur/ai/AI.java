@@ -44,6 +44,7 @@ public class AI {
 			return moves.get(0).getKey();
 		}
 		
+		int[] noScenarios = new int[moves.size()];
 		double[] scores = new double[moves.size()];
 		// Pair<counter index, position>
 		Pair<Integer, Integer> min, max = min = new Pair<>(
@@ -56,6 +57,7 @@ public class AI {
 			Counter counter = moves.get(i).getKey();
 			MoveState ms = moves.get(i).getValue();
 			scores[i] = 0;
+			noScenarios[i] = 0;
 			int currentPos = counter.getCurrentRouteIndex();
 			int nextPos = currentPos + game.getCurrentRoll();
 			
@@ -64,18 +66,22 @@ public class AI {
 			
 			if (currentPos < 0) {
 				scores[i] += dna.getValue(DNA.ENTER_BOARD);
+				noScenarios[i]++;
 			} else if (
 				currentPos < game.getBoard().getStartLen()
 					&& nextPos >= game.getBoard().getStartLen()
 					&& nextPos < game.getBoard().getMidLen()
 				) {
+				
 				scores[i] += dna.getValue(DNA.ENTER_CENTER);
+				noScenarios[i]++;
 			} else if (
 				currentPos < game.getBoard().getMidLen()
 					&& nextPos >= game.getBoard().getMidLen()
 					&& nextPos < game.getBoard().getRouteLength()
 				) {
 				scores[i] += dna.getValue(DNA.ENTER_END);
+				noScenarios[i]++;
 			}
 			
 			
@@ -83,6 +89,7 @@ public class AI {
 			
 			if (game.getBoard().getTile(nextPos).isRosette()) {
 				scores[i] += dna.getValue(DNA.ROSETTE);
+				noScenarios[i]++;
 			}
 			
 			
@@ -90,8 +97,10 @@ public class AI {
 			
 			if (ms == MoveState.CAPTURE) {
 				scores[i] += dna.getValue(DNA.CAPTURE);
+				noScenarios[i]++;
 			} else if (ms == MoveState.END) {
 				scores[i] += dna.getValue(DNA.EXIT_BOARD);
+				noScenarios[i]++;
 			}
 			
 			/* Min max positions */
@@ -122,6 +131,7 @@ public class AI {
 				
 				if (c.getPlayer() == currentPlayer) {
 					scores[i] += dna.getValue(DNA.SPACES_AFTER_ENEMY_PRE, j - 1);
+					noScenarios[i]++;
 				}
 			}
 			
@@ -138,6 +148,7 @@ public class AI {
 				
 				if (c.getPlayer() == currentPlayer) {
 					scores[i] += dna.getValue(DNA.SPACES_AFTER_ENEMY_POST, j - 1);
+					noScenarios[i]++;
 				}
 			}
 			
@@ -158,11 +169,22 @@ public class AI {
 			}
 			
 			scores[i] += dna.getValue(DNA.FRIENDLIES_ON_BOARD, friendly);
+			noScenarios[i]++;
 			scores[i] += dna.getValue(DNA.HOSTILES_ON_BOARD, hostile);
+			noScenarios[i]++;
 		}
 		
 		scores[min.getKey()] += dna.getValue(DNA.CLOSEST_PLACE);
+		noScenarios[min.getKey()]++;
 		scores[max.getKey()] += dna.getValue(DNA.FURTHEST_PLACE);
+		noScenarios[max.getKey()]++;
+		
+		// Normalise values
+		for (int i = 0; i < scores.length; i++) {
+			if (noScenarios[i] > 0) {
+				scores[i] /= noScenarios[i];
+			}
+		}
 		
 		// Pick highest score counter
 		double maxScore = 0;
