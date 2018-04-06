@@ -8,6 +8,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA;
+import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import java.awt.Font;
@@ -32,7 +33,7 @@ public class GameUrSimulate implements IState {
 	private int currentGame = 0, currentGeneration = 0;
 	
 	@Override
-	public void initialise(StateManager stateManager) {
+	public void initialise(StateManager stateManager, Bundle bundle) {
 		Log.SET_INFO();
 		
 		nodes = new Node[(int) Utility.mapWidth(150, 300)];
@@ -55,6 +56,11 @@ public class GameUrSimulate implements IState {
 	}
 	
 	@Override
+	public void onSet(Bundle bundle) {
+	
+	}
+	
+	@Override
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
@@ -68,11 +74,11 @@ public class GameUrSimulate implements IState {
 				if (++currentGame >= gamesPerGeneration) {
 					if (++currentGeneration >= noGenerations) {
 						int n = 0;
-						for (int i = 0; i < ais.length; i++) {
-							if (ais[i].getFitness() == 6) {
+						for (AI ai : ais) {
+							if (ai.getFitness() == 6) {
 								n++;
 							}
-							Log.info("AI", ais[i].toString());
+							Log.info("AI", ai.toString());
 						}
 						Log.info("AI", "6s: " + n);
 						
@@ -166,9 +172,7 @@ public class GameUrSimulate implements IState {
 			}
 			
 			w.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}

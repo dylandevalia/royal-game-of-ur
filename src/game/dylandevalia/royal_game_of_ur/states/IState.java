@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
+import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -9,7 +10,9 @@ import java.awt.event.MouseEvent;
  */
 public interface IState {
 	
-	void initialise(StateManager stateManager);
+	void initialise(StateManager stateManager, Bundle bundle);
+	
+	void onSet(Bundle bundle);
 	
 	void update();
 	

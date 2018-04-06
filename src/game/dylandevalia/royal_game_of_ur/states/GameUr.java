@@ -10,6 +10,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
+import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -48,10 +49,10 @@ public class GameUr implements IState {
 	private Node[] nodes;
 	
 	@Override
-	public void initialise(StateManager stateManager) {
+	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(false, null, null);
+		game = new GameLogic(true, null, null);
 		Log.info("GAME_UR", "GameLogic created");
 		
 		btn_roll = new TextButton(
@@ -74,6 +75,13 @@ public class GameUr implements IState {
 				Utility.randBetween(-200, Window.WIDTH + 200),
 				Utility.randBetween(-200, Window.HEIGHT + 200)
 			);
+		}
+	}
+	
+	@Override
+	public void onSet(Bundle bundle) {
+		if (bundle != null) {
+			nodes = (Node[]) bundle.get("nodes");
 		}
 	}
 	
@@ -137,7 +145,7 @@ public class GameUr implements IState {
 			);
 		}
 		
-		if (--fadeInNum > 0) {
+		if ((fadeInNum -= 5) > 0) {
 			g.setColor(new Color(0, 0, 0, fadeInNum));
 			g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		}
@@ -204,10 +212,12 @@ public class GameUr implements IState {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+			Bundle bundle = new Bundle().put("nodes", nodes);
+			
 			if (!stateManager.isLoaded(GameState.PAUSE)) {
-				stateManager.loadState(GameState.PAUSE);
+				stateManager.loadState(GameState.PAUSE, bundle);
 			}
-			stateManager.setState(GameState.PAUSE);
+			stateManager.setState(GameState.PAUSE, bundle);
 		}
 	}
 	

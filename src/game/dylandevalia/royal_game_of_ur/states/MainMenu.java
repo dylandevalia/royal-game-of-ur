@@ -7,6 +7,7 @@ import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
+import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.ICallback;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
@@ -37,7 +38,7 @@ public class MainMenu implements IState {
 	/** The buttons on the screen */
 	private TextButton btn_play, btn_quit;
 	
-	public void initialise(StateManager stateManager) {
+	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
 		nodes = new Node[(int) Utility.mapWidth(150, 300)];
@@ -81,6 +82,11 @@ public class MainMenu implements IState {
 		});
 	}
 	
+	@Override
+	public void onSet(Bundle bundle) {
+	
+	}
+	
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
@@ -111,7 +117,7 @@ public class MainMenu implements IState {
 			if (dist < 300) {
 				g.setColor(
 					ColorMaterial.withAlpha(
-						ColorMaterial.INDIGO[3],
+						ColorMaterial.INDIGO[2],
 						(int) Utility.map(dist, 0, 300, 255, 0)
 					)
 				);
@@ -140,10 +146,11 @@ public class MainMenu implements IState {
 			case NONE:
 				break;
 			case DOWN:
-				if (--fadeNum < 0) {
+				if ((fadeNum -= 5) < 0) {
 					fadeNum = 0;
 				}
-				g.setColor(new Color(0, 0, 0, fadeNum));
+				
+				g.setColor(new Color(255, 255, 255, fadeNum));
 				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 				if (fadeNum <= 0) {
 					fadeState = FadeState.NONE;
@@ -151,7 +158,7 @@ public class MainMenu implements IState {
 				}
 				break;
 			case UP:
-				if ((fadeNum += 3) > 255) {
+				if ((fadeNum += 5) > 255) {
 					fadeNum = 255;
 				}
 				
@@ -171,8 +178,8 @@ public class MainMenu implements IState {
 	 * Loads the Royal Game of Ur state and starts the fade
 	 */
 	private void loadGame() {
-		if (!stateManager.isLoaded(GameState.GAME_UR_SIMULATE)) {
-			stateManager.loadState(GameState.GAME_UR_SIMULATE);
+		if (!stateManager.isLoaded(GameState.GAME_UR)) {
+			stateManager.loadState(GameState.GAME_UR);
 		}
 		fadeState = FadeState.UP;
 		fadeState.setCallback(this::startGame);
@@ -183,7 +190,7 @@ public class MainMenu implements IState {
 	 */
 	private void startGame() {
 		Log.info("MENU", "Starting ur");
-		stateManager.setState(GameState.GAME_UR_SIMULATE);
+		stateManager.setState(GameState.GAME_UR);
 		stateManager.unloadState(GameState.MAIN_MENU);
 	}
 	

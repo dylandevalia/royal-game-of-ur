@@ -1,5 +1,6 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
+import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -27,15 +28,39 @@ public class StateManager {
 	 *
 	 * @param state The states to be initialise
 	 */
-	public void loadState(GameState state) {
+	void loadState(GameState state, Bundle bundle) {
 		try {
 			int index = state.getIndex();
 			loadedStates[index] = (IState) state.getObj().newInstance();
-			loadedStates[index].initialise(this);
+			loadedStates[index].initialise(this, bundle);
 			Log.info("STATE MANAGER", "Loaded " + state);
 		} catch (Exception e) {
 			Log.error("STATE MANAGER", "Error trying to create new instance of state", e);
 		}
+	}
+	
+	/**
+	 * Creates the state in the array and calls the state's initialise function
+	 *
+	 * @param state The states to be initialise
+	 */
+	public void loadState(GameState state) {
+		loadState(state, null);
+	}
+	
+	/**
+	 * Sets the given state as the active state and delivers the given bundle
+	 *
+	 * @param state The state to become active
+	 */
+	void setState(GameState state, Bundle bundle) {
+		if (loadedStates[state.getIndex()] == null) {
+			Log.error("STATE MANAGER", "State not loaded!");
+			return;
+		}
+		currentState = loadedStates[state.getIndex()];
+		currentState.onSet(bundle);
+		Log.info("STATE MANAGER", "Set " + state);
 	}
 	
 	/**
@@ -44,12 +69,7 @@ public class StateManager {
 	 * @param state The state to become active
 	 */
 	public void setState(GameState state) {
-		if (loadedStates[state.getIndex()] == null) {
-			Log.error("STATE MANAGER", "State not loaded!");
-			return;
-		}
-		currentState = loadedStates[state.getIndex()];
-		Log.info("STATE MANAGER", "Set " + state);
+		setState(state, null);
 	}
 	
 	/**
@@ -57,7 +77,7 @@ public class StateManager {
 	 *
 	 * @param state The state to be deleted
 	 */
-	public void unloadState(GameState state) {
+	void unloadState(GameState state) {
 		loadedStates[state.getIndex()] = null;
 		Log.info("STATE MANAGER", "Unloaded " + state);
 	}
@@ -68,12 +88,12 @@ public class StateManager {
 	 * @param state The state to check if it's loaded
 	 * @return Boolean if the state is loaded
 	 */
-	public boolean isLoaded(GameState state) {
+	boolean isLoaded(GameState state) {
 		return loadedStates[state.getIndex()] != null;
 	}
 	
-	public void reinitialise() {
-		currentState.initialise(this);
+	public void reinitialise(Bundle bundle) {
+		currentState.initialise(this, bundle);
 		Log.info("STATE MANAGER", "Re-Initialised " + currentState);
 	}
 	
