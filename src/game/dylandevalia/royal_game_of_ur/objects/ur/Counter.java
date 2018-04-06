@@ -158,6 +158,7 @@ public class Counter extends AbstractButton {
 	
 	boolean isMoving() {
 		return isMoving;
+		// return !atTarget();
 	}
 	
 	public int getCurrentRouteIndex() {
@@ -168,7 +169,7 @@ public class Counter extends AbstractButton {
 		this.currentRouteIndex = currentRouteIndex;
 	}
 	
-	public boolean isMouseHovering() {
+	boolean isMouseHovering() {
 		return allowHover && isMouseHovering;
 	}
 	

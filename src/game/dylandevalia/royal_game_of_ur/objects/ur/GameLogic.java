@@ -53,12 +53,16 @@ public class GameLogic {
 	private UrDice dice;
 	
 	/**
+	 * The constructor with modifiable rule-sets
+	 *
 	 * @param boardStartLength The length of the board's starting area
 	 * @param boardMidLength   The length of the board's middle area
 	 * @param boardEndLen      The length of the board's end area
 	 * @param noCounters       The number of counters each player has
 	 * @param animateGame      Should the game use animations
 	 * @param noDice           The number of dice the board will use
+	 * @param playerOneAI      The AI for player one
+	 * @param playerTwoAI      The AI for player two
 	 */
 	public GameLogic(
 		int boardStartLength, int boardMidLength, int boardEndLen,
@@ -72,8 +76,8 @@ public class GameLogic {
 		// Create players
 		playerOne = new Player(
 			PlayerID.ONE,
-			"Ed",
-			ColorMaterial.PURPLE,
+			"Pritz",
+			ColorMaterial.DEEP_PURPLE,
 			board.getRouteLength(),
 			playerOneAI
 		);
@@ -104,6 +108,13 @@ public class GameLogic {
 		}
 	}
 	
+	/**
+	 * Constructor for game with standard rules
+	 *
+	 * @param animateGame Should the game animate
+	 * @param playerOneAI The AI for player one
+	 * @param playerTwoAI The AI for player two
+	 */
 	public GameLogic(boolean animateGame, AI playerOneAI, AI playerTwoAI) {
 		this(
 			4, 8, 2,
@@ -425,11 +436,20 @@ public class GameLogic {
 	public void draw(Graphics2D g, double interpolate) {
 		board.draw(g, interpolate);
 		
-		// drawCounters(g, interpolate);
-		for (Counter counter : playerOne.getCounters()) {
-			counter.draw(g, interpolate);
-		}
-		for (Counter counter : playerTwo.getCounters()) {
+		ArrayList<Counter> moving = new ArrayList<>();
+		
+		// Draw non-moving counters on the board
+		drawCounters(playerOne, moving, g, interpolate);
+		drawCounters(playerTwo, moving, g, interpolate);
+		
+		// Draw counters in the start/end clusters (and captured counters)
+		playerOne.getStartCluster().draw(g, interpolate);
+		playerOne.getEndCluster().draw(g, interpolate);
+		playerTwo.getStartCluster().draw(g, interpolate);
+		playerTwo.getEndCluster().draw(g, interpolate);
+		
+		// Draw moving counters
+		for (Counter counter : moving) {
 			counter.draw(g, interpolate);
 		}
 	}
@@ -437,25 +457,20 @@ public class GameLogic {
 	/**
 	 * Draws the counters in the correct order
 	 */
-	private void drawCounters(Graphics2D g, double interpolate) {
-		ArrayList<Counter> still = new ArrayList<>(),
-			cluster = new ArrayList<>(),
-			moving = new ArrayList<>();
-		
-		Counter[] one = playerOne.getCounters(), two = playerTwo.getCounters();
-		for (int i = 0; i < playerOne.getCounters().length; i++) {
-			if (!one[i].isMoving()) {
-				still.add(one[i]);
-			} else if (one[i].getCurrentRouteIndex() < 0
-				|| one[i].getCurrentRouteIndex() >= board.getRouteLength()
+	private void drawCounters(Player player, ArrayList<Counter> moving, Graphics2D g,
+		double interpolate) {
+		for (Counter counter : player.getCounters()) {
+			if (player.getStartCluster().contains(counter)
+				|| player.getEndCluster().contains(counter)
 				) {
-				
+				continue;
 			}
-			
+			if (counter.isMoving()) {
+				moving.add(counter);
+			} else {
+				counter.draw(g, interpolate);
+			}
 		}
-		
-		still.forEach(c -> c.draw(g, interpolate));
-		
 	}
 	
 	

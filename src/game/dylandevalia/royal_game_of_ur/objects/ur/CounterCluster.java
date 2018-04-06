@@ -5,12 +5,13 @@ import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 /**
  * Keeps an array-list of counters and position vectors for those counters
  */
-public class CounterCluster {
+class CounterCluster {
 	
 	/** Should the animations be instantaneous */
 	static boolean instantAnimate = false;
@@ -99,7 +100,7 @@ public class CounterCluster {
 	 */
 	private Vector2D getNextPos() {
 		return initialPos.copy().add(
-			Counter.WIDTH * startPos.size() * (goLeft ? -1 : 1),
+			Counter.WIDTH * startPos.size() * (goLeft ? -1 : 0.5),
 			0
 		);
 	}
@@ -140,5 +141,20 @@ public class CounterCluster {
 	
 	int getSize() {
 		return counters.size();
+	}
+	
+	boolean contains(Counter counter) {
+		for (Counter c : counters) {
+			if (c == counter) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	void draw(Graphics2D g, double interpolate) {
+		for (int i = counters.size() - 1; i >= 0; i--) {
+			counters.get(i).draw(g, interpolate);
+		}
 	}
 }

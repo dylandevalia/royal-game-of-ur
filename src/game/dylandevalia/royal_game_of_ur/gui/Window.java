@@ -17,7 +17,7 @@ public class Window extends JFrame {
 	public static int HEIGHT = 1080;
 	
 	/** Should the window run is fullscreen or windowed */
-	private boolean fullscreen = false;
+	private boolean fullscreen = true;
 	
 	public Window() {
 		this.setTitle("The Royal Game of Ur");

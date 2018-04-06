@@ -70,7 +70,7 @@ public class Player {
 		}
 	}
 	
-	public PlayerID getId() {
+	PlayerID getId() {
 		return id;
 	}
 	
