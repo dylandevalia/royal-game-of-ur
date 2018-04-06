@@ -37,8 +37,6 @@ public class AI {
 		GameLogic game,
 		ArrayList<Pair<Counter, MoveState>> moves
 	) {
-		// TODO: Normalise sum by scenarios hit
-		
 		// If only one possible move, return counter
 		if (moves.size() == 1) {
 			return moves.get(0).getKey();

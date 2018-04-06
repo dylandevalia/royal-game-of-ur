@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-// TODO: Bundle system to pass data between states
 // TODO: Asynchronous state loading with callback when completed initialisation
 
 /**

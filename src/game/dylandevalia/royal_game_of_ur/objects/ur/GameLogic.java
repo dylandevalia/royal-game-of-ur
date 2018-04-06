@@ -34,8 +34,8 @@ public class GameLogic {
 	/** The current roll of the dice */
 	private int currentRoll = -1;
 	
-	/** Has the objects been won */
-	private Player won = null;
+	/** Has the objects been winner */
+	private Player winner = null;
 	
 	/** Should the objects allow counters to be moved */
 	private boolean allowMove = false;
@@ -287,7 +287,7 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Runs at the end of a turn - checks if the game is won and initiates the next turn
+	 * Runs at the end of a turn - checks if the game is winner and initiates the next turn
 	 *
 	 * @param finalTile The final tile that the counter just move to that turn
 	 */
@@ -300,18 +300,18 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Checks if the objects is won by seeing if either player's end cluster is equal to the number
+	 * Checks if the objects is winner by seeing if either player's end cluster is equal to the number
 	 * of counters
 	 *
-	 * @return True if the objects is won
+	 * @return True if the objects is winner
 	 */
 	private boolean checkIfWon() {
 		if (
 			playerOne.getEndCluster().getSize() == playerOne.getCounters().length
 				|| playerTwo.getEndCluster().getSize() == playerTwo.getCounters().length
 			) {
-			won = currentPlayer;
-			Log.debug("GAME", "GAME WON! - " + won.getId());
+			winner = currentPlayer;
+			Log.debug("GAME", "GAME WON! - " + winner.getId());
 			return true;
 		}
 		return false;
@@ -507,11 +507,11 @@ public class GameLogic {
 	}
 	
 	public boolean isWon() {
-		return won != null;
+		return winner != null;
 	}
 	
-	public Player getWon() {
-		return won;
+	public Player getWinner() {
+		return winner;
 	}
 	
 	public boolean isAllowMove() {
