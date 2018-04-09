@@ -34,6 +34,8 @@ public class GameLogic {
 	/** The current roll of the dice */
 	private int currentRoll = -1;
 	
+	private int noTurns = 0;
+	
 	/** Has the objects been winner */
 	private Player winner = null;
 	
@@ -533,6 +535,8 @@ public class GameLogic {
 	public boolean isAnimating() {
 		return animating;
 	}
+	
+	// TODO: Redo fitness calculation
 	
 	public int playerFitness(PlayerID id) {
 		Player player = (id == PlayerID.ONE) ? playerOne : playerTwo;

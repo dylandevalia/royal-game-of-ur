@@ -69,7 +69,7 @@ public class GameUrSimulate implements IState {
 		for (GameLogic g : game) {
 			if (g.isWon()) {
 				ais[currentGame * 2].setFitness(g.playerFitness(PlayerID.ONE));
-				ais[currentGame * 2].setFitness(g.playerFitness(PlayerID.TWO));
+				ais[(currentGame * 2) + 1].setFitness(g.playerFitness(PlayerID.TWO));
 				
 				if (++currentGame >= gamesPerGeneration) {
 					if (++currentGeneration >= noGenerations) {
