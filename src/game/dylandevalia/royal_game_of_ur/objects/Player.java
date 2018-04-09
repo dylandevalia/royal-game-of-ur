@@ -1,7 +1,7 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur;
+package game.dylandevalia.royal_game_of_ur.objects;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AI;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 

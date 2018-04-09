@@ -1,16 +1,16 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
-import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
-import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA;
+import game.dylandevalia.royal_game_of_ur.objects.GameLogic;
+import game.dylandevalia.royal_game_of_ur.objects.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AI;
+import game.dylandevalia.royal_game_of_ur.objects.ai.DNA;
+import game.dylandevalia.royal_game_of_ur.objects.nodes.NodeSystem;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -21,12 +21,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class GameUrSimulate implements IState {
 	
-	private GameLogic[] game;
-	private Node[] nodes;
+	private GameLogic[] games;
+	private NodeSystem nodes;
 	private int gamesPerGeneration = 50;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
 	private int noGenerations = 100;
@@ -34,25 +35,14 @@ public class GameUrSimulate implements IState {
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
-		Log.SET_INFO();
+		nodes = new NodeSystem();
 		
-		nodes = new Node[(int) Utility.mapWidth(150, 300)];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(
-				Utility.randBetween(-200, Window.WIDTH + 200),
-				Utility.randBetween(-200, Window.HEIGHT + 200)
-			);
-		}
+		Arrays.setAll(ais, i -> new AI());
 		
-		for (int i = 0; i < ais.length; i++) {
-			ais[i] = new AI();
+		games = new GameLogic[gamesPerGeneration];
+		for (int i = 0; i < games.length; i++) {
+			games[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
 		}
-		
-		game = new GameLogic[gamesPerGeneration];
-		for (int i = 0; i < game.length; i++) {
-			game[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
-		}
-		// game = new GameLogic(false, ais[0], ais[1]);
 	}
 	
 	@Override
@@ -62,11 +52,9 @@ public class GameUrSimulate implements IState {
 	
 	@Override
 	public void update() {
-		for (Node n : nodes) {
-			n.update();
-		}
+		nodes.update();
 		
-		for (GameLogic g : game) {
+		for (GameLogic g : games) {
 			if (g.isWon()) {
 				ais[currentGame * 2].setFitness(g.playerFitness(PlayerID.ONE));
 				ais[(currentGame * 2) + 1].setFitness(g.playerFitness(PlayerID.TWO));
@@ -78,7 +66,7 @@ public class GameUrSimulate implements IState {
 							if (ai.getFitness() == 6) {
 								n++;
 							}
-							Log.info("AI", ai.toString());
+							// Log.info("AI", ai.toString());
 						}
 						Log.info("AI", "6s: " + n);
 						
@@ -97,7 +85,7 @@ public class GameUrSimulate implements IState {
 				);
 			}
 			
-			g.update(Framework.getMousePos());
+			g.update(/*Framework.getMousePos()*/ Vector2D.ZERO());
 		}
 	}
 	
@@ -132,38 +120,38 @@ public class GameUrSimulate implements IState {
 			PrintWriter w = new PrintWriter("data/GeneticAI_" + datetime + ".csv", "UTF-8");
 			
 			// Headers
-			w.println(
-				"rosette,"
-					+ "capture,"
-					+ "enter board,"
-					+ "enter centre,"
-					+ "enter end,"
-					+ "exit board,"
-					+ "furthest,"
-					+ "closest,"
-					+ "spaces pre (1),"
-					+ "spaces pre (2),"
-					+ "spaces pre (3),"
-					+ "spaces pre (4),"
-					+ "spaces post (1),"
-					+ "spaces post (2),"
-					+ "spaces post (3),"
-					+ "spaces post (4),"
-					+ "friendlies (0),"
-					+ "friendlies (1),"
-					+ "friendlies (2),"
-					+ "friendlies (3),"
-					+ "friendlies (4),"
-					+ "friendlies (5),"
-					+ "friendlies (6),"
-					+ "hostiles (0),"
-					+ "hostiles (1),"
-					+ "hostiles (2),"
-					+ "hostiles (3),"
-					+ "hostiles (4),"
-					+ "hostiles (5),"
-					+ "hostiles (6),"
-					+ "fitness"
+			w.println(""
+				+ "rosette,"
+				+ "capture,"
+				+ "enter board,"
+				+ "enter centre,"
+				+ "enter end,"
+				+ "exit board,"
+				+ "furthest,"
+				+ "closest,"
+				+ "spaces pre (1),"
+				+ "spaces pre (2),"
+				+ "spaces pre (3),"
+				+ "spaces pre (4),"
+				+ "spaces post (1),"
+				+ "spaces post (2),"
+				+ "spaces post (3),"
+				+ "spaces post (4),"
+				+ "friendlies (0),"
+				+ "friendlies (1),"
+				+ "friendlies (2),"
+				+ "friendlies (3),"
+				+ "friendlies (4),"
+				+ "friendlies (5),"
+				+ "friendlies (6),"
+				+ "hostiles (0),"
+				+ "hostiles (1),"
+				+ "hostiles (2),"
+				+ "hostiles (3),"
+				+ "hostiles (4),"
+				+ "hostiles (5),"
+				+ "hostiles (6),"
+				+ "fitness"
 			);
 			
 			// Values
@@ -190,9 +178,7 @@ public class GameUrSimulate implements IState {
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		nodes.draw(g, interpolate, false);
 		
 		
 		/* Text */

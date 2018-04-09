@@ -5,7 +5,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.objects.nodes.NodeSystem;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.ICallback;
@@ -28,7 +28,7 @@ public class MainMenu implements IState {
 	private StateManager stateManager;
 	
 	/** The array of nodes used for the background */
-	private Node[] nodes;
+	private NodeSystem system;
 	
 	/** The state of the fadeState */
 	private FadeState fadeState = FadeState.DOWN;
@@ -41,13 +41,9 @@ public class MainMenu implements IState {
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
-		nodes = new Node[(int) Utility.mapWidth(150, 300)];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(
-				Utility.randBetween(-200, Window.WIDTH + 200),
-				Utility.randBetween(-200, Window.HEIGHT + 200)
-			);
-		}
+		Log.SET_TRACE();
+		
+		system = new NodeSystem();
 		
 		Color base = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 50);
 		Color hover = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 150);
@@ -88,9 +84,7 @@ public class MainMenu implements IState {
 	}
 	
 	public void update() {
-		for (Node n : nodes) {
-			n.update();
-		}
+		system.update();
 		
 		Vector2D mousePos = Framework.getMousePos();
 		btn_play.update(mousePos);
@@ -108,25 +102,7 @@ public class MainMenu implements IState {
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		//g.setPaint(oldPaint);
 		
-		Vector2D mousePos = Framework.getMousePos();
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-			
-			Vector2D nPos = nodes[i].getPos();
-			double dist = Vector2D.dist(mousePos, nPos);
-			if (dist < 300) {
-				g.setColor(
-					ColorMaterial.withAlpha(
-						ColorMaterial.INDIGO[2],
-						(int) Utility.map(dist, 0, 300, 255, 0)
-					)
-				);
-				g.drawLine(
-					(int) mousePos.x, (int) mousePos.y,
-					(int) nPos.x, (int) nPos.y
-				);
-			}
-		}
+		system.draw(g, interpolate, false);
 		
 		btn_play.draw(g, interpolate);
 		btn_quit.draw(g, interpolate);

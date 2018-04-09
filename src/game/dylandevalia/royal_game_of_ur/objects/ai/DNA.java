@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
+package game.dylandevalia.royal_game_of_ur.objects.ai;
 
 import game.dylandevalia.royal_game_of_ur.states.GameUr;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;

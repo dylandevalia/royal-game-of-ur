@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
+package game.dylandevalia.royal_game_of_ur.objects.ai;
 
 /**
  * A single chromosome that holds an array of values. Can be used and access with a single value

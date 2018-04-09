@@ -1,10 +1,10 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
+package game.dylandevalia.royal_game_of_ur.objects.ai;
 
-import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
-import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
+import game.dylandevalia.royal_game_of_ur.objects.Counter;
+import game.dylandevalia.royal_game_of_ur.objects.GameLogic;
+import game.dylandevalia.royal_game_of_ur.objects.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.objects.Tile;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import java.util.ArrayList;
 

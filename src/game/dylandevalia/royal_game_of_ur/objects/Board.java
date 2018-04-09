@@ -1,7 +1,7 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur;
+package game.dylandevalia.royal_game_of_ur.objects;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import java.awt.Graphics2D;
 

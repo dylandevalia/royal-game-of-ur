@@ -1,9 +1,9 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur;
+package game.dylandevalia.royal_game_of_ur.objects;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import game.dylandevalia.royal_game_of_ur.objects.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.AbstractButton;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;

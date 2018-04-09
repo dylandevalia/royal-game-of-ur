@@ -2,7 +2,7 @@ package game.dylandevalia.royal_game_of_ur.states;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.objects.nodes.NodeSystem;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import java.awt.GradientPaint;
@@ -17,24 +17,22 @@ public class Pause implements IState {
 	
 	private StateManager stateManager;
 	
-	private Node[] nodes;
+	private NodeSystem nodes;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
-		nodes = (Node[]) bundle.get("nodes");
+		nodes = (NodeSystem) bundle.get("nodes");
 	}
 	
 	@Override
 	public void onSet(Bundle bundle) {
-		nodes = (Node[]) bundle.get("nodes");
+		nodes = (NodeSystem) bundle.get("nodes");
 	}
 	
 	@Override
 	public void update() {
-		for (Node n : nodes) {
-			n.update();
-		}
+		nodes.update();
 	}
 	
 	@Override
@@ -48,9 +46,7 @@ public class Pause implements IState {
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		nodes.draw(g, interpolate, false);
 	}
 	
 	@Override
@@ -66,7 +62,7 @@ public class Pause implements IState {
 			stateManager.loadState(GameState.MAIN_MENU);
 			stateManager.setState(GameState.MAIN_MENU);
 			
-			// stateManager.setState(GameState.GAME_UR, new Bundle().put("nodes", nodes));
+			stateManager.setState(GameState.GAME_UR, new Bundle().put("nodes", nodes));
 		}
 	}
 	

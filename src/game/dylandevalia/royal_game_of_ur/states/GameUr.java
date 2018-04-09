@@ -3,12 +3,12 @@ package game.dylandevalia.royal_game_of_ur.states;
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import game.dylandevalia.royal_game_of_ur.objects.Counter;
+import game.dylandevalia.royal_game_of_ur.objects.GameLogic;
+import game.dylandevalia.royal_game_of_ur.objects.Tile;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
-import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
+import game.dylandevalia.royal_game_of_ur.objects.nodes.NodeSystem;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
@@ -46,7 +46,7 @@ public class GameUr implements IState {
 	private double fadeBgRatio = 0;
 	
 	/** The array of nodes used in the background */
-	private Node[] nodes;
+	private NodeSystem nodes;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
@@ -69,19 +69,13 @@ public class GameUr implements IState {
 		btn_roll.setOnClickListener(game::rollDice);
 		Log.info("GAME_UR", "Generation completed");
 		
-		nodes = new Node[(int) Utility.mapWidth(150, 300)];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(
-				Utility.randBetween(-200, Window.WIDTH + 200),
-				Utility.randBetween(-200, Window.HEIGHT + 200)
-			);
-		}
+		nodes = new NodeSystem();
 	}
 	
 	@Override
 	public void onSet(Bundle bundle) {
 		if (bundle != null) {
-			nodes = (Node[]) bundle.get("nodes");
+			nodes = (NodeSystem) bundle.get("nodes");
 		}
 	}
 	
@@ -96,18 +90,13 @@ public class GameUr implements IState {
 		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
 		btn_roll.update(mousePos);
 		
-		for (Node n : nodes) {
-			n.update();
-		}
+		nodes.update();
 	}
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		drawBackground(g);
-		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		nodes.draw(g, interpolate, false);
 		
 		game.draw(g, interpolate);
 		

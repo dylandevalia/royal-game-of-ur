@@ -284,7 +284,7 @@ public class ColorMaterial {
 	@NotNull
 	public static Color withAlpha(Color c, int alpha) {
 		if (alpha < 0 || alpha > 255) {
-			throw new IllegalArgumentException("Invalid alpha value");
+			throw new IllegalArgumentException("Invalid alpha value: " + alpha);
 		}
 		
 		return new Color(c.getRed(), c.getGreen(), c.getBlue(), alpha);

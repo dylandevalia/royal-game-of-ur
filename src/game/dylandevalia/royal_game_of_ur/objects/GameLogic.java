@@ -1,11 +1,11 @@
-package game.dylandevalia.royal_game_of_ur.objects.ur;
+package game.dylandevalia.royal_game_of_ur.objects;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController;
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
+import game.dylandevalia.royal_game_of_ur.objects.Player.PlayerID;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AI;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AIController;
+import game.dylandevalia.royal_game_of_ur.objects.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
 import game.dylandevalia.royal_game_of_ur.utility.UrDice;
