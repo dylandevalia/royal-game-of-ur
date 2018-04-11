@@ -27,9 +27,9 @@ public class GameUrSimulate implements IState {
 	
 	private GameLogic[] game;
 	private Node[] nodes;
-	private int gamesPerGeneration = 50;
+	private final int gamesPerGeneration = 50;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
-	private int noGenerations = 100;
+	private final int noGenerations = 100;
 	private int currentGame = 0, currentGeneration = 0;
 	
 	@Override
@@ -82,6 +82,7 @@ public class GameUrSimulate implements IState {
 						}
 						Log.info("AI", "6s: " + n);
 						
+						// Write AI attributes to file and close program
 						writeToFile();
 						System.exit(0);
 					}
@@ -114,15 +115,24 @@ public class GameUrSimulate implements IState {
 		
 		AI[] newAis = new AI[ais.length];
 		for (int i = 0; i < ais.length; i++) {
+			// Pick two random parents from the mating pool
 			DNA mother = matingPool.get(Utility.randBetween(0, matingPool.size() - 1)).getDna();
 			DNA father = matingPool.get(Utility.randBetween(0, matingPool.size() - 1)).getDna();
 			
+			// Crossbreed and mutate child DNA
 			DNA child = DNA.crossover(mother, father);
 			child.mutate();
 			
+			// Apply new child DNA to an AI
 			newAis[i] = new AI(child);
 		}
 		
+		// Randomly select 2% AIs and give them random attributes
+		for (int i = 0; i < 2 * (ais.length / 100); i++) {
+			newAis[Utility.randBetween(0, newAis.length - 1)] = new AI();
+		}
+		
+		// Set new child AIs
 		ais = newAis;
 	}
 	

@@ -93,7 +93,6 @@ public class Framework extends Canvas {
 		
 		while (runGame) {
 			
-			
 			/* Update objects */
 			
 			long now = System.nanoTime();
