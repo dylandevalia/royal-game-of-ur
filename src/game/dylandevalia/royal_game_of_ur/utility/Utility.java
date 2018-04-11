@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import java.util.List;
 
 public class Utility {
 	
@@ -18,6 +19,28 @@ public class Utility {
 	public static double randBetween(double min, double max) {
 		double range = Math.abs(max - min);
 		return (Math.random() * range) + (min <= max ? min : max);
+	}
+	
+	/**
+	 * Returns a random item from the array
+	 *
+	 * @param array The array to get the random item
+	 * @param <T>   The type of the array
+	 * @return A random item of type T from the array
+	 */
+	public static <T> T random(T[] array) {
+		return array[randBetween(0, array.length - 1)];
+	}
+	
+	/**
+	 * Returns a random item from the given list of type T
+	 *
+	 * @param list The list to get the random item from
+	 * @param <T>  The object type that the list holds
+	 * @return A random item of type T from the list
+	 */
+	public static <T> T random(List<T> list) {
+		return list.get(randBetween(0, list.size() - 1));
 	}
 	
 	/**
