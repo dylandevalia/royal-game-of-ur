@@ -14,6 +14,8 @@ import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -21,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GameUrSimulate extends AbstractState {
+public class GameUrSimulate implements IState {
 	
 	private final int gamesPerGeneration = 5;
 	private final int noGenerations = 1;
@@ -51,6 +53,11 @@ public class GameUrSimulate extends AbstractState {
 			game[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
 		}
 		// game = new GameLogic(false, ais[0], ais[1]);
+	}
+	
+	@Override
+	public void onSet(Bundle bundle) {
+	
 	}
 	
 	@Override
@@ -213,5 +220,25 @@ public class GameUrSimulate extends AbstractState {
 		g.drawString("Current Game: " + (currentGame + 1) + " / " + gamesPerGeneration, 100, 100);
 		g.drawString("Current Generation: " + (currentGeneration + 1 + " / " + noGenerations), 100,
 			300);
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+	
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+	
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+	
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	
 	}
 }
