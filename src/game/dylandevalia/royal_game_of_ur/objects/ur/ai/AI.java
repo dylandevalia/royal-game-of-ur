@@ -16,7 +16,7 @@ public class AI {
 	/** The AI's {@link DNA} */
 	private DNA dna;
 	
-	private int fitness = 0;
+	private double fitness = -1;
 	
 	public AI() {
 		dna = new DNA();
@@ -198,11 +198,11 @@ public class AI {
 		return moves.get(index).getKey();
 	}
 	
-	public int getFitness() {
+	public double getFitness() {
 		return fitness;
 	}
 	
-	public void setFitness(int fitness) {
+	public void setFitness(double fitness) {
 		this.fitness = fitness;
 	}
 	

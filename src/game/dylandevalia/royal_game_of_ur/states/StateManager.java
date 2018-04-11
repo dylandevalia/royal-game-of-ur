@@ -10,17 +10,19 @@ import java.awt.event.MouseEvent;
 
 /**
  * Controls the creation, initialising, activating/swapping and destroying of states. Passes
- * functions onto the currently active state. AbstractState objects are implemented from the 'AbstractState'
- * interface {@link AbstractState}
+ * functions onto the currently active state. IState objects are implemented from the 'IState'
+ * interface {@link IState}
  */
 public class StateManager {
 	
 	/** Static to give all states a new id in array */
 	private static int stateIndexCounter = 0;
+	
 	/** Array of loaded states */
-	private final AbstractState[] loadedStates = new AbstractState[GameState.values().length];
+	private final IState[] loadedStates = new IState[GameState.values().length];
+	
 	/** The currently active state */
-	private AbstractState currentState;
+	private IState currentState;
 	
 	/**
 	 * Creates the state in the array and calls the state's initialise function
@@ -30,7 +32,7 @@ public class StateManager {
 	void loadState(GameState state, Bundle bundle) {
 		try {
 			int index = state.getIndex();
-			loadedStates[index] = (AbstractState) state.getObj().newInstance();
+			loadedStates[index] = (IState) state.getObj().newInstance();
 			loadedStates[index].initialise(this, bundle);
 			Log.info("STATE MANAGER", "Loaded " + state);
 		} catch (Exception e) {
@@ -128,7 +130,7 @@ public class StateManager {
 	 * the static {@code stateIndexCounter} to be used in the array of states {@code loadedStates}
 	 *
 	 * @see #stateIndexCounter
-	 * @see AbstractState
+	 * @see IState
 	 */
 	public enum GameState {
 		MAIN_MENU(MainMenu.class), GAME_UR(GameUr.class),

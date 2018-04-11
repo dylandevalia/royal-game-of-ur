@@ -21,7 +21,7 @@ import java.awt.event.MouseEvent;
 /**
  * The main menu of the Royal Game of Ur
  */
-public class MainMenu extends AbstractState {
+public class MainMenu implements IState {
 	
 	/** Reference to the state manager */
 	private StateManager stateManager;

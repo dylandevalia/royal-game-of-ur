@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 /**
  * Pause state for the game
  */
-public class Pause extends AbstractState {
+public class Pause implements IState {
 	
 	private StateManager stateManager;
 	

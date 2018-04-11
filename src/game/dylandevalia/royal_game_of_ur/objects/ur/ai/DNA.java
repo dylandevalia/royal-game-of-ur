@@ -58,8 +58,7 @@ public class DNA {
 	DNA() {
 		chromosomes = initialiseChromosomes();
 		
-		int len = CrossoverMethod.values().length;
-		this.crossoverMethod = CrossoverMethod.values()[Utility.randBetween(0, len - 1)];
+		this.crossoverMethod = Utility.random(CrossoverMethod.values());
 	}
 	
 	/**
@@ -199,7 +198,8 @@ public class DNA {
 	
 	@Override
 	public String toString() {
-		return "\n        rosette: " + chromosomes[ROSETTE].getValue()
+		return ""
+			+ "\n        rosette: " + chromosomes[ROSETTE].getValue()
 			+ "\n        capture: " + chromosomes[CAPTURE].getValue()
 			+ "\n    enter board: " + chromosomes[ENTER_BOARD].getValue()
 			+ "\n   enter centre: " + chromosomes[ENTER_CENTER].getValue()

@@ -34,7 +34,7 @@ public class GameLogic {
 	/** The current roll of the dice */
 	private int currentRoll = -1;
 	
-	private int noTurns = 0;
+	private int turnCount = 0;
 	
 	/** Has the objects been winner */
 	private Player winner = null;
@@ -255,6 +255,8 @@ public class GameLogic {
 			// is blocked by player's counter - move back to start
 			final Counter takenCounter = finalTile.getCounter();
 			final Player otherPlayer = getOtherPlayer();
+			otherPlayer.countersCaptured();
+			
 			if (instantAnimate) {
 				moveCounterToStart(otherPlayer, takenCounter);
 			} else {
@@ -302,8 +304,8 @@ public class GameLogic {
 	}
 	
 	/**
-	 * Checks if the objects is winner by seeing if either player's end cluster is equal to the number
-	 * of counters
+	 * Checks if the objects is winner by seeing if either player's end cluster is equal to the
+	 * number of counters
 	 *
 	 * @return True if the objects is winner
 	 */
@@ -325,6 +327,7 @@ public class GameLogic {
 	 * @param swapPlayers Whether the players should be swapped
 	 */
 	private void nextTurn(boolean swapPlayers) {
+		turnCount++;
 		previousPlayer = currentPlayer;
 		if (swapPlayers) {
 			swapPlayers();
@@ -538,9 +541,19 @@ public class GameLogic {
 	
 	// TODO: Redo fitness calculation
 	
-	public int playerFitness(PlayerID id) {
+	public double playerFitness(PlayerID id) {
 		Player player = (id == PlayerID.ONE) ? playerOne : playerTwo;
 		Player other = (id == PlayerID.ONE) ? playerTwo : playerOne;
-		return player.getEndCluster().getSize() - other.getEndCluster().getSize();
+		
+		double score = player.getEndCluster().getSize() - other.getEndCluster().getSize();
+		score += player.getNoCounters();
+		// int noCounters = player.getNoCounters();
+		// score = Utility.map(score, -noCounters, noCounters, 0, 10);
+		
+		int countersCaptured = player.getCountersCaptured();
+		
+		boolean playerWon = player == getWinner();
+		
+		return (1000.0 / turnCount) * score;
 	}
 }

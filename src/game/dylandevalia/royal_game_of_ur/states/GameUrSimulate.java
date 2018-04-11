@@ -25,9 +25,9 @@ import java.util.Date;
 
 public class GameUrSimulate implements IState {
 	
-	private final int gamesPerGeneration = 5;
-	private final int noGenerations = 1;
-	private GameLogic[] game;
+	private final int gamesPerGeneration = 50;
+	private final int noGenerations = 1000;
+	private GameLogic[] games;
 	private Node[] nodes;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
 	private int currentGame = 0, currentGeneration = 0;
@@ -48,11 +48,11 @@ public class GameUrSimulate implements IState {
 			ais[i] = new AI();
 		}
 		
-		game = new GameLogic[gamesPerGeneration];
-		for (int i = 0; i < game.length; i++) {
-			game[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
+		games = new GameLogic[gamesPerGeneration];
+		for (int i = 0; i < games.length; i++) {
+			games[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
 		}
-		// game = new GameLogic(false, ais[0], ais[1]);
+		// games = new GameLogic(false, ais[0], ais[1]);
 	}
 	
 	@Override
@@ -66,54 +66,63 @@ public class GameUrSimulate implements IState {
 			n.update();
 		}
 		
-		for (GameLogic g : game) {
-			if (g.isWon()) {
-				ais[currentGame * 2].setFitness(g.playerFitness(PlayerID.ONE));
-				ais[(currentGame * 2) + 1].setFitness(g.playerFitness(PlayerID.TWO));
-				// Log.info("AIS[" + (currentGame * 2) + "]", ais[currentGame * 2].getFitness());
-				// Log.info("AIS[" + ((currentGame * 2) + 1) + "]",
-				// 	ais[(currentGame * 2) + 1].getFitness());
+		for (int i = 0; i < games.length; i++) {
+			if (games[i].isWon()) {
+				// If this game has already been checked, continue
+				if (ais[i * 2].getFitness() >= 0) {
+					continue;
+				}
+				
+				ais[i * 2].setFitness(games[i].playerFitness(PlayerID.ONE));
+				ais[(i * 2) + 1].setFitness(games[i].playerFitness(PlayerID.TWO));
+				// Log.info("AIS[" + (i * 2) + "]", ais[i * 2].getFitness());
+				// Log.info(
+				// "AIS[" + ((i * 2) + 1) + "]",
+				// 	ais[(i * 2) + 1].getFitness()
+				// );
 				
 				currentGame++;
 				if (currentGame >= gamesPerGeneration) {
 					
 					currentGeneration++;
 					if (currentGeneration >= noGenerations) {
-						// int n = 0;
-						// for (AI ai : ais) {
-						// 	if (ai.getFitness() == 6) {
-						// 		n++;
-						// 	}
-						// 	Log.info("AI", ai.toString());
-						// }
-						// Log.info("AI", "6s: " + n);
-						
 						// Write AI attributes to file and close program
 						writeToFile();
 						System.exit(0);
 					}
 					
+					// Cross breed new AIs
+					naturalSelection();
+					
+					// Create new games with new AIs
+					for (int j = 0; j < games.length; j++) {
+						games[j] = new GameLogic(false, ais[j * 2], ais[(j * 2) + 1]);
+					}
+					
 					currentGame = 0;
 				}
-				
-				naturalSelection();
-				
-				g = new GameLogic(
-					false,
-					ais[currentGame * 2], ais[(currentGame * 2) + 1]
-				);
 			}
 			
-			g.update(Framework.getMousePos());
+			games[i].update(Framework.getMousePos());
 		}
 	}
 	
 	private void naturalSelection() {
 		ArrayList<AI> matingPool = new ArrayList<>();
+		
+		// Find max fitness value
+		double maxFitness = 0;
 		for (AI ai : ais) {
-			int n = (int) Math.floor(Utility.map(
-				ai.getFitness(), -6, 6, 1, 100
-			));
+			if (ai.getFitness() > maxFitness) {
+				maxFitness = ai.getFitness();
+			}
+		}
+		
+		for (AI ai : ais) {
+			// Normalise fitness
+			int n = ((int) Utility.map(ai.getFitness(), 0, maxFitness, 0, 100));
+			
+			// Add ai to mating pool n times
 			for (int j = 0; j < n; j++) {
 				matingPool.add(ai);
 			}
@@ -122,8 +131,8 @@ public class GameUrSimulate implements IState {
 		AI[] newAis = new AI[ais.length];
 		for (int i = 0; i < ais.length; i++) {
 			// Pick two random parents from the mating pool
-			DNA mother = matingPool.get(Utility.randBetween(0, matingPool.size() - 1)).getDna();
-			DNA father = matingPool.get(Utility.randBetween(0, matingPool.size() - 1)).getDna();
+			DNA father = Utility.random(matingPool).getDna();
+			DNA mother = Utility.random(matingPool).getDna();
 			
 			// Crossbreed and mutate child DNA
 			DNA child = DNA.crossover(mother, father);
@@ -135,7 +144,8 @@ public class GameUrSimulate implements IState {
 		
 		// Randomly select 2% AIs and give them random attributes
 		for (int i = 0; i < 2 * (ais.length / 100); i++) {
-			newAis[Utility.randBetween(0, newAis.length - 1)] = new AI();
+			AI chosen = Utility.random(ais);
+			chosen = new AI();
 		}
 		
 		// Set new child AIs
@@ -145,7 +155,14 @@ public class GameUrSimulate implements IState {
 	private void writeToFile() {
 		String datetime = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 		try {
-			PrintWriter w = new PrintWriter("data/GeneticAI_" + datetime + ".csv", "UTF-8");
+			PrintWriter w = new PrintWriter(""
+				+ "data/GeneticAI_"
+				+ "agents-" + ais.length
+				+ "_generations-" + noGenerations
+				+ "_" + datetime +
+				".csv",
+				"UTF-8"
+			);
 			
 			// Headers
 			w.println(""

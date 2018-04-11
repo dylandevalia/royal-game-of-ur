@@ -26,7 +26,7 @@ import java.awt.event.MouseEvent;
 /**
  * State which plays the Royal Game of Ur
  */
-public class GameUr extends AbstractState {
+public class GameUr implements IState {
 	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;

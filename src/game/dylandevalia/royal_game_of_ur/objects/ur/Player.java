@@ -37,6 +37,9 @@ public class Player {
 	/** Is the player AI controlled */
 	private AI ai;
 	
+	/** The number of times one of this players counters were captured */
+	private int countersCaptured = 0;
+	
 	/**
 	 * @param id          The ID of the player
 	 * @param name        The name of the player
@@ -82,6 +85,10 @@ public class Player {
 		return counters;
 	}
 	
+	public int getNoCounters() {
+		return counters.length;
+	}
+	
 	public Tile[] getRoute() {
 		return route;
 	}
@@ -104,6 +111,14 @@ public class Player {
 	
 	AI getAI() {
 		return ai;
+	}
+	
+	public int getCountersCaptured() {
+		return countersCaptured;
+	}
+	
+	public void countersCaptured() {
+		countersCaptured++;
 	}
 	
 	/**
