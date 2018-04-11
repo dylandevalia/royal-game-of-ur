@@ -14,8 +14,6 @@ import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -23,13 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GameUrSimulate implements IState {
+public class GameUrSimulate extends AbstractState {
 	
+	private final int gamesPerGeneration = 5;
+	private final int noGenerations = 1;
 	private GameLogic[] game;
 	private Node[] nodes;
-	private final int gamesPerGeneration = 50;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
-	private final int noGenerations = 100;
 	private int currentGame = 0, currentGeneration = 0;
 	
 	@Override
@@ -56,11 +54,6 @@ public class GameUrSimulate implements IState {
 	}
 	
 	@Override
-	public void onSet(Bundle bundle) {
-	
-	}
-	
-	@Override
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
@@ -70,17 +63,23 @@ public class GameUrSimulate implements IState {
 			if (g.isWon()) {
 				ais[currentGame * 2].setFitness(g.playerFitness(PlayerID.ONE));
 				ais[(currentGame * 2) + 1].setFitness(g.playerFitness(PlayerID.TWO));
+				// Log.info("AIS[" + (currentGame * 2) + "]", ais[currentGame * 2].getFitness());
+				// Log.info("AIS[" + ((currentGame * 2) + 1) + "]",
+				// 	ais[(currentGame * 2) + 1].getFitness());
 				
-				if (++currentGame >= gamesPerGeneration) {
-					if (++currentGeneration >= noGenerations) {
-						int n = 0;
-						for (AI ai : ais) {
-							if (ai.getFitness() == 6) {
-								n++;
-							}
-							Log.info("AI", ai.toString());
-						}
-						Log.info("AI", "6s: " + n);
+				currentGame++;
+				if (currentGame >= gamesPerGeneration) {
+					
+					currentGeneration++;
+					if (currentGeneration >= noGenerations) {
+						// int n = 0;
+						// for (AI ai : ais) {
+						// 	if (ai.getFitness() == 6) {
+						// 		n++;
+						// 	}
+						// 	Log.info("AI", ai.toString());
+						// }
+						// Log.info("AI", "6s: " + n);
 						
 						// Write AI attributes to file and close program
 						writeToFile();
@@ -142,38 +141,38 @@ public class GameUrSimulate implements IState {
 			PrintWriter w = new PrintWriter("data/GeneticAI_" + datetime + ".csv", "UTF-8");
 			
 			// Headers
-			w.println(
-				"rosette,"
-					+ "capture,"
-					+ "enter board,"
-					+ "enter centre,"
-					+ "enter end,"
-					+ "exit board,"
-					+ "furthest,"
-					+ "closest,"
-					+ "spaces pre (1),"
-					+ "spaces pre (2),"
-					+ "spaces pre (3),"
-					+ "spaces pre (4),"
-					+ "spaces post (1),"
-					+ "spaces post (2),"
-					+ "spaces post (3),"
-					+ "spaces post (4),"
-					+ "friendlies (0),"
-					+ "friendlies (1),"
-					+ "friendlies (2),"
-					+ "friendlies (3),"
-					+ "friendlies (4),"
-					+ "friendlies (5),"
-					+ "friendlies (6),"
-					+ "hostiles (0),"
-					+ "hostiles (1),"
-					+ "hostiles (2),"
-					+ "hostiles (3),"
-					+ "hostiles (4),"
-					+ "hostiles (5),"
-					+ "hostiles (6),"
-					+ "fitness"
+			w.println(""
+				+ "rosette,"
+				+ "capture,"
+				+ "enter board,"
+				+ "enter centre,"
+				+ "enter end,"
+				+ "exit board,"
+				+ "furthest,"
+				+ "closest,"
+				+ "spaces pre (1),"
+				+ "spaces pre (2),"
+				+ "spaces pre (3),"
+				+ "spaces pre (4),"
+				+ "spaces post (1),"
+				+ "spaces post (2),"
+				+ "spaces post (3),"
+				+ "spaces post (4),"
+				+ "friendlies (0),"
+				+ "friendlies (1),"
+				+ "friendlies (2),"
+				+ "friendlies (3),"
+				+ "friendlies (4),"
+				+ "friendlies (5),"
+				+ "friendlies (6),"
+				+ "hostiles (0),"
+				+ "hostiles (1),"
+				+ "hostiles (2),"
+				+ "hostiles (3),"
+				+ "hostiles (4),"
+				+ "hostiles (5),"
+				+ "hostiles (6),"
+				+ "fitness"
 			);
 			
 			// Values
@@ -214,25 +213,5 @@ public class GameUrSimulate implements IState {
 		g.drawString("Current Game: " + (currentGame + 1) + " / " + gamesPerGeneration, 100, 100);
 		g.drawString("Current Generation: " + (currentGeneration + 1 + " / " + noGenerations), 100,
 			300);
-	}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-	
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-	
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-	
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	
 	}
 }

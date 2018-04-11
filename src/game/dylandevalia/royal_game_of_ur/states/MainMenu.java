@@ -16,13 +16,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
  * The main menu of the Royal Game of Ur
  */
-public class MainMenu implements IState {
+public class MainMenu extends AbstractState {
 	
 	/** Reference to the state manager */
 	private StateManager stateManager;
@@ -80,11 +79,6 @@ public class MainMenu implements IState {
 			fadeState = FadeState.UP;
 			fadeState.setCallback(() -> System.exit(0));
 		});
-	}
-	
-	@Override
-	public void onSet(Bundle bundle) {
-	
 	}
 	
 	public void update() {
@@ -178,8 +172,8 @@ public class MainMenu implements IState {
 	 * Loads the Royal Game of Ur state and starts the fade
 	 */
 	private void loadGame() {
-		if (!stateManager.isLoaded(GameState.GAME_UR)) {
-			stateManager.loadState(GameState.GAME_UR);
+		if (!stateManager.isLoaded(GameState.GAME_UR_SIMULATE)) {
+			stateManager.loadState(GameState.GAME_UR_SIMULATE);
 		}
 		fadeState = FadeState.UP;
 		fadeState.setCallback(this::startGame);
@@ -190,20 +184,8 @@ public class MainMenu implements IState {
 	 */
 	private void startGame() {
 		Log.info("MENU", "Starting ur");
-		stateManager.setState(GameState.GAME_UR);
+		stateManager.setState(GameState.GAME_UR_SIMULATE);
 		stateManager.unloadState(GameState.MAIN_MENU);
-	}
-	
-	public void keyPressed(KeyEvent e) {
-		// Log.debug("main menu/key press", "char: '" + e.getKeyChar() + "'");
-	}
-	
-	public void keyReleased(KeyEvent e) {
-	
-	}
-	
-	public void mousePressed(MouseEvent e) {
-	
 	}
 	
 	public void mouseReleased(MouseEvent e) {

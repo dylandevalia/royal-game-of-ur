@@ -8,12 +8,11 @@ import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 /**
  * Pause state for the game
  */
-public class Pause implements IState {
+public class Pause extends AbstractState {
 	
 	private StateManager stateManager;
 	
@@ -54,11 +53,6 @@ public class Pause implements IState {
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent e) {
-	
-	}
-	
-	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			stateManager.unloadState(GameState.GAME_UR);
@@ -68,15 +62,5 @@ public class Pause implements IState {
 			
 			// stateManager.setState(GameState.GAME_UR, new Bundle().put("nodes", nodes));
 		}
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-	
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	
 	}
 }

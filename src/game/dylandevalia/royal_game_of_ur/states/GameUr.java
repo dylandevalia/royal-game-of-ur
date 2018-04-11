@@ -26,7 +26,7 @@ import java.awt.event.MouseEvent;
 /**
  * State which plays the Royal Game of Ur
  */
-public class GameUr implements IState {
+public class GameUr extends AbstractState {
 	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;
@@ -205,11 +205,6 @@ public class GameUr implements IState {
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent e) {
-	
-	}
-	
-	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
 			Bundle bundle = new Bundle().put("nodes", nodes);
@@ -219,11 +214,6 @@ public class GameUr implements IState {
 			}
 			stateManager.setState(GameState.PAUSE, bundle);
 		}
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-	
 	}
 	
 	@Override
