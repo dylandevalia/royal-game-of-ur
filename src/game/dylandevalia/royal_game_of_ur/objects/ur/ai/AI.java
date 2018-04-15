@@ -17,6 +17,7 @@ public class AI {
 	/** The AI's {@link DNA} */
 	private DNA dna;
 	
+	/** Tracks how successful the AI is */
 	private double fitness = -1;
 	
 	public AI() {
@@ -51,6 +52,19 @@ public class AI {
 			moves.get(0).getKey().getCurrentRouteIndex()
 		);
 		PlayerID currentPlayer = moves.get(0).getKey().getPlayer();
+		
+		// Calculate how many hostile and friendly counters are on the board
+		int friendly = 0, hostile = 0;
+		for (int j = 0; j < game.getBoard().getNoTiles(); j++) {
+			if (game.getBoard().getTile(j).hasCounter()) {
+				Counter c = game.getBoard().getTile(j).getCounter();
+				if (c.getPlayer() == currentPlayer) {
+					friendly++;
+				} else {
+					hostile++;
+				}
+			}
+		}
 		
 		for (int i = 0; i < moves.size(); i++) {
 			Counter counter = moves.get(i).getKey();
@@ -153,19 +167,6 @@ public class AI {
 			
 			
 			/* Counters on the board */
-			// TODO: Can cache these values
-			
-			int friendly = 0, hostile = 0;
-			for (int j = 0; j < game.getBoard().getNoTiles(); j++) {
-				if (game.getBoard().getTile(j).hasCounter()) {
-					Counter c = game.getBoard().getTile(j).getCounter();
-					if (c.getPlayer() == currentPlayer) {
-						friendly++;
-					} else {
-						hostile++;
-					}
-				}
-			}
 			
 			scores[i] += dna.getValue(DNA.FRIENDLIES_ON_BOARD, friendly);
 			noScenarios[i]++;

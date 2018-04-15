@@ -43,7 +43,7 @@ public class Board {
 	 * Generates the board of tiles using {@link #startingTilesLen}, {@link #middleTilesLen} and
 	 * {@link #endTilesLen} as well as {@link #rosetteSquares}
 	 */
-	public void generate(Tile[] one_route, Tile[] two_route) {
+	void generate(Tile[] one_route, Tile[] two_route) {
 		// Set tile width programmatically based on size available
 		Tile.WIDTH = Window.WIDTH / (middleTilesLen + 2);
 		
@@ -96,7 +96,7 @@ public class Board {
 	 * @param counter The counter to move
 	 * @return The tile to move to
 	 */
-	public Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
+	Tile getNextTile(Tile[] route, Counter counter, boolean forward) {
 		counter.setCurrentRouteIndex(counter.getCurrentRouteIndex() + (forward ? 1 : -1));
 		if (counter.getCurrentRouteIndex() < 0) {
 			return route[0];

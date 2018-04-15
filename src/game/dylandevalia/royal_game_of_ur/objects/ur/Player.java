@@ -117,7 +117,7 @@ public class Player {
 		return countersCaptured;
 	}
 	
-	public void countersCaptured() {
+	void countersCaptured() {
 		countersCaptured++;
 	}
 	

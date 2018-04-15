@@ -486,9 +486,7 @@ public class GameLogic {
 	}
 	
 	
-	/* ------- */
 	/* Getters */
-	/* ------- */
 	
 	public Player getCurrentPlayer() {
 		return currentPlayer;
@@ -546,8 +544,6 @@ public class GameLogic {
 		return animating;
 	}
 	
-	// TODO: Redo fitness calculation
-	
 	public double playerFitness(PlayerID id) {
 		Player player = (id == PlayerID.ONE) ? playerOne : playerTwo;
 		Player other = (id == PlayerID.ONE) ? playerTwo : playerOne;
@@ -557,9 +553,9 @@ public class GameLogic {
 		// int noCounters = player.getNoCounters();
 		// score = Utility.map(score, -noCounters, noCounters, 0, 10);
 		
-		int countersCaptured = player.getCountersCaptured();
+		// int countersCaptured = player.getCountersCaptured();
 		
-		boolean playerWon = player == getWinner();
+		// boolean playerWon = player == getWinner();
 		
 		return (1000.0 / turnCount) * score;
 	}

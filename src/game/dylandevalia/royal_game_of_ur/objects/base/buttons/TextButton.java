@@ -14,10 +14,13 @@ public class TextButton extends AbstractButton {
 	
 	/** The message that the button will show */
 	private String message;
+	
 	/** The font that the button should use */
 	private Font font;
+	
 	/** The {@link Alignment} of the button */
 	private Alignment alignment;
+	
 	/** The padding around the text */
 	private int paddingX, paddingY;
 	

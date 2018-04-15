@@ -102,24 +102,24 @@ public class MainMenu implements IState {
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		//g.setPaint(oldPaint);
 		
-		Vector2D mousePos = Framework.getMousePos();
+		// Vector2D mousePos = Framework.getMousePos();
 		for (int i = 0; i < nodes.length; i++) {
 			nodes[i].draw(g, interpolate, nodes, i);
 			
-			Vector2D nPos = nodes[i].getPos();
-			double dist = Vector2D.dist(mousePos, nPos);
-			if (dist < 300) {
-				g.setColor(
-					ColorMaterial.withAlpha(
-						ColorMaterial.INDIGO[2],
-						(int) Utility.map(dist, 0, 300, 255, 0)
-					)
-				);
-				g.drawLine(
-					(int) mousePos.x, (int) mousePos.y,
-					(int) nPos.x, (int) nPos.y
-				);
-			}
+			// Vector2D nPos = nodes[i].getPos();
+			// double dist = Vector2D.dist(mousePos, nPos);
+			// if (dist < 300) {
+			// 	g.setColor(
+			// 		ColorMaterial.withAlpha(
+			// 			ColorMaterial.INDIGO[2],
+			// 			(int) Utility.map(dist, 0, 300, 255, 0)
+			// 		)
+			// 	);
+			// 	g.drawLine(
+			// 		(int) mousePos.x, (int) mousePos.y,
+			// 		(int) nPos.x, (int) nPos.y
+			// 	);
+			// }
 		}
 		
 		btn_play.draw(g, interpolate);
