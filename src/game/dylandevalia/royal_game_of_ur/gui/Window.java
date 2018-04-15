@@ -33,10 +33,9 @@ public class Window extends JFrame {
 			HEIGHT = screenSize.height;
 		} else {
 			pack();
-			// Insets insets = getInsets();
 			setSize(new Dimension(
-				WIDTH, // + insets.left + insets.right,// + 6,
-				HEIGHT // + insets.top + insets.bottom// + 35
+				WIDTH,
+				HEIGHT
 			));
 			setLocationRelativeTo(null);
 			setResizable(false);
