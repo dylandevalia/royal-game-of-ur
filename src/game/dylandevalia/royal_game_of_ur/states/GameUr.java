@@ -8,7 +8,10 @@ import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignm
 import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
+import game.dylandevalia.royal_game_of_ur.objects.ur.Player;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
+import game.dylandevalia.royal_game_of_ur.objects.ur.ai.Library;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
@@ -48,11 +51,13 @@ public class GameUr implements IState {
 	/** The array of nodes used in the background */
 	private Node[] nodes;
 	
+	private Player currentPlayer;
+	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(true, null, null);
+		game = new GameLogic(true, null, new AI(Library.bespoke));
 		Log.info("GAME_UR", "GameLogic created");
 		
 		btn_roll = new TextButton(
@@ -76,6 +81,8 @@ public class GameUr implements IState {
 				Utility.randBetween(-200, Window.HEIGHT + 200)
 			);
 		}
+		
+		currentPlayer = game.getCurrentPlayer();
 	}
 	
 	@Override
@@ -91,6 +98,11 @@ public class GameUr implements IState {
 		Vector2D mousePos = Framework.getMousePos();
 		
 		game.update(mousePos);
+		
+		if (currentPlayer != game.getCurrentPlayer()) {
+			currentPlayer = game.getCurrentPlayer();
+			fadeBgRatio = 0;
+		}
 		
 		// Update buttons
 		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
@@ -262,11 +274,7 @@ public class GameUr implements IState {
 		
 		game.endOfTurn(finalTile);
 		
-		if (game.getCurrentRoll() > 0) {
-			fadeBgRatio = 0;
-		} else {
-			fadeBgRatio = 1;
-		}
+		//fadeBgRatio = (game.getCurrentRoll() > 0) ? 0 : 1;
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them

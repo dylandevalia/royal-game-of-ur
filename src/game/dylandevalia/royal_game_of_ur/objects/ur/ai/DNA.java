@@ -57,7 +57,6 @@ public class DNA {
 	 */
 	DNA() {
 		chromosomes = initialiseChromosomes();
-		
 		this.crossoverMethod = Utility.random(CrossoverMethod.values());
 	}
 	
@@ -68,7 +67,7 @@ public class DNA {
 	 *                        generate correct structure
 	 * @param crossoverMethod The method that the DNA will use to preform crossover
 	 */
-	private DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethod) {
+	DNA(Chromosome[] chromosomes, CrossoverMethod crossoverMethod) {
 		this.chromosomes = chromosomes;
 		this.crossoverMethod = crossoverMethod;
 	}
@@ -267,7 +266,7 @@ public class DNA {
 	/**
 	 * The list of methods that a DNA can crossover
 	 */
-	private enum CrossoverMethod {
+	enum CrossoverMethod {
 		AVERAGE,
 		SINGLE_POINT, DOUBLE_POINT,
 		FIFTY_FIFTY

@@ -6,6 +6,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Tile;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AIController.MoveState;
 import game.dylandevalia.royal_game_of_ur.utility.Pair;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import java.util.ArrayList;
 
 /**
@@ -54,8 +55,8 @@ public class AI {
 		for (int i = 0; i < moves.size(); i++) {
 			Counter counter = moves.get(i).getKey();
 			MoveState ms = moves.get(i).getValue();
-			scores[i] = 0;
-			noScenarios[i] = 0;
+			// scores[i] = 0;
+			// noScenarios[i] = 0;
 			int currentPos = counter.getCurrentRouteIndex();
 			int nextPos = currentPos + game.getCurrentRoll();
 			
@@ -188,7 +189,10 @@ public class AI {
 		double maxScore = 0;
 		int index = 0;
 		for (int i = 0; i < scores.length; i++) {
-			if (scores[i] > maxScore) {
+			if (
+				scores[i] > maxScore
+					|| (scores[i] == maxScore && Utility.fiftyFifty())
+				) {
 				maxScore = scores[i];
 				index = i;
 			}

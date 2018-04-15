@@ -31,6 +31,7 @@ public class GameUrSimulate implements IState {
 	private Node[] nodes;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
 	private int currentGame = 0, currentGeneration = 0;
+	private double maxFitness = 0, maxMaxFitness = 0;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
@@ -111,11 +112,14 @@ public class GameUrSimulate implements IState {
 		ArrayList<AI> matingPool = new ArrayList<>();
 		
 		// Find max fitness value
-		double maxFitness = 0;
+		maxFitness = 0;
 		for (AI ai : ais) {
 			if (ai.getFitness() > maxFitness) {
 				maxFitness = ai.getFitness();
 			}
+		}
+		if (maxFitness > maxMaxFitness) {
+			maxMaxFitness = maxFitness;
 		}
 		
 		for (AI ai : ais) {
@@ -234,9 +238,22 @@ public class GameUrSimulate implements IState {
 		g.setFont(new Font("TimesRoman", Font.BOLD,
 			(int) Utility.mapWidth(28, 56)
 		));
-		g.drawString("Current Game: " + (currentGame + 1) + " / " + gamesPerGeneration, 100, 100);
-		g.drawString("Current Generation: " + (currentGeneration + 1 + " / " + noGenerations), 100,
-			300);
+		g.drawString(
+			"Current Game: " + (currentGame + 1) + " / " + gamesPerGeneration,
+			100, 100
+		);
+		g.drawString(
+			"Current Generation: " + (currentGeneration + 1 + " / " + noGenerations),
+			100, 300
+		);
+		g.drawString(
+			"Max Fitness: " + maxFitness,
+			100, 500
+		);
+		g.drawString(
+			"Max Max Fitness: " + maxMaxFitness,
+			100, 550
+		);
 	}
 	
 	@Override

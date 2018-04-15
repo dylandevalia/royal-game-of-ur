@@ -24,12 +24,14 @@ class Chromosome {
 		return values[index];
 	}
 	
-	void setValue(double value) {
+	Chromosome setValue(double value) {
 		values[0] = value;
+		return this;
 	}
 	
-	void setValue(int index, double values) {
+	Chromosome setValue(int index, double values) {
 		this.values[index] = values;
+		return this;
 	}
 	
 	int getLength() {

@@ -366,6 +366,13 @@ public class GameLogic {
 	
 	public void update(Vector2D mousePos) {
 		if (isWon()) {
+			for (Counter c : playerOne.getCounters()) {
+				c.update(Vector2D.ZERO(), false);
+			}
+			for (Counter c : playerTwo.getCounters()) {
+				c.update(Vector2D.ZERO(), false);
+			}
+			board.update(null, null);
 			return;
 		}
 		
@@ -515,7 +522,7 @@ public class GameLogic {
 		return winner != null;
 	}
 	
-	public Player getWinner() {
+	private Player getWinner() {
 		return winner;
 	}
 	
