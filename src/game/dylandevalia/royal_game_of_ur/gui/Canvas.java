@@ -48,18 +48,38 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	/**
 	 * A hashmap of all the keyCodes and whether they are currently held down
 	 */
-	private static HashMap<Integer, Boolean> keyboardStates = new HashMap<>();
+	private static HashMap<Integer, Boolean> keyboardCodeStates = new HashMap<>();
+	
+	private static HashMap<Character, Boolean> keyboardCharStates = new HashMap<>();
 	
 	/**
-	 * Checks if a given key is being held down Returns false on NullPointerException as key hasn't
-	 * been pressed yet so there's no value for it in the map
+	 * Checks if a given key is being held down. Returns false on NullPointerException as key hasn't
+	 * been pressed yet so there's no value for it in the map.
+	 * <p>
+	 * Use {@link KeyEvent}'s static members for its virtual keyboard. E.g {@code
+	 * KeyEvent.VK_ESCAPE} for the escape key or {@code KeyEvent.VK_A} for the 'a' key
 	 *
 	 * @param key The keycode of the key to check
 	 * @return Whether the given key is held down
 	 */
 	public static boolean getKeyState(int key) {
 		try {
-			return keyboardStates.get(key);
+			return keyboardCodeStates.get(key);
+		} catch (NullPointerException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if a given key is being held down. Returns false on NullPointerException if a key is
+	 * not yet registered with the hash map
+	 *
+	 * @param key The key char to check
+	 * @return True if the given key is being pressed. False else
+	 */
+	public static boolean getKeyState(char key) {
+		try {
+			return keyboardCharStates.get(key);
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -67,13 +87,15 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		keyboardStates.put(e.getKeyCode(), true);
+		keyboardCodeStates.put(e.getKeyCode(), true);
+		keyboardCharStates.put(e.getKeyChar(), true);
 		keyPressedFramework(e);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		keyboardStates.put(e.getKeyCode(), false);
+		keyboardCodeStates.put(e.getKeyCode(), false);
+		keyboardCharStates.put(e.getKeyChar(), false);
 		keyReleasedFramework(e);
 	}
 	

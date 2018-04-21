@@ -51,13 +51,13 @@ public class GameUr implements IState {
 	/** The array of nodes used in the background */
 	private Node[] nodes;
 	
-	private Player currentPlayer;
+	private Player currentPlayer, previousPlayer;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(true, null, new AI(Library.bespoke));
+		game = new GameLogic(true, null, new AI(Library.thousandNormalised));
 		Log.info("GAME_UR", "GameLogic created");
 		
 		btn_roll = new TextButton(
@@ -82,7 +82,7 @@ public class GameUr implements IState {
 			);
 		}
 		
-		currentPlayer = game.getCurrentPlayer();
+		currentPlayer = previousPlayer = game.getCurrentPlayer();
 	}
 	
 	@Override
@@ -99,17 +99,18 @@ public class GameUr implements IState {
 		
 		game.update(mousePos);
 		
-		if (currentPlayer != game.getCurrentPlayer()) {
-			currentPlayer = game.getCurrentPlayer();
-			fadeBgRatio = 0;
-		}
-		
 		// Update buttons
 		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
 		btn_roll.update(mousePos);
 		
 		for (Node n : nodes) {
 			n.update();
+		}
+		
+		if (currentPlayer != game.getCurrentPlayer()) {
+			fadeBgRatio = 0;
+			previousPlayer = currentPlayer;
+			currentPlayer = game.getCurrentPlayer();
 		}
 	}
 	
@@ -168,43 +169,42 @@ public class GameUr implements IState {
 	 * the previous and current players' colours on a new turn
 	 */
 	private void drawBackground(Graphics2D g) {
-		Paint oldPaint = g.getPaint();
-		
 		fadeBgRatio = Utility.clamp(fadeBgRatio += 0.05, 0.0, 1.0);
 		
 		int brightShade = 4;
 		Color bright = new Color(
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[brightShade].getRed(),
-				game.getPreviousPlayer().getColors()[brightShade].getRed()),
+				currentPlayer.getColors()[brightShade].getRed(),
+				previousPlayer.getColors()[brightShade].getRed()),
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[brightShade].getGreen(),
-				game.getPreviousPlayer().getColors()[brightShade].getGreen()),
+				currentPlayer.getColors()[brightShade].getGreen(),
+				previousPlayer.getColors()[brightShade].getGreen()),
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[brightShade].getBlue(),
-				game.getPreviousPlayer().getColors()[brightShade].getBlue())
+				currentPlayer.getColors()[brightShade].getBlue(),
+				previousPlayer.getColors()[brightShade].getBlue())
 		);
 		
 		int darkShade = 9;
 		Color dark = new Color(
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[darkShade].getRed(),
-				game.getPreviousPlayer().getColors()[darkShade].getRed()
+				currentPlayer.getColors()[darkShade].getRed(),
+				previousPlayer.getColors()[darkShade].getRed()
 			),
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[darkShade].getGreen(),
-				game.getPreviousPlayer().getColors()[darkShade].getGreen()),
+				currentPlayer.getColors()[darkShade].getGreen(),
+				previousPlayer.getColors()[darkShade].getGreen()),
 			(int) Utility.lerp(
 				fadeBgRatio,
-				game.getCurrentPlayer().getColors()[darkShade].getBlue(),
-				game.getPreviousPlayer().getColors()[darkShade].getBlue())
+				currentPlayer.getColors()[darkShade].getBlue(),
+				previousPlayer.getColors()[darkShade].getBlue())
 		);
 		
+		Paint oldPaint = g.getPaint();
 		GradientPaint gradientPaint = new GradientPaint(
 			-100, -100,
 			bright,

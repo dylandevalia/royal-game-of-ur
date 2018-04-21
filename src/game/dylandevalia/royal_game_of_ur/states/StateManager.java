@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 // TODO: Asynchronous state loading with callback when completed initialisation
+// TODO: Create map of states instead of array. States then register to the map with a key string. Instead of Enum business
 
 /**
  * Controls the creation, initialising, activating/swapping and destroying of states. Passes
