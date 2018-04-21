@@ -14,7 +14,7 @@ import java.awt.Graphics2D;
 public class Tile extends BaseEntity {
 	
 	/** Colour used when mouse hovers over a counter with an allowed move */
-	private static final Color hoverAllowed = ColorMaterial.withAlpha(ColorMaterial.GREY[2], 100);
+	private static final Color hoverAllowed = ColorMaterial.withAlpha(ColorMaterial.GREY[5], 100);
 	/** Colour used when mouse hovers over a counter with a blocked move */
 	private static final Color hoverBlocked = ColorMaterial.withAlpha(ColorMaterial.red, 100);
 	/** Colour used when mouse hovers over a counter that will capture another counter */
@@ -72,13 +72,13 @@ public class Tile extends BaseEntity {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
-		g.setColor(ColorMaterial.BROWN[9]);
+		g.setColor(ColorMaterial.GREY[9]);
 		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
 		
 		if (rosette) {
-			g.setColor(ColorMaterial.BROWN[6]);
+			g.setColor(ColorMaterial.GREY[6]);
 		} else {
-			g.setColor(ColorMaterial.BROWN[3]);
+			g.setColor(ColorMaterial.GREY[3]);
 		}
 		
 		drawInnerTile(g);
@@ -114,7 +114,7 @@ public class Tile extends BaseEntity {
 	 * Draws the tile without the border
 	 */
 	private void drawInnerTile(Graphics2D g) {
-		final int boarderWidth = (int) Utility.mapWidth(1, 2);
+		final int boarderWidth = (int) Utility.mapWidth(2, 4);
 		g.fillRect(
 			(int) drawPos.x + boarderWidth,
 			(int) drawPos.y + boarderWidth,

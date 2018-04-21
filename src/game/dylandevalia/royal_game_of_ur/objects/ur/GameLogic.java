@@ -79,14 +79,14 @@ public class GameLogic {
 		playerOne = new Player(
 			PlayerID.ONE,
 			"Pritz",
-			ColorMaterial.DEEP_PURPLE,
+			ColorMaterial.BLUE,
 			board.getRouteLength(),
 			playerOneAI
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
 			"Dylan",
-			ColorMaterial.GREEN,
+			ColorMaterial.DEEP_ORANGE,
 			board.getRouteLength(),
 			playerTwoAI
 		);
