@@ -72,8 +72,10 @@ public class Tile extends BaseEntity {
 	public void draw(Graphics2D g, double interpolate) {
 		super.draw(g, interpolate);
 		
-		g.setColor(ColorMaterial.GREY[9]);
-		g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
+		g.setColor(ColorMaterial.withAlpha(ColorMaterial.GREY[9], 100));
+		// g.fillRect((int) drawPos.x, (int) drawPos.y, width, height);
+		drawInnerTile(g, ((int) Utility.mapWidth(2, 4)));
+		
 		
 		if (rosette) {
 			g.setColor(ColorMaterial.GREY[6]);
@@ -81,7 +83,7 @@ public class Tile extends BaseEntity {
 			g.setColor(ColorMaterial.GREY[3]);
 		}
 		
-		drawInnerTile(g);
+		drawInnerTile(g, 0);
 		
 		// If no hover effect needed, return
 		if (hoverMode == null) {
@@ -91,19 +93,19 @@ public class Tile extends BaseEntity {
 		switch (hoverMode) {
 			case EMPTY:
 				g.setColor(hoverAllowed);
-				drawInnerTile(g);
+				drawInnerTile(g, 0);
 				break;
 			case END:
 				g.setColor(hoverEnd);
-				drawInnerTile(g);
+				drawInnerTile(g, 0);
 				break;
 			case BLOCKED:
 				g.setColor(hoverBlocked);
-				drawInnerTile(g);
+				drawInnerTile(g, 0);
 				break;
 			case CAPTURE:
 				g.setColor(hoverCapture);
-				drawInnerTile(g);
+				drawInnerTile(g, 0);
 				break;
 			default:
 				break;
@@ -113,11 +115,11 @@ public class Tile extends BaseEntity {
 	/**
 	 * Draws the tile without the border
 	 */
-	private void drawInnerTile(Graphics2D g) {
+	private void drawInnerTile(Graphics2D g, int offset) {
 		final int boarderWidth = (int) Utility.mapWidth(2, 4);
 		g.fillRect(
-			(int) drawPos.x + boarderWidth,
-			(int) drawPos.y + boarderWidth,
+			(int) drawPos.x + boarderWidth + offset,
+			(int) drawPos.y + boarderWidth + offset,
 			width - boarderWidth * 2,
 			height - boarderWidth * 2
 		);

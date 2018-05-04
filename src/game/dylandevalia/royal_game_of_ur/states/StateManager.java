@@ -28,7 +28,8 @@ public class StateManager {
 	/**
 	 * Creates the state in the array and calls the state's initialise function
 	 *
-	 * @param state The states to be initialise
+	 * @param state  The states to be initialise
+	 * @param bundle An optional bundle of data which can be passed into the initialising state
 	 */
 	void loadState(GameState state, Bundle bundle) {
 		try {
@@ -53,7 +54,8 @@ public class StateManager {
 	/**
 	 * Sets the given state as the active state and delivers the given bundle
 	 *
-	 * @param state The state to become active
+	 * @param state  The state to become active
+	 * @param bundle An optional bundle of data that can be sent to the state
 	 */
 	void setState(GameState state, Bundle bundle) {
 		if (loadedStates[state.getIndex()] == null) {
@@ -72,6 +74,17 @@ public class StateManager {
 	 */
 	public void setState(GameState state) {
 		setState(state, null);
+	}
+	
+	public void loadAndSetState(GameState state, Bundle bundle) {
+		if (!isLoaded(state)) {
+			loadState(state, bundle);
+		}
+		setState(state, bundle);
+	}
+	
+	private void loadAndSetState(GameState state) {
+		loadState(state, null);
 	}
 	
 	/**
@@ -94,6 +107,11 @@ public class StateManager {
 		return loadedStates[state.getIndex()] != null;
 	}
 	
+	/**
+	 * Reinitialise the currently active state
+	 *
+	 * @param bundle An optional bundle of data which can be passed through to the state
+	 */
 	public void reinitialise(Bundle bundle) {
 		currentState.initialise(this, bundle);
 		Log.info("STATE MANAGER", "Re-Initialised " + currentState);

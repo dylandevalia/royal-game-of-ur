@@ -3,19 +3,21 @@ package game.dylandevalia.royal_game_of_ur.states;
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA;
+import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,24 +27,31 @@ import java.util.Date;
 
 public class GameUrSimulate implements IState {
 	
+	private StateManager stateManager;
+	
 	private final int gamesPerGeneration = 50;
 	private final int noGenerations = 1000;
 	private GameLogic[] games;
-	private Node[] nodes;
+	private Background bg;
 	private AI[] ais = new AI[gamesPerGeneration * 2];
 	private int currentGame = 0, currentGeneration = 0;
-	private double maxFitness = 0, maxMaxFitness = 0;
+	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
-	@Override
+	private int fade = 255;
+	private boolean fadeDown = true;
+	
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		Log.SET_INFO();
 		
-		nodes = new Node[(int) Utility.mapWidth(150, 300)];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(
-				Utility.randBetween(-200, Window.WIDTH + 200),
-				Utility.randBetween(-200, Window.HEIGHT + 200)
+		this.stateManager = stateManager;
+		
+		if (bundle != null) {
+			bg = new Background(
+				ColorMaterial.RED,
+				(Node[]) bundle.get("nodes")
 			);
+		} else {
+			bg = new Background(ColorMaterial.RED);
 		}
 		
 		for (int i = 0; i < ais.length; i++) {
@@ -53,19 +62,27 @@ public class GameUrSimulate implements IState {
 		for (int i = 0; i < games.length; i++) {
 			games[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
 		}
-		// games = new GameLogic(false, ais[0], ais[1]);
 	}
 	
-	@Override
 	public void onSet(Bundle bundle) {
 	
 	}
 	
-	@Override
 	public void update() {
-		for (Node n : nodes) {
-			n.update();
+		if (fadeDown) {
+			if ((fade -= 5) < 0) {
+				fade = 0;
+			}
+		} else {
+			if ((fade += 10) > 255) {
+				fade = 255;
+				stateManager.loadState(GameState.MAIN_MENU);
+				stateManager.setState(GameState.MAIN_MENU);
+				stateManager.unloadState(GameState.GAME_UR_SIMULATE);
+			}
 		}
+		
+		bg.update();
 		
 		for (int i = 0; i < games.length; i++) {
 			if (games[i].isWon()) {
@@ -76,11 +93,6 @@ public class GameUrSimulate implements IState {
 				
 				ais[i * 2].setFitness(games[i].playerFitness(PlayerID.ONE));
 				ais[(i * 2) + 1].setFitness(games[i].playerFitness(PlayerID.TWO));
-				// Log.info("AIS[" + (i * 2) + "]", ais[i * 2].getFitness());
-				// Log.info(
-				// "AIS[" + ((i * 2) + 1) + "]",
-				// 	ais[(i * 2) + 1].getFitness()
-				// );
 				
 				currentGame++;
 				if (currentGame >= gamesPerGeneration) {
@@ -120,6 +132,7 @@ public class GameUrSimulate implements IState {
 		}
 		if (maxFitness > maxMaxFitness) {
 			maxMaxFitness = maxFitness;
+			mmfGeneration = currentGeneration;
 		}
 		
 		for (AI ai : ais) {
@@ -147,7 +160,7 @@ public class GameUrSimulate implements IState {
 		}
 		
 		// Randomly select 2% AIs and give them random attributes
-		for (int i = 0; i < 2 * (ais.length / 100); i++) {
+		for (int i = 0; i < 5 * (ais.length / 100); i++) {
 			AI chosen = Utility.random(ais);
 			chosen = new AI();
 		}
@@ -214,7 +227,6 @@ public class GameUrSimulate implements IState {
 		}
 	}
 	
-	@Override
 	public void draw(Graphics2D g, double interpolate) {
 		/* Background */
 		
@@ -227,9 +239,7 @@ public class GameUrSimulate implements IState {
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		bg.draw(g, interpolate);
 		
 		
 		/* Text */
@@ -254,25 +264,18 @@ public class GameUrSimulate implements IState {
 			"Max Max Fitness: " + maxMaxFitness,
 			100, 550
 		);
+		g.drawString(
+			"MMF Generation: " + mmfGeneration,
+			100, 600
+		);
+		
+		g.setColor(new Color(255, 255, 255, fade));
+		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent e) {
-	
-	}
-	
-	@Override
 	public void keyReleased(KeyEvent e) {
-	
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-	
-	}
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			fadeDown = false;
+		}
 	}
 }

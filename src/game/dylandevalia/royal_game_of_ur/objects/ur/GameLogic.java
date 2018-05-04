@@ -78,14 +78,14 @@ public class GameLogic {
 		// Create players
 		playerOne = new Player(
 			PlayerID.ONE,
-			"Pritz",
-			ColorMaterial.BLUE,
+			"Dylan",
+			ColorMaterial.DEEP_PURPLE,
 			board.getRouteLength(),
 			playerOneAI
 		);
 		playerTwo = new Player(
 			PlayerID.TWO,
-			"Dylan",
+			"AI",
 			ColorMaterial.DEEP_ORANGE,
 			board.getRouteLength(),
 			playerTwoAI
@@ -104,10 +104,8 @@ public class GameLogic {
 		
 		// Should animate game
 		this.instantAnimate = !animateGame;
-		if (!animateGame) {
-			CounterCluster.instantAnimate = true;
-			Counter.instantAnimate = true;
-		}
+		CounterCluster.instantAnimate = !animateGame;
+		Counter.instantAnimate = !animateGame;
 	}
 	
 	/**

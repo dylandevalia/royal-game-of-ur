@@ -1,13 +1,21 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
+import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
+import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
-import java.awt.GradientPaint;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * Pause state for the game
@@ -16,51 +24,107 @@ public class Pause implements IState {
 	
 	private StateManager stateManager;
 	
-	private Node[] nodes;
+	private Background bg;
+	
+	private TextButton title, btn_resume, btn_quit;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
-		nodes = (Node[]) bundle.get("nodes");
+		bg = new Background(ColorMaterial.RED, (Node[]) bundle.get("nodes"));
+		
+		Color base = ColorMaterial.withAlpha(ColorMaterial.RED[8], 50);
+		Color hover = ColorMaterial.withAlpha(ColorMaterial.RED[8], 150);
+		
+		title = new TextButton(
+			Window.WIDTH / 2, Window.HEIGHT / 4,
+			25, 25,
+			new Font(
+				"TimesRoman", Font.BOLD,
+				(int) Utility.mapWidth(96, 128)
+			),
+			Alignment.CENTER,
+			"PAUSED",
+			new Color(0, 0, 0, 0), new Color(0, 0, 0, 0), new Color(0, 0, 0, 0),
+			ColorMaterial.RED[0]
+		);
+		
+		btn_resume = new TextButton(
+			Window.WIDTH / 2, Window.HEIGHT / 2,
+			25, 25,
+			new Font(
+				"TimesRoman", Font.BOLD,
+				(int) Utility.mapWidth(64, 128)
+			),
+			Alignment.CENTER,
+			"Resume",
+			base, hover, base,
+			ColorMaterial.RED[1]
+		);
+		btn_resume.setOnClickListener(() -> loadState(GameState.GAME_UR));
+		
+		btn_quit = new TextButton(
+			Window.WIDTH / 2, 3 * Window.HEIGHT / 4,
+			25, 25,
+			new Font(
+				"TimesRoman", Font.BOLD,
+				(int) Utility.mapWidth(24, 48)
+			),
+			Alignment.CENTER,
+			"Quit",
+			base, hover, base,
+			ColorMaterial.RED[1]
+		);
+		btn_quit.setOnClickListener(() -> loadState(GameState.MAIN_MENU));
 	}
 	
 	@Override
 	public void onSet(Bundle bundle) {
-		nodes = (Node[]) bundle.get("nodes");
+		bg.setNodes((Node[]) bundle.get("nodes"));
 	}
 	
 	@Override
 	public void update() {
-		for (Node n : nodes) {
-			n.update();
-		}
+		bg.update();
+		
+		Vector2D mousePos = Framework.getMousePos();
+		title.update(Vector2D.ZERO());
+		btn_resume.update(mousePos);
+		btn_quit.update(mousePos);
 	}
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
-		GradientPaint gradientPaint = new GradientPaint(
-			-100, -100,
-			ColorMaterial.RED[4],
-			Window.WIDTH + 100, Window.HEIGHT + 100,
-			ColorMaterial.RED[9]
-		);
-		g.setPaint(gradientPaint);
-		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+		bg.draw(g, interpolate);
 		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		title.draw(g, interpolate);
+		btn_resume.draw(g, interpolate);
+		btn_quit.draw(g, interpolate);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			loadState(GameState.GAME_UR);
+		}
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// Get mouse position
+		Vector2D mousePos = new Vector2D(e.getX(), e.getY());
+		if (btn_resume.isColliding(mousePos)) {
+			btn_resume.press();
+		} else if (btn_quit.isColliding(mousePos)) {
+			btn_quit.press();
+		}
+	}
+	
+	private void loadState(GameState state) {
+		stateManager.loadAndSetState(state, new Bundle().put("nodes", bg.getNodes()));
+		if (state != GameState.GAME_UR) {
 			stateManager.unloadState(GameState.GAME_UR);
-			
-			stateManager.loadState(GameState.MAIN_MENU);
-			stateManager.setState(GameState.MAIN_MENU);
-			
-			// stateManager.setState(GameState.GAME_UR, new Bundle().put("nodes", nodes));
+			stateManager.unloadState(GameState.PAUSE);
 		}
 	}
 }

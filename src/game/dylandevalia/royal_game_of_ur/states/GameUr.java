@@ -3,9 +3,10 @@ package game.dylandevalia.royal_game_of_ur.states;
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
-import game.dylandevalia.royal_game_of_ur.objects.menu.Node;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player;
@@ -20,9 +21,7 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.GradientPaint;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -33,10 +32,13 @@ public class GameUr implements IState {
 	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;
+	
 	/** The number of dice to be used */
 	public static int noDice = 4;
+	
 	/** Reference to the state manager */
 	private StateManager stateManager;
+	
 	/** Holds the objects logic */
 	private GameLogic game;
 	
@@ -44,20 +46,19 @@ public class GameUr implements IState {
 	private TextButton btn_roll;
 	
 	/** The number used to control the alpha of the fade */
-	private int fadeInNum = 256;
-	/** The lerp between the fade and the normal screen */
-	private double fadeBgRatio = 0;
+	private int fadeIn = 255;
 	
-	/** The array of nodes used in the background */
-	private Node[] nodes;
+	/** The background object which controls the gradient and nodes */
+	private Background bg;
 	
-	private Player currentPlayer, previousPlayer;
+	/** Reference to the current player in the game */
+	private Player currentPlayer;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		
-		game = new GameLogic(true, null, new AI(Library.thousandNormalised));
+		game = new GameLogic(true, null, new AI(Library.thousand_126));
 		Log.info("GAME_UR", "GameLogic created");
 		
 		btn_roll = new TextButton(
@@ -74,53 +75,48 @@ public class GameUr implements IState {
 		btn_roll.setOnClickListener(game::rollDice);
 		Log.info("GAME_UR", "Generation completed");
 		
-		nodes = new Node[(int) Utility.mapWidth(150, 300)];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(
-				Utility.randBetween(-200, Window.WIDTH + 200),
-				Utility.randBetween(-200, Window.HEIGHT + 200)
+		if (bundle != null) {
+			bg = new Background(
+				game.getCurrentPlayer().getColors(),
+				(Node[]) bundle.get("nodes")
 			);
+		} else {
+			bg = new Background(game.getCurrentPlayer().getColors());
 		}
-		
-		currentPlayer = previousPlayer = game.getCurrentPlayer();
 	}
 	
 	@Override
 	public void onSet(Bundle bundle) {
 		if (bundle != null) {
-			nodes = (Node[]) bundle.get("nodes");
+			bg.setNodes((Node[]) bundle.get("nodes"));
 		}
 	}
 	
 	@Override
 	public void update() {
+		// Update background
+		bg.update();
+		
 		// Get mouse position
 		Vector2D mousePos = Framework.getMousePos();
 		
+		// Update game logic
 		game.update(mousePos);
 		
 		// Update buttons
 		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
 		btn_roll.update(mousePos);
 		
-		for (Node n : nodes) {
-			n.update();
-		}
-		
+		// If player has changed, update reference and update background colours
 		if (currentPlayer != game.getCurrentPlayer()) {
-			fadeBgRatio = 0;
-			previousPlayer = currentPlayer;
 			currentPlayer = game.getCurrentPlayer();
+			bg.setColors(currentPlayer.getColors());
 		}
 	}
 	
 	@Override
 	public void draw(Graphics2D g, double interpolate) {
-		drawBackground(g);
-		
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].draw(g, interpolate, nodes, i);
-		}
+		bg.draw(g, interpolate);
 		
 		game.draw(g, interpolate);
 		
@@ -158,68 +154,16 @@ public class GameUr implements IState {
 			);
 		}
 		
-		if ((fadeInNum -= 5) > 0) {
-			g.setColor(new Color(0, 0, 0, fadeInNum));
+		if ((fadeIn -= 5) > 0) {
+			g.setColor(new Color(255, 255, 255, fadeIn));
 			g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		}
-	}
-	
-	/**
-	 * Draws the background as a gradient based on the current player's colours Also fades between
-	 * the previous and current players' colours on a new turn
-	 */
-	private void drawBackground(Graphics2D g) {
-		fadeBgRatio = Utility.clamp(fadeBgRatio += 0.05, 0.0, 1.0);
-		
-		int brightShade = 4;
-		Color bright = new Color(
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[brightShade].getRed(),
-				previousPlayer.getColors()[brightShade].getRed()),
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[brightShade].getGreen(),
-				previousPlayer.getColors()[brightShade].getGreen()),
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[brightShade].getBlue(),
-				previousPlayer.getColors()[brightShade].getBlue())
-		);
-		
-		int darkShade = 9;
-		Color dark = new Color(
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[darkShade].getRed(),
-				previousPlayer.getColors()[darkShade].getRed()
-			),
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[darkShade].getGreen(),
-				previousPlayer.getColors()[darkShade].getGreen()),
-			(int) Utility.lerp(
-				fadeBgRatio,
-				currentPlayer.getColors()[darkShade].getBlue(),
-				previousPlayer.getColors()[darkShade].getBlue())
-		);
-		
-		Paint oldPaint = g.getPaint();
-		GradientPaint gradientPaint = new GradientPaint(
-			-100, -100,
-			bright,
-			Window.WIDTH + 100, Window.HEIGHT + 100,
-			dark
-		);
-		g.setPaint(gradientPaint);
-		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-		g.setPaint(oldPaint);
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-			Bundle bundle = new Bundle().put("nodes", nodes);
+			Bundle bundle = new Bundle().put("nodes", bg.getNodes());
 			
 			if (!stateManager.isLoaded(GameState.PAUSE)) {
 				stateManager.loadState(GameState.PAUSE, bundle);
@@ -273,8 +217,6 @@ public class GameUr implements IState {
 			.moveCounter(game.getCurrentPlayer(), counter, game.getCurrentRoll());
 		
 		game.endOfTurn(finalTile);
-		
-		//fadeBgRatio = (game.getCurrentRoll() > 0) ? 0 : 1;
 		
 		// Return since we found the counter, there's not point
 		// looking through the rest of them

@@ -43,6 +43,10 @@ public abstract class BaseEntity {
 	
 	/**
 	 * Use if the width and height is the same size
+	 *
+	 * @param x    The top left x coordinate of the entity
+	 * @param y    The top left y coordinate of the entity
+	 * @param size The width and height of the entity
 	 */
 	protected BaseEntity(int x, int y, int size) {
 		this(x, y, size, size);
@@ -71,6 +75,9 @@ public abstract class BaseEntity {
 	
 	/**
 	 * Uses the interpolation value to calculate a draw position
+	 *
+	 * @param interpolate The interpolation value past in from the game loop
+	 * @see game.dylandevalia.royal_game_of_ur.gui.Framework
 	 */
 	private void calculateDrawPos(double interpolate) {
 		if (pos.equals(lastPos)) {
@@ -82,6 +89,9 @@ public abstract class BaseEntity {
 	
 	/**
 	 * Checks if the drawable object is on the screen
+	 *
+	 * @param pos The position of the object to check if it is in the bounds of the screen
+	 * @return True if the position vector is on the screen
 	 */
 	private boolean isOnScreen(Vector2D pos) {
 		return !(pos.x + width < 0 || pos.x > Window.WIDTH

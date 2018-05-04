@@ -20,7 +20,7 @@ public class Counter extends AbstractButton {
 	public static final int WIDTH = Window.WIDTH / 15;
 	
 	/** How quickly the counter will move towards its current target */
-	static final double SPEED = Utility.mapWidth(8, 16);
+	static final double SPEED = Utility.mapWidth(10, 16);
 	
 	static boolean instantAnimate = false;
 	
@@ -111,13 +111,16 @@ public class Counter extends AbstractButton {
 		int drawX = (int) drawPos.x, drawY = (int) drawPos.y;
 		
 		g.setColor(ColorMaterial.withAlpha(colors[9], 100));
-		g.fillOval(drawX + 5, drawY + 5, width, height);
+		int shadowOffset = (int) Utility.mapWidth(3, 4);
+		g.fillOval(drawX + shadowOffset, drawY + shadowOffset, width, height);
 		
 		int shade = 5 - ((allowHover && isMouseHovering) ? 2 : 0);
 		g.setColor(colors[shade]);
 		g.fillOval(drawX, drawY, width, height);
 		
+		
 		/* Dots */
+		
 		g.setColor(colors[shade - 2]);
 		g.fillOval(
 			(drawX + width / 2) - width / 16,

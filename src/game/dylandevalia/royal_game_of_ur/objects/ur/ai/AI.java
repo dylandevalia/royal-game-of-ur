@@ -187,20 +187,23 @@ public class AI {
 		}
 		
 		// Pick highest score counter
-		double maxScore = 0;
-		int index = 0;
+		double maxScore = -1;
+		ArrayList<Integer> indexes = new ArrayList<>();
 		for (int i = 0; i < scores.length; i++) {
-			if (
-				scores[i] > maxScore
-					|| (scores[i] == maxScore && Utility.fiftyFifty())
-				) {
+			if (scores[i] > maxScore) {
+				// New max score, update reference and create new list
 				maxScore = scores[i];
-				index = i;
+				indexes = new ArrayList<>();
+				indexes.add(i);
+				// index = i;
+			} else if (scores[i] == maxScore) {
+				// If has the same score, add to the list
+				indexes.add(i);
 			}
 		}
 		
-		// Return highest scoring counter
-		return moves.get(index).getKey();
+		// Return a random highest scoring counter
+		return moves.get(Utility.random(indexes)).getKey(); // moves.get(index).getKey();
 	}
 	
 	public double getFitness() {

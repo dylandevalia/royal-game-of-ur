@@ -1,12 +1,9 @@
 package game.dylandevalia.royal_game_of_ur.objects.ur.ai;
 
-import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA.CrossoverMethod;
-import game.dylandevalia.royal_game_of_ur.utility.Utility;
-
 public class Library {
 	
 	/** DNA of the most fit agent after 1000 generation of genetic evolution */
-	public static DNA thousand = new DNA(
+	public static DNA thousand_116 = new DNA(
 		new Chromosome[]{
 			new Chromosome().setValue(0.601443380),     // Rosette
 			new Chromosome().setValue(0.520370240),     // Capture
@@ -47,52 +44,97 @@ public class Library {
 				.setValue(5, 0.518193902)       // 5
 				.setValue(6, 0.510373610),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
+	);
+	
+	/** DNA of the most fit agent after 1000 generation of genetic evolution */
+	public static DNA thousand_126 = new DNA(
+		new Chromosome[]{
+			new Chromosome().setValue(0.605758402),     // Rosette
+			new Chromosome().setValue(0.523174481),     // Capture
+			new Chromosome().setValue(0.500268245),     // Enter board
+			new Chromosome().setValue(0.344588582),     // Enter centre
+			new Chromosome().setValue(0.497346305),     // Enter end
+			new Chromosome().setValue(0.674548541),     // Exit board
+			new Chromosome().setValue(0.426701936),     // Furthest
+			new Chromosome().setValue(0.493249610),     // Closest
+			
+			new Chromosome(4)                   // Spaces pre
+				.setValue(0, 0.529455298)       // 1
+				.setValue(1, 0.473901674)       // 2
+				.setValue(2, 0.583292383)       // 3
+				.setValue(3, 0.488080683),      // 4
+			
+			new Chromosome(4)                   // Spaces post
+				.setValue(0, 0.467637820)       // 1
+				.setValue(1, 0.575382447)       // 2
+				.setValue(2, 0.554045752)       // 3
+				.setValue(3, 0.524770723),      // 4
+			
+			new Chromosome(7)                   // Friendlies
+				.setValue(0, 0.465120890)       // 0
+				.setValue(1, 0.487829901)       // 1
+				.setValue(2, 0.438037277)       // 2
+				.setValue(3, 0.472117174)       // 3
+				.setValue(4, 0.505623473)       // 4
+				.setValue(5, 0.479678042)       // 5
+				.setValue(6, 0.466345906),      // 6
+			
+			new Chromosome(7)                   // Hostiles
+				.setValue(0, 0.432810145)       // 0
+				.setValue(1, 0.535213707)       // 1
+				.setValue(2, 0.502852158)       // 2
+				.setValue(3, 0.455821194)       // 3
+				.setValue(4, 0.554259602)       // 4
+				.setValue(5, 0.499455278)       // 5
+				.setValue(6, 0.513466143),      // 6
+		},
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** The most fit agent after 1000 generation of genetic evolution normalised between 0 and 1 */
-	public static DNA thousandNormalised = new DNA(
+	public static DNA thousandNormalised_1 = new DNA(
 		new Chromosome[]{
 			new Chromosome().setValue(0.893953587),     // Rosette
 			new Chromosome().setValue(0.508743716),     // Capture
-			new Chromosome().setValue(0.508743716),     // Enter board
-			new Chromosome().setValue(0.346916918),     // Enter centre
-			new Chromosome().setValue(0.346916918),     // Enter end
-			new Chromosome().setValue(0.051486916),     // Exit board
-			new Chromosome().setValue(0.051486916),     // Furthest
-			new Chromosome().setValue(0.894166836),     // Closest
+			new Chromosome().setValue(0.346916918),     // Enter board
+			new Chromosome().setValue(0.051486916),     // Enter centre
+			new Chromosome().setValue(0.894166836),     // Enter end
+			new Chromosome().setValue(1.000000000),     // Exit board
+			new Chromosome().setValue(0.462506467),     // Furthest
+			new Chromosome().setValue(0.000000000),     // Closest
 			
 			new Chromosome(4)                   // Spaces pre
-				.setValue(0, 0.894166836)       // 1
-				.setValue(1, 1.000000000)       // 2
-				.setValue(2, 1.000000000)       // 3
-				.setValue(3, 0.462506467),      // 4
+				.setValue(0, 0.300938533)       // 1
+				.setValue(1, 0.314748887)       // 2
+				.setValue(2, 0.419277375)       // 3
+				.setValue(3, 0.402077413),      // 4
 			
 			new Chromosome(4)                   // Spaces post
-				.setValue(0, 0.462506467)       // 1
-				.setValue(1, 0.000000000)       // 2
-				.setValue(2, 0.000000000)       // 3
-				.setValue(3, 0.300938533),      // 4
+				.setValue(0, 0.248520398)       // 1
+				.setValue(1, 0.780454544)       // 2
+				.setValue(2, 0.580995492)       // 3
+				.setValue(3, 0.259642285),      // 4
 			
 			new Chromosome(7)                   // Friendlies
-				.setValue(0, 0.300938533)       // 0
-				.setValue(1, 0.314748887)       // 1
-				.setValue(2, 0.314748887)       // 2
-				.setValue(3, 0.419277375)       // 3
-				.setValue(4, 0.419277375)       // 4
-				.setValue(5, 0.402077413)       // 5
-				.setValue(6, 0.402077413),      // 6
+				.setValue(0, 0.301994657)       // 0
+				.setValue(1, 0.465020696)       // 1
+				.setValue(2, 0.641278876)       // 2
+				.setValue(3, 0.326816464)       // 3
+				.setValue(4, 0.260962700)       // 4
+				.setValue(5, 0.267113558)       // 5
+				.setValue(6, 0.24937336),      // 6
 			
 			new Chromosome(7)                   // Hostiles
-				.setValue(0, 0.248520398)       // 0
-				.setValue(1, 0.248520398)       // 1
-				.setValue(2, 0.780454544)       // 2
-				.setValue(3, 0.780454544)       // 3
-				.setValue(4, 0.580995492)       // 4
-				.setValue(5, 0.580995492)       // 5
-				.setValue(6, 0.259642285),      // 6
+				.setValue(0, 0.338081555)       // 0
+				.setValue(1, 0.337793706)       // 1
+				.setValue(2, 0.483821660)       // 2
+				.setValue(3, 0.293224276)       // 3
+				.setValue(4, 0.285118748)       // 4
+				.setValue(5, 0.477385978)       // 5
+				.setValue(6, 0.410467913),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	
@@ -140,7 +182,7 @@ public class Library {
 				.setValue(5, 0.0)       // 5
 				.setValue(6, 0.0),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** Bespoke as to the values I believe to be pretty good */
@@ -185,7 +227,7 @@ public class Library {
 				.setValue(5, 0.6)       // 5
 				.setValue(6, 0.7),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** Aggressive AI which will prioritize capturing enemy counters */
@@ -230,7 +272,7 @@ public class Library {
 				.setValue(5, 0.8)       // 5
 				.setValue(6, 1.0),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** AI that tries to get a counter to the end before moving other counters */
@@ -275,7 +317,7 @@ public class Library {
 				.setValue(5, 0.0)       // 5
 				.setValue(6, 0.0),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** Tries to move all its counter up the board together */
@@ -320,7 +362,7 @@ public class Library {
 				.setValue(5, 0.0)       // 5
 				.setValue(6, 0.0),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** Tries to make sure it won't get captured by the enemy */
@@ -365,7 +407,7 @@ public class Library {
 				.setValue(5, 0.6)       // 5
 				.setValue(6, 0.7),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 	
 	/** Tries to make sure it won't get captured by the enemy */
@@ -410,6 +452,6 @@ public class Library {
 				.setValue(5, 0.0)       // 5
 				.setValue(6, 0.0),      // 6
 		},
-		Utility.random(CrossoverMethod.values())
+		null // Utility.random(CrossoverMethod.values())
 	);
 }
