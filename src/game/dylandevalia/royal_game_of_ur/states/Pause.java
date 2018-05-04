@@ -5,6 +5,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
@@ -26,12 +27,15 @@ public class Pause implements IState {
 	
 	private Background bg;
 	
+	private Fade fade;
+	
 	private TextButton title, btn_resume, btn_quit;
 	
 	@Override
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		this.stateManager = stateManager;
 		bg = new Background(ColorMaterial.RED, (Node[]) bundle.get("nodes"));
+		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, false);
 		
 		Color base = ColorMaterial.withAlpha(ColorMaterial.RED[8], 50);
 		Color hover = ColorMaterial.withAlpha(ColorMaterial.RED[8], 150);
@@ -75,7 +79,10 @@ public class Pause implements IState {
 			base, hover, base,
 			ColorMaterial.RED[1]
 		);
-		btn_quit.setOnClickListener(() -> loadState(GameState.MAIN_MENU));
+		btn_quit.setOnClickListener(() -> {
+			fade.out();
+			fade.setCallback(() -> loadState(GameState.MAIN_MENU));
+		});
 	}
 	
 	@Override
@@ -100,6 +107,8 @@ public class Pause implements IState {
 		title.draw(g, interpolate);
 		btn_resume.draw(g, interpolate);
 		btn_quit.draw(g, interpolate);
+		
+		fade.draw(g);
 	}
 	
 	@Override

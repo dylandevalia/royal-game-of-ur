@@ -83,8 +83,8 @@ public class StateManager {
 		setState(state, bundle);
 	}
 	
-	private void loadAndSetState(GameState state) {
-		loadState(state, null);
+	public void loadAndSetState(GameState state) {
+		loadAndSetState(state, null);
 	}
 	
 	/**

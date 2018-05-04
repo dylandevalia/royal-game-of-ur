@@ -5,6 +5,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Counter;
@@ -18,7 +19,6 @@ import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -45,11 +45,11 @@ public class GameUr implements IState {
 	/** Reroll button */
 	private TextButton btn_roll;
 	
-	/** The number used to control the alpha of the fade */
-	private int fadeIn = 255;
-	
 	/** The background object which controls the gradient and nodes */
 	private Background bg;
+	
+	/** The number used to control the alpha of the fade */
+	private Fade fade;
 	
 	/** Reference to the current player in the game */
 	private Player currentPlayer;
@@ -83,6 +83,8 @@ public class GameUr implements IState {
 		} else {
 			bg = new Background(game.getCurrentPlayer().getColors());
 		}
+		
+		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, true);
 	}
 	
 	@Override
@@ -154,10 +156,7 @@ public class GameUr implements IState {
 			);
 		}
 		
-		if ((fadeIn -= 5) > 0) {
-			g.setColor(new Color(255, 255, 255, fadeIn));
-			g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-		}
+		fade.draw(g);
 	}
 	
 	@Override

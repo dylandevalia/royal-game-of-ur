@@ -4,11 +4,11 @@ import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
-import game.dylandevalia.royal_game_of_ur.utility.ICallback;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
@@ -28,10 +28,8 @@ public class MainMenu implements IState {
 	/** The gradient background and nodes */
 	private Background bg;
 	
-	/** The state of the fadeState */
-	private FadeState fadeState = FadeState.DOWN;
-	/** The number used to control the alpha of the fadeState */
-	private int fadeNum = 255;
+	/** Controls the in and out fade effect */
+	private Fade fade;
 	
 	/** The buttons on the screen */
 	private TextButton title, btn_play, btn_simulate, btn_quit;
@@ -40,9 +38,11 @@ public class MainMenu implements IState {
 		this.stateManager = stateManager;
 		
 		bg = new Background(ColorMaterial.INDIGO);
+		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, true);
 		
 		Color base = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 50);
 		Color hover = ColorMaterial.withAlpha(ColorMaterial.INDIGO[8], 150);
+		Color transparent = new Color(0, 0, 0, 0);
 		
 		title = new TextButton(
 			(Window.WIDTH / 2), (Window.HEIGHT / 4),
@@ -52,7 +52,7 @@ public class MainMenu implements IState {
 			),
 			Alignment.CENTER,
 			"The Royal Game of Ur",
-			new Color(0, 0, 0, 0), new Color(0, 0, 0, 0), new Color(0, 0, 0, 0),
+			transparent, transparent, transparent,
 			ColorMaterial.INDIGO[0]
 		);
 		title.setOnClickListener(this::loadGame);
@@ -95,8 +95,8 @@ public class MainMenu implements IState {
 			ColorMaterial.INDIGO[1]
 		);
 		btn_quit.setOnClickListener(() -> {
-			fadeState = FadeState.UP;
-			fadeState.setCallback(() -> System.exit(0));
+			fade.out();
+			fade.setCallback(() -> System.exit(0));
 		});
 	}
 	
@@ -118,48 +118,7 @@ public class MainMenu implements IState {
 		btn_simulate.draw(g, interpolate);
 		btn_quit.draw(g, interpolate);
 		
-		drawFade(g);
-	}
-	
-	/**
-	 * Draws the fadeState to black over the screen depending on the state
-	 *
-	 * @param g The graphics object which gives access to the canvas
-	 * @see #fadeState
-	 * @see #fadeNum
-	 * @see FadeState
-	 */
-	private void drawFade(Graphics2D g) {
-		switch (fadeState) {
-			case NONE:
-				break;
-			case DOWN:
-				if ((fadeNum -= 5) < 0) {
-					fadeNum = 0;
-				}
-				
-				g.setColor(new Color(255, 255, 255, fadeNum));
-				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-				if (fadeNum <= 0) {
-					fadeState = FadeState.NONE;
-					fadeNum = 0;
-				}
-				break;
-			case UP:
-				if ((fadeNum += 5) > 255) {
-					fadeNum = 255;
-				}
-				
-				g.setColor(new Color(255, 255, 255, fadeNum));
-				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-				
-				g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
-				if (fadeNum >= 254) {
-					fadeState.runCallback();
-					fadeNum = 255;
-				}
-				break;
-		}
+		fade.draw(g);
 	}
 	
 	/**
@@ -169,8 +128,8 @@ public class MainMenu implements IState {
 		if (!stateManager.isLoaded(GameState.GAME_UR)) {
 			stateManager.loadState(GameState.GAME_UR);
 		}
-		fadeState = FadeState.UP;
-		fadeState.setCallback(this::startGame);
+		fade.out();
+		fade.setCallback(this::startGame);
 	}
 	
 	/**
@@ -180,8 +139,8 @@ public class MainMenu implements IState {
 		if (!stateManager.isLoaded(GameState.GAME_UR_SIMULATE)) {
 			stateManager.loadState(GameState.GAME_UR_SIMULATE);
 		}
-		fadeState = FadeState.UP;
-		fadeState.setCallback(this::startSimulation);
+		fade.out();
+		fade.setCallback(this::startSimulation);
 	}
 	
 	/**
@@ -211,33 +170,6 @@ public class MainMenu implements IState {
 			btn_simulate.press();
 		} else if (btn_quit.isColliding(mousePos)) {
 			btn_quit.press();
-		}
-	}
-	
-	/**
-	 * Holds the state of the fade in and out Also uses a callback function to execute when a fade
-	 * is complete
-	 */
-	private enum FadeState {
-		DOWN(), NONE(), UP();
-		
-		private ICallback callback;
-		private Color color;
-		
-		void setCallback(ICallback callback) {
-			this.callback = callback;
-		}
-		
-		void runCallback() {
-			callback.callback();
-		}
-		
-		public Color getColor() {
-			return color;
-		}
-		
-		public void setColor(Color color) {
-			this.color = color;
 		}
 	}
 }

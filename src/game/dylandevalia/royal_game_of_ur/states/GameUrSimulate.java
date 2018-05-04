@@ -5,6 +5,7 @@ import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
+import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
@@ -13,7 +14,6 @@ import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -37,8 +37,7 @@ public class GameUrSimulate implements IState {
 	private int currentGame = 0, currentGeneration = 0;
 	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
-	private int fade = 255;
-	private boolean fadeDown = true;
+	private Fade fade;
 	
 	public void initialise(StateManager stateManager, Bundle bundle) {
 		Log.SET_INFO();
@@ -53,6 +52,8 @@ public class GameUrSimulate implements IState {
 		} else {
 			bg = new Background(ColorMaterial.RED);
 		}
+		
+		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, true);
 		
 		for (int i = 0; i < ais.length; i++) {
 			ais[i] = new AI();
@@ -69,19 +70,6 @@ public class GameUrSimulate implements IState {
 	}
 	
 	public void update() {
-		if (fadeDown) {
-			if ((fade -= 5) < 0) {
-				fade = 0;
-			}
-		} else {
-			if ((fade += 10) > 255) {
-				fade = 255;
-				stateManager.loadState(GameState.MAIN_MENU);
-				stateManager.setState(GameState.MAIN_MENU);
-				stateManager.unloadState(GameState.GAME_UR_SIMULATE);
-			}
-		}
-		
 		bg.update();
 		
 		for (int i = 0; i < games.length; i++) {
@@ -269,13 +257,16 @@ public class GameUrSimulate implements IState {
 			100, 600
 		);
 		
-		g.setColor(new Color(255, 255, 255, fade));
-		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
+		fade.draw(g);
 	}
 	
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			fadeDown = false;
+			fade.out();
+			fade.setCallback(() -> {
+				stateManager.loadAndSetState(GameState.MAIN_MENU);
+				stateManager.unloadState(GameState.GAME_UR_SIMULATE);
+			});
 		}
 	}
 }

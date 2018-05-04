@@ -110,6 +110,26 @@ public class Utility {
 	}
 	
 	/**
+	 * Clamps the given value between the range of min to max. If the number if less than the
+	 * minimum or greater than the maximum, it is set to the minimum and maximum value respectively.
+	 * If the number is within the range, it just simply returned, unchanged.
+	 *
+	 * @param n   The number of clamp
+	 * @param min The minimum value of the range
+	 * @param max The maximum value of the range
+	 * @return {@code min} if {@code n < min}, {@code max} if {@code n > max}, else {@code n}
+	 */
+	public static int clamp(int n, int min, int max) {
+		if (n < min) {
+			n = min;
+		} else if (n > max) {
+			n = max;
+		}
+		
+		return n;
+	}
+	
+	/**
 	 * Takes two numbers and linearly interpolates a middle values depending on the ratio value At
 	 * {@code ratio = 0} returns {@code near} At {@code ratio = 0.5} returns {@code (near + far) /
 	 * 2} (ie. mid point) At {@code ratio = 1} returns {@code far}
