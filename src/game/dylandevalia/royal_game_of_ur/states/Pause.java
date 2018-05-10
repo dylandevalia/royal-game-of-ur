@@ -23,10 +23,13 @@ import java.awt.event.MouseEvent;
  */
 public class Pause extends AbstractState {
 	
+	/** The background object which controls the gradient and nodes */
 	private Background bg;
 	
+	/** Controls the fade transition effect */
 	private Fade fade;
 	
+	/** The buttons on the screen */
 	private TextButton title, btn_resume, btn_quit;
 	
 	@Override
@@ -126,6 +129,11 @@ public class Pause extends AbstractState {
 		}
 	}
 	
+	/**
+	 * Loads the given state
+	 *
+	 * @param state The state to load
+	 */
 	private void loadState(GameState state) {
 		stateManager.loadAndSetState(state, new Bundle().put("nodes", bg.getNodes()));
 		if (state != GameState.GAME_UR) {

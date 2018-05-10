@@ -53,7 +53,6 @@ public class GameUr extends AbstractState {
 	
 	@Override
 	public void initialise(Bundle bundle) {
-		
 		game = new GameLogic(true, null, new AI(Library.thousand_126));
 		Log.info("GAME_UR", "GameLogic created");
 		

@@ -25,16 +25,33 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The state which simulates the genetic algorithm of the Royal Game of Ur
+ */
 public class GameUrSimulate extends AbstractState {
 	
+	/** The number of games that should be played per generation */
 	private final int gamesPerGeneration = 50;
+	
+	/** The number of generations to play */
 	private final int noGenerations = 1000;
+	
+	/** The array of games this generation */
 	private GameLogic[] games;
-	private Background bg;
+	
+	/** The array of AI instances - there are twice as many agents as {@link #gamesPerGeneration} */
 	private AI[] ais = new AI[gamesPerGeneration * 2];
+	
+	/** References to the current game and generation */
 	private int currentGame = 0, currentGeneration = 0;
+	
+	/** Keeps track of the max fitness */
 	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
+	/** The background object */
+	private Background bg;
+	
+	/** Controls the fade effect between states */
 	private Fade fade;
 	
 	public void initialise(Bundle bundle) {
@@ -100,6 +117,10 @@ public class GameUrSimulate extends AbstractState {
 		}
 	}
 	
+	/**
+	 * Performs the natural selection process by creating a new set of AIs. The fitter agents of the
+	 * current generation have a greater chance of being chosen as parents for the new children
+	 */
 	private void naturalSelection() {
 		ArrayList<AI> matingPool = new ArrayList<>();
 		
@@ -139,7 +160,7 @@ public class GameUrSimulate extends AbstractState {
 			newAis[i] = new AI(child);
 		}
 		
-		// Randomly select 2% AIs and give them random attributes
+		// Randomly select 5% AIs and give them random attributes
 		for (int i = 0; i < 5 * (ais.length / 100); i++) {
 			AI chosen = Utility.random(ais);
 			chosen = new AI();
@@ -149,6 +170,9 @@ public class GameUrSimulate extends AbstractState {
 		ais = newAis;
 	}
 	
+	/**
+	 * Writes all the AIs' DNA data to a {@code .csv} file
+	 */
 	private void writeToFile() {
 		String datetime = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 		try {
@@ -201,6 +225,7 @@ public class GameUrSimulate extends AbstractState {
 				w.println(ai.getDNAValues() + "," + ai.getFitness());
 			}
 			
+			// Close file i/o
 			w.close();
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
