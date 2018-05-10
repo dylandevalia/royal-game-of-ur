@@ -54,6 +54,9 @@ public class GameLogic {
 	/** The dice controller */
 	private UrDice dice;
 	
+	/** The last time the dice was rolled */
+	private long lastTimeRolled = System.currentTimeMillis();
+	
 	/**
 	 * The constructor with modifiable rule-sets
 	 *
@@ -164,6 +167,7 @@ public class GameLogic {
 	public void rollDice() {
 		allowMove = true;
 		allowRoll = false;
+		lastTimeRolled = System.currentTimeMillis();
 		
 		currentRoll = dice.roll();
 		Log.trace("GAME", "Rolled: " + currentRoll);
@@ -404,7 +408,11 @@ public class GameLogic {
 		// Update board (tiles)
 		board.update(moveState, hoveringTile);
 		
-		if (!animating && currentPlayer.isAI()) {
+		if (
+			!animating
+				&& currentPlayer.isAI()
+				&& System.currentTimeMillis() - lastTimeRolled > 2000
+			) {
 			rollDice();
 		}
 	}
@@ -527,7 +535,7 @@ public class GameLogic {
 	}
 	
 	public boolean isAllowRoll() {
-		return allowRoll;
+		return !currentPlayer.isAI() && allowRoll;
 	}
 	
 	public Board getBoard() {
