@@ -1,4 +1,4 @@
-package game.dylandevalia.royal_game_of_ur.states;
+package game.dylandevalia.royal_game_of_ur.states.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
@@ -10,6 +10,7 @@ import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
 import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA;
+import game.dylandevalia.royal_game_of_ur.states.AbstractState;
 import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;

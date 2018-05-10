@@ -1,5 +1,9 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
+import game.dylandevalia.royal_game_of_ur.states.ur.GameUr;
+import game.dylandevalia.royal_game_of_ur.states.ur.GameUrSimulate;
+import game.dylandevalia.royal_game_of_ur.states.ur.MainMenu;
+import game.dylandevalia.royal_game_of_ur.states.ur.Pause;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import java.awt.Graphics2D;
@@ -89,7 +93,7 @@ public class StateManager {
 	 *
 	 * @param state The state to be deleted
 	 */
-	void unloadState(GameState state) {
+	public void unloadState(GameState state) {
 		loadedStates[state.getIndex()] = null;
 		Log.info("STATE MANAGER", "Unloaded " + state);
 	}
@@ -100,7 +104,7 @@ public class StateManager {
 	 * @param state The state to check if it's loaded
 	 * @return Boolean if the state is loaded
 	 */
-	boolean isLoaded(GameState state) {
+	public boolean isLoaded(GameState state) {
 		return loadedStates[state.getIndex()] != null;
 	}
 	
