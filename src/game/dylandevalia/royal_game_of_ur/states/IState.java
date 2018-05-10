@@ -12,27 +12,17 @@ public interface IState {
 	
 	void initialise(StateManager stateManager, Bundle bundle);
 	
-	default void onSet(Bundle bundle) {
-	
-	}
+	void onSet(Bundle bundle);
 	
 	void update();
 	
 	void draw(Graphics2D g, double interpolate);
 	
-	default void keyPressed(KeyEvent e) {
+	void keyPressed(KeyEvent e);
 	
-	}
+	void keyReleased(KeyEvent e);
 	
-	default void keyReleased(KeyEvent e) {
+	void mousePressed(MouseEvent e);
 	
-	}
-	
-	default void mousePressed(MouseEvent e) {
-	
-	}
-	
-	default void mouseReleased(MouseEvent e) {
-	
-	}
+	void mouseReleased(MouseEvent e);
 }

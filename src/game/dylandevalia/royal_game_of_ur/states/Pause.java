@@ -21,9 +21,7 @@ import java.awt.event.MouseEvent;
 /**
  * Pause state for the game
  */
-public class Pause implements IState {
-	
-	private StateManager stateManager;
+public class Pause extends AbstractState {
 	
 	private Background bg;
 	
@@ -32,8 +30,7 @@ public class Pause implements IState {
 	private TextButton title, btn_resume, btn_quit;
 	
 	@Override
-	public void initialise(StateManager stateManager, Bundle bundle) {
-		this.stateManager = stateManager;
+	public void initialise(Bundle bundle) {
 		bg = new Background(ColorMaterial.RED, (Node[]) bundle.get("nodes"));
 		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, false);
 		

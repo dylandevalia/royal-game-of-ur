@@ -20,10 +20,7 @@ import java.awt.event.MouseEvent;
 /**
  * The main menu of the Royal Game of Ur
  */
-public class MainMenu implements IState {
-	
-	/** Reference to the state manager */
-	private StateManager stateManager;
+public class MainMenu extends AbstractState {
 	
 	/** The gradient background and nodes */
 	private Background bg;
@@ -34,9 +31,7 @@ public class MainMenu implements IState {
 	/** The buttons on the screen */
 	private TextButton title, btn_play, btn_simulate, btn_quit;
 	
-	public void initialise(StateManager stateManager, Bundle bundle) {
-		this.stateManager = stateManager;
-		
+	public void initialise(Bundle bundle) {
 		bg = new Background(ColorMaterial.INDIGO);
 		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, true);
 		

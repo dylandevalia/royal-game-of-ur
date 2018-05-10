@@ -25,9 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GameUrSimulate implements IState {
-	
-	private StateManager stateManager;
+public class GameUrSimulate extends AbstractState {
 	
 	private final int gamesPerGeneration = 50;
 	private final int noGenerations = 1000;
@@ -39,10 +37,8 @@ public class GameUrSimulate implements IState {
 	
 	private Fade fade;
 	
-	public void initialise(StateManager stateManager, Bundle bundle) {
+	public void initialise(Bundle bundle) {
 		Log.SET_INFO();
-		
-		this.stateManager = stateManager;
 		
 		if (bundle != null) {
 			bg = new Background(
@@ -63,10 +59,6 @@ public class GameUrSimulate implements IState {
 		for (int i = 0; i < games.length; i++) {
 			games[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
 		}
-	}
-	
-	public void onSet(Bundle bundle) {
-	
 	}
 	
 	public void update() {

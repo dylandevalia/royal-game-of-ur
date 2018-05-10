@@ -28,16 +28,13 @@ import java.awt.event.MouseEvent;
 /**
  * State which plays the Royal Game of Ur
  */
-public class GameUr implements IState {
+public class GameUr extends AbstractState {
 	
 	/** The number of counters each player should have */
 	public static int noCounters = 6;
 	
 	/** The number of dice to be used */
 	public static int noDice = 4;
-	
-	/** Reference to the state manager */
-	private StateManager stateManager;
 	
 	/** Holds the objects logic */
 	private GameLogic game;
@@ -55,8 +52,7 @@ public class GameUr implements IState {
 	private Player currentPlayer;
 	
 	@Override
-	public void initialise(StateManager stateManager, Bundle bundle) {
-		this.stateManager = stateManager;
+	public void initialise(Bundle bundle) {
 		
 		game = new GameLogic(true, null, new AI(Library.thousand_126));
 		Log.info("GAME_UR", "GameLogic created");
