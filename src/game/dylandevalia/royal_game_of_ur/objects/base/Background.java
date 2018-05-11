@@ -112,10 +112,12 @@ public class Background {
 		this.nodes = nodes;
 	}
 	
-	public void setColors(Color[] colors) {
+	public void setColors(Color[] colors, boolean fade) {
 		this.oldColors = this.colors;
 		this.colors = colors;
-		fadeRatio = 0;
+		if (fade) {
+			fadeRatio = 0;
+		}
 	}
 	
 	/**

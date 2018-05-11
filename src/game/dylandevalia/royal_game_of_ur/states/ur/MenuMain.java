@@ -4,6 +4,7 @@ import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
 import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
 import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton;
 import game.dylandevalia.royal_game_of_ur.objects.base.buttons.TextButton.Alignment;
@@ -16,18 +17,13 @@ import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
  * The main menu of the Royal Game of Ur
  */
-public class MainMenu extends AbstractState {
-	
-	/** The gradient background and nodes */
-	private Background bg;
-	
-	/** Controls the in and out fade effect */
-	private Fade fade;
+public class MenuMain extends AbstractState {
 	
 	/** The buttons on the screen */
 	private TextButton title, btn_play, btn_simulate, btn_quit;
@@ -96,6 +92,15 @@ public class MainMenu extends AbstractState {
 		});
 	}
 	
+	@Override
+	public void onSet(Bundle bundle) {
+		if (bundle != null) {
+			bg.setColors(ColorMaterial.CYAN, false);
+			bg.setColors(ColorMaterial.INDIGO, true);
+			bg.setNodes((Node[]) bundle.get("nodes"));
+		}
+	}
+	
 	public void update() {
 		bg.update();
 		
@@ -145,7 +150,7 @@ public class MainMenu extends AbstractState {
 	private void startGame() {
 		Log.info("MENU", "Starting ur");
 		stateManager.setState(GameState.GAME_UR);
-		stateManager.unloadState(GameState.MAIN_MENU);
+		stateManager.unloadState(GameState.MENU_MAIN);
 	}
 	
 	/**
@@ -154,7 +159,7 @@ public class MainMenu extends AbstractState {
 	private void startSimulation() {
 		Log.info("MENU", "Starting ur");
 		stateManager.setState(GameState.GAME_UR_SIMULATE);
-		stateManager.unloadState(GameState.MAIN_MENU);
+		stateManager.unloadState(GameState.MENU_MAIN);
 	}
 	
 	public void mouseReleased(MouseEvent e) {
@@ -166,6 +171,14 @@ public class MainMenu extends AbstractState {
 			btn_simulate.press();
 		} else if (btn_quit.isColliding(mousePos)) {
 			btn_quit.press();
+		}
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyChar() == ' ') {
+			stateManager
+				.loadAndSetState(GameState.MENU_PLAY, new Bundle().put("nodes", bg.getNodes()));
 		}
 	}
 }

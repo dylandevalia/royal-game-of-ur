@@ -61,8 +61,8 @@ public class Framework extends Canvas {
 		super();
 		
 		// Creates the main menu state and sets it to the active state
-		stateManager.loadState(StateManager.GameState.MAIN_MENU);
-		stateManager.setState(StateManager.GameState.MAIN_MENU);
+		stateManager.loadState(StateManager.GameState.MENU_MAIN);
+		stateManager.setState(StateManager.GameState.MENU_MAIN);
 		
 		// Stats the objects loop in its own thread
 		new Thread(this::gameLoop).start();

@@ -49,12 +49,6 @@ public class GameUrSimulate extends AbstractState {
 	/** Keeps track of the max fitness */
 	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
-	/** The background object */
-	private Background bg;
-	
-	/** Controls the fade effect between states */
-	private Fade fade;
-	
 	public void initialise(Bundle bundle) {
 		Log.SET_INFO();
 		
@@ -282,7 +276,7 @@ public class GameUrSimulate extends AbstractState {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			fade.out();
 			fade.setCallback(() -> {
-				stateManager.loadAndSetState(GameState.MAIN_MENU);
+				stateManager.loadAndSetState(GameState.MENU_MAIN);
 				stateManager.unloadState(GameState.GAME_UR_SIMULATE);
 			});
 		}

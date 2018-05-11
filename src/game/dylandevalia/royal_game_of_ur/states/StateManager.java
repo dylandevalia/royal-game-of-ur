@@ -2,7 +2,8 @@ package game.dylandevalia.royal_game_of_ur.states;
 
 import game.dylandevalia.royal_game_of_ur.states.ur.GameUr;
 import game.dylandevalia.royal_game_of_ur.states.ur.GameUrSimulate;
-import game.dylandevalia.royal_game_of_ur.states.ur.MainMenu;
+import game.dylandevalia.royal_game_of_ur.states.ur.MenuMain;
+import game.dylandevalia.royal_game_of_ur.states.ur.MenuPlay;
 import game.dylandevalia.royal_game_of_ur.states.ur.Pause;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
@@ -32,7 +33,7 @@ public class StateManager {
 	 * @param state  The states to be initialise
 	 * @param bundle An optional bundle of data which can be passed into the initialising state
 	 */
-	void loadState(GameState state, Bundle bundle) {
+	public void loadState(GameState state, Bundle bundle) {
 		try {
 			int index = state.getIndex();
 			loadedStates[index] = (IState) state.getObj().newInstance();
@@ -58,7 +59,7 @@ public class StateManager {
 	 * @param state  The state to become active
 	 * @param bundle An optional bundle of data that can be sent to the state
 	 */
-	void setState(GameState state, Bundle bundle) {
+	public void setState(GameState state, Bundle bundle) {
 		if (loadedStates[state.getIndex()] == null) {
 			Log.error("STATE MANAGER", "State not loaded!");
 			return;
@@ -153,8 +154,9 @@ public class StateManager {
 	 * @see IState
 	 */
 	public enum GameState {
-		MAIN_MENU(MainMenu.class), GAME_UR(GameUr.class),
-		GAME_UR_SIMULATE(GameUrSimulate.class), PAUSE(Pause.class);
+		MENU_MAIN(MenuMain.class), MENU_PLAY(MenuPlay.class),
+		GAME_UR_SIMULATE(GameUrSimulate.class),
+		GAME_UR(GameUr.class), PAUSE(Pause.class);
 		
 		private int index;
 		private Class obj;

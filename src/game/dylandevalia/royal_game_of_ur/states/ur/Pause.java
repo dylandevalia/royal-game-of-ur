@@ -24,12 +24,6 @@ import java.awt.event.MouseEvent;
  */
 public class Pause extends AbstractState {
 	
-	/** The background object which controls the gradient and nodes */
-	private Background bg;
-	
-	/** Controls the fade transition effect */
-	private Fade fade;
-	
 	/** The buttons on the screen */
 	private TextButton title, btn_resume, btn_quit;
 	
@@ -82,7 +76,7 @@ public class Pause extends AbstractState {
 		);
 		btn_quit.setOnClickListener(() -> {
 			fade.out();
-			fade.setCallback(() -> loadState(GameState.MAIN_MENU));
+			fade.setCallback(() -> loadState(GameState.MENU_MAIN));
 		});
 	}
 	

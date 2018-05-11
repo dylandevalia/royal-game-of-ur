@@ -1,5 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.states;
 
+import game.dylandevalia.royal_game_of_ur.objects.base.Background;
+import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -13,6 +15,12 @@ public abstract class AbstractState implements IState {
 	
 	/** Reference to the state manager */
 	protected StateManager stateManager;
+	
+	/** The gradient background and nodes */
+	protected Background bg;
+	
+	/** Controls the fade transition effect */
+	protected Fade fade;
 	
 	/**
 	 * Initialisation method called by the state manager. Stores a reference to the state manager

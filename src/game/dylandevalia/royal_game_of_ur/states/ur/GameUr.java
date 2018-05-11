@@ -43,12 +43,6 @@ public class GameUr extends AbstractState {
 	/** Reroll button */
 	private TextButton btn_roll;
 	
-	/** The background object which controls the gradient and nodes */
-	private Background bg;
-	
-	/** The number used to control the alpha of the fade */
-	private Fade fade;
-	
 	/** Reference to the current player in the game */
 	private Player currentPlayer;
 	
@@ -108,7 +102,7 @@ public class GameUr extends AbstractState {
 		// If player has changed, update reference and update background colours
 		if (currentPlayer != game.getCurrentPlayer()) {
 			currentPlayer = game.getCurrentPlayer();
-			bg.setColors(currentPlayer.getColors());
+			bg.setColors(currentPlayer.getColors(), true);
 		}
 	}
 	
