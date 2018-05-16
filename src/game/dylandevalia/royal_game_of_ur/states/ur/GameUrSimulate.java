@@ -1,13 +1,10 @@
 package game.dylandevalia.royal_game_of_ur.states.ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.ColorMaterial;
-import game.dylandevalia.royal_game_of_ur.gui.Framework;
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.objects.base.Background;
-import game.dylandevalia.royal_game_of_ur.objects.base.Background.Node;
 import game.dylandevalia.royal_game_of_ur.objects.base.Fade;
 import game.dylandevalia.royal_game_of_ur.objects.ur.GameLogic;
-import game.dylandevalia.royal_game_of_ur.objects.ur.Player.PlayerID;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.AI;
 import game.dylandevalia.royal_game_of_ur.objects.ur.ai.DNA;
 import game.dylandevalia.royal_game_of_ur.states.AbstractState;
@@ -15,6 +12,7 @@ import game.dylandevalia.royal_game_of_ur.states.StateManager.GameState;
 import game.dylandevalia.royal_game_of_ur.utility.Bundle;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
 import game.dylandevalia.royal_game_of_ur.utility.Utility;
+import game.dylandevalia.royal_game_of_ur.utility.Vector2D;
 import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -31,84 +29,136 @@ import java.util.Date;
  */
 public class GameUrSimulate extends AbstractState {
 	
-	/** The number of games that should be played per generation */
-	private final int gamesPerGeneration = 50;
+	/** The number of agents to simulate */
+	private final int noAgents = 100;
 	
-	/** The number of generations to play */
+	/** The number of generations the simulations should go on for */
 	private final int noGenerations = 1000;
 	
-	/** The array of games this generation */
+	/** The array of agents */
+	private AI[] agents = new AI[noAgents];
+	
+	/** The number of rounds there will be each generation */
+	private final int noRounds = noAgents - 1;
+	
+	/** The number of teams that rotate each round */
+	private final int noTeamsRotating = noAgents - 1;
+	
+	/** The array of rotating teams */
+	private AI[] rotating = new AI[noTeamsRotating];
+	
+	/** The array of games being played each round */
 	private GameLogic[] games;
 	
-	/** The array of AI instances - there are twice as many agents as {@link #gamesPerGeneration} */
-	private AI[] ais = new AI[gamesPerGeneration * 2];
-	
-	/** References to the current game and generation */
-	private int currentGame = 0, currentGeneration = 0;
+	/** Variables that track the current state of the simulation */
+	private int gamesCompleted = 0, currentRound = 0, currentGeneration = 0;
 	
 	/** Keeps track of the max fitness */
 	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
+	@Override
 	public void initialise(Bundle bundle) {
-		Log.SET_INFO();
+		// Log.SET_INFO();
+		Log.SET_WARN();
 		
+		// Set background
 		if (bundle != null) {
 			bg = new Background(
 				ColorMaterial.RED,
-				(Node[]) bundle.get("nodes")
+				(Background.Node[]) bundle.get("nodes")
 			);
 		} else {
 			bg = new Background(ColorMaterial.RED);
 		}
 		
+		// Set fade in
 		fade = new Fade(ColorMaterial.GREY[0], ColorMaterial.GREY[0], 5, true);
 		
-		for (int i = 0; i < ais.length; i++) {
-			ais[i] = new AI();
+		// Check that there are an even number of agents
+		if (noAgents % 2 != 0) {
+			throw new IllegalArgumentException("Number of agents must be even");
 		}
 		
-		games = new GameLogic[gamesPerGeneration];
-		for (int i = 0; i < games.length; i++) {
-			games[i] = new GameLogic(false, ais[2 * i], ais[(2 * i) + 1]);
+		// Generate new random AIs
+		for (int i = 0; i < agents.length; i++) {
+			agents[i] = new AI();
 		}
+		
+		// Copy all but first AI to rotating array
+		System.arraycopy(agents, 1, rotating, 0, rotating.length);
+		
+		// Generate the first set of games
+		generateNextGames();
 	}
 	
+	@Override
 	public void update() {
 		bg.update();
 		
-		for (int i = 0; i < games.length; i++) {
-			if (games[i].isWon()) {
-				// If this game has already been checked, continue
-				if (ais[i * 2].getFitness() >= 0) {
+		// Loop through each game
+		for (GameLogic game : games) {
+			// Check if the game has been won
+			if (game.isWon()) {
+				
+				// Check if game has already been processed
+				if (game.isProcessed()) {
 					continue;
 				}
 				
-				ais[i * 2].setFitness(games[i].playerFitness(PlayerID.ONE));
-				ais[(i * 2) + 1].setFitness(games[i].playerFitness(PlayerID.TWO));
+				// Calculate fitness of agents and set game as processed
+				game.calculatePlayerFitnesses();
+				game.setProcessed(true);
 				
-				currentGame++;
-				if (currentGame >= gamesPerGeneration) {
+				gamesCompleted++;
+				if (gamesCompleted >= games.length) {
+					// All games have been completed
 					
-					currentGeneration++;
-					if (currentGeneration >= noGenerations) {
-						// Write AI attributes to file and close program
-						writeToFile();
-						System.exit(0);
+					currentRound++;
+					if (currentRound >= noRounds) {
+						// All rounds have been completed
+						
+						currentGeneration++;
+						if (currentGeneration >= noGenerations) {
+							// All generations have been completed
+							
+							// Write AI attributes to file and close program
+							writeToFile();
+							System.exit(0);
+						}
+						
+						Log.info("SIM", "New generation");
+						naturalSelection();
+						currentRound = 0;
 					}
 					
-					// Cross breed new AIs
-					naturalSelection();
-					
-					// Create new games with new AIs
-					for (int j = 0; j < games.length; j++) {
-						games[j] = new GameLogic(false, ais[j * 2], ais[(j * 2) + 1]);
-					}
-					
-					currentGame = 0;
+					Log.info("SIM", "New round");
+					generateNextGames();
+					gamesCompleted = 0;
 				}
 			}
 			
-			games[i].update(Framework.getMousePos());
+			game.update(Vector2D.ZERO());
+		}
+	}
+	
+	/**
+	 * Generates a new array of games by rotating the agents and who they are playing against
+	 */
+	private void generateNextGames() {
+		int currentRotationAgent = currentRound % noTeamsRotating;
+		
+		games = new GameLogic[noAgents / 2];
+		
+		games[0] = new GameLogic(false, agents[0], rotating[currentRotationAgent]);
+		Log.info("SIM", "0 vs " + (currentRotationAgent + 1));
+		
+		int halfSize = noAgents / 2;
+		for (int i = 1; i < halfSize; i++) {
+			int agentOne = (currentRound + noTeamsRotating - i) % noTeamsRotating;
+			int agentTwo = (currentRound + i) % noTeamsRotating;
+			
+			games[i] = new GameLogic(false, rotating[agentOne], rotating[agentTwo]);
+			Log.info("SIM", (agentOne + 1) + " vs " + (agentTwo + 1));
 		}
 	}
 	
@@ -121,7 +171,7 @@ public class GameUrSimulate extends AbstractState {
 		
 		// Find max fitness value
 		maxFitness = 0;
-		for (AI ai : ais) {
+		for (AI ai : agents) {
 			if (ai.getFitness() > maxFitness) {
 				maxFitness = ai.getFitness();
 			}
@@ -131,7 +181,7 @@ public class GameUrSimulate extends AbstractState {
 			mmfGeneration = currentGeneration;
 		}
 		
-		for (AI ai : ais) {
+		for (AI ai : agents) {
 			// Normalise fitness
 			int n = ((int) Utility.map(ai.getFitness(), 0, maxFitness, 0, 100));
 			
@@ -141,8 +191,8 @@ public class GameUrSimulate extends AbstractState {
 			}
 		}
 		
-		AI[] newAis = new AI[ais.length];
-		for (int i = 0; i < ais.length; i++) {
+		AI[] newAis = new AI[agents.length];
+		for (int i = 0; i < agents.length; i++) {
 			// Pick two random parents from the mating pool
 			DNA father = Utility.random(matingPool).getDna();
 			DNA mother = Utility.random(matingPool).getDna();
@@ -156,13 +206,13 @@ public class GameUrSimulate extends AbstractState {
 		}
 		
 		// Randomly select 5% AIs and give them random attributes
-		for (int i = 0; i < 5 * (ais.length / 100); i++) {
-			AI chosen = Utility.random(ais);
+		for (int i = 0; i < 5 * (agents.length / 100); i++) {
+			AI chosen = Utility.random(agents);
 			chosen = new AI();
 		}
 		
 		// Set new child AIs
-		ais = newAis;
+		agents = newAis;
 	}
 	
 	/**
@@ -173,7 +223,7 @@ public class GameUrSimulate extends AbstractState {
 		try {
 			PrintWriter w = new PrintWriter(""
 				+ "data/GeneticAI_"
-				+ "agents-" + ais.length
+				+ "agents-" + agents.length
 				+ "_generations-" + noGenerations
 				+ "_" + datetime +
 				".csv",
@@ -216,7 +266,7 @@ public class GameUrSimulate extends AbstractState {
 			);
 			
 			// Values
-			for (AI ai : ais) {
+			for (AI ai : agents) {
 				w.println(ai.getDNAValues() + "," + ai.getFitness());
 			}
 			
@@ -248,13 +298,18 @@ public class GameUrSimulate extends AbstractState {
 		g.setFont(new Font("TimesRoman", Font.BOLD,
 			(int) Utility.mapWidth(28, 56)
 		));
+		
 		g.drawString(
-			"Current Game: " + (currentGame + 1) + " / " + gamesPerGeneration,
+			"Games completed: " + (gamesCompleted) + " / " + games.length,
 			100, 100
 		);
 		g.drawString(
-			"Current Generation: " + (currentGeneration + 1 + " / " + noGenerations),
-			100, 300
+			"Current round: " + (currentRound + 1) + " / " + noRounds,
+			100, 150
+		);
+		g.drawString(
+			"Current Generation: " + (currentGeneration + 1) + " / " + noGenerations,
+			100, 200
 		);
 		g.drawString(
 			"Max Fitness: " + maxFitness,

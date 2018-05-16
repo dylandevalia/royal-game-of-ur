@@ -34,10 +34,14 @@ public class GameLogic {
 	/** The current roll of the dice */
 	private int currentRoll = -1;
 	
+	/** Counts the number of turns the game has taken */
 	private int turnCount = 0;
 	
 	/** Has the objects been winner */
 	private Player winner = null;
+	
+	/** Used to check if the game has been processed when simulating */
+	private boolean processed = false;
 	
 	/** Should the objects allow counters to be moved */
 	private boolean allowMove = false;
@@ -45,8 +49,8 @@ public class GameLogic {
 	/** Should the objects be allowed to roll */
 	private boolean allowRoll = true;
 	
-	/** Is the scene animating */
-	private boolean animating = false;
+	/** Is the scene isSceneAnimating */
+	private boolean isSceneAnimating = false;
 	
 	/** Should the game skip animations */
 	private boolean instantAnimate;
@@ -243,7 +247,7 @@ public class GameLogic {
 					return null;
 				default:
 					Tile nextTile = board.getNextTile(route, counter, true);
-					animating = true;
+					isSceneAnimating = true;
 					counter.setTarget(counterInTilePosition(nextTile), false);
 					break;
 			}
@@ -285,7 +289,7 @@ public class GameLogic {
 		Tile[] route = player.getRoute();
 		while (AIController.checkMove(route, counter, -1) != MoveState.START) {
 			Tile nextTile = board.getNextTile(route, counter, false);
-			animating = true;
+			isSceneAnimating = true;
 			counter.setTarget(counterInTilePosition(nextTile), true);
 		}
 		player.getStartCluster().add(counter);
@@ -378,7 +382,7 @@ public class GameLogic {
 			return;
 		}
 		
-		animating = false;
+		isSceneAnimating = false;
 		
 		// Update counters
 		Counter hoveringCounter = updateCounters(
@@ -408,12 +412,12 @@ public class GameLogic {
 		// Update board (tiles)
 		board.update(moveState, hoveringTile);
 		
-		if (
-			!animating
-				&& currentPlayer.isAI()
-				&& System.currentTimeMillis() - lastTimeRolled > 2000
-			) {
-			rollDice();
+		// If scene is not animating and the current player is an AI
+		if (!isSceneAnimating && currentPlayer.isAI()) {
+			// If not instant animating, wait 2 seconds before moving
+			if (instantAnimate || System.currentTimeMillis() - lastTimeRolled > 2000) {
+				rollDice();
+			}
 		}
 	}
 	
@@ -440,8 +444,8 @@ public class GameLogic {
 					&& counter.getCurrentRouteIndex() < board.getRouteLength()
 			);
 			
-			if (!animating && counter.isMoving()) {
-				animating = true;
+			if (!isSceneAnimating && counter.isMoving()) {
+				isSceneAnimating = true;
 			}
 			
 			if (hoveringCounter == null && counter.isMouseHovering()) {
@@ -526,6 +530,14 @@ public class GameLogic {
 		return winner != null;
 	}
 	
+	public boolean isProcessed() {
+		return processed;
+	}
+	
+	public void setProcessed(boolean processed) {
+		this.processed = processed;
+	}
+	
 	private Player getWinner() {
 		return winner;
 	}
@@ -546,11 +558,11 @@ public class GameLogic {
 		return dice;
 	}
 	
-	public boolean isAnimating() {
-		return animating;
+	public boolean isSceneAnimating() {
+		return isSceneAnimating;
 	}
 	
-	public double playerFitness(PlayerID id) {
+	public double getPlayerFitness(PlayerID id) {
 		Player player = (id == PlayerID.ONE) ? playerOne : playerTwo;
 		Player other = (id == PlayerID.ONE) ? playerTwo : playerOne;
 		
@@ -564,5 +576,10 @@ public class GameLogic {
 		// boolean playerWon = player == getWinner();
 		
 		return (1000.0 / turnCount) * score;
+	}
+	
+	public void calculatePlayerFitnesses() {
+		playerOne.getAI().setFitness(getPlayerFitness(PlayerID.ONE));
+		playerTwo.getAI().setFitness(getPlayerFitness(PlayerID.TWO));
 	}
 }

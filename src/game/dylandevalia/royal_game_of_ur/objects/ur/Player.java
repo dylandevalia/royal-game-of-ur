@@ -109,7 +109,7 @@ public class Player {
 		return ai != null;
 	}
 	
-	AI getAI() {
+	public AI getAI() {
 		return ai;
 	}
 	
@@ -120,6 +120,8 @@ public class Player {
 	void countersCaptured() {
 		countersCaptured++;
 	}
+	
+	// TODO: Get rid of PlayerID ?
 	
 	/**
 	 * Player identifications

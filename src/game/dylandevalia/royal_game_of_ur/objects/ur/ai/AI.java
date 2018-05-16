@@ -18,7 +18,7 @@ public class AI {
 	private DNA dna;
 	
 	/** Tracks how successful the AI is */
-	private double fitness = -1;
+	private double fitness = 0;
 	
 	public AI() {
 		dna = new DNA();
@@ -211,7 +211,7 @@ public class AI {
 	}
 	
 	public void setFitness(double fitness) {
-		this.fitness = fitness;
+		this.fitness += fitness;
 	}
 	
 	public DNA getDna() {

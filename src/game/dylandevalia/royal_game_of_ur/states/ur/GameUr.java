@@ -96,7 +96,7 @@ public class GameUr extends AbstractState {
 		game.update(mousePos);
 		
 		// Update buttons
-		btn_roll.setActive(game.isAllowRoll() && !game.isAnimating());
+		btn_roll.setActive(game.isAllowRoll() && !game.isSceneAnimating());
 		btn_roll.update(mousePos);
 		
 		// If player has changed, update reference and update background colours
