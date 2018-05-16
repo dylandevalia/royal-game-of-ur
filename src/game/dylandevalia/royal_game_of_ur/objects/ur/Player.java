@@ -85,7 +85,7 @@ public class Player {
 		return counters;
 	}
 	
-	public int getNoCounters() {
+	int getNoCounters() {
 		return counters.length;
 	}
 	
@@ -109,7 +109,7 @@ public class Player {
 		return ai != null;
 	}
 	
-	public AI getAI() {
+	AI getAI() {
 		return ai;
 	}
 	
