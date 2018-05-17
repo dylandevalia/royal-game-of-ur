@@ -33,7 +33,7 @@ public class GameUrSimulate extends AbstractState {
 	private final int noAgents = 100;
 	
 	/** The number of generations the simulations should go on for */
-	private final int noGenerations = 1000;
+	private final int noGenerations = 100;
 	
 	/** The array of agents */
 	private AI[] agents = new AI[noAgents];
@@ -44,22 +44,22 @@ public class GameUrSimulate extends AbstractState {
 	/** The number of teams that rotate each round */
 	private final int noTeamsRotating = noAgents - 1;
 	
-	/** The array of rotating teams */
-	private AI[] rotating = new AI[noTeamsRotating];
-	
 	/** The array of games being played each round */
-	private GameLogic[] games;
+	private GameLogic[][] games;
 	
 	/** Variables that track the current state of the simulation */
-	private int gamesCompleted = 0, currentRound = 0, currentGeneration = 0;
+	private int roundsCompleted = 0, currentGeneration = 0;
+	
+	/** Tracks the number of games completed in each round */
+	private int[] gamesCompleted = new int[noRounds];
 	
 	/** Keeps track of the max fitness */
 	private double maxFitness = 0, maxMaxFitness = 0, mmfGeneration = 0;
 	
 	@Override
 	public void initialise(Bundle bundle) {
-		// Log.SET_INFO();
-		Log.SET_WARN();
+		Log.SET_INFO();
+		// Log.SET_WARN();
 		
 		// Set background
 		if (bundle != null) {
@@ -84,9 +84,6 @@ public class GameUrSimulate extends AbstractState {
 			agents[i] = new AI();
 		}
 		
-		// Copy all but first AI to rotating array
-		System.arraycopy(agents, 1, rotating, 0, rotating.length);
-		
 		// Generate the first set of games
 		generateNextGames();
 	}
@@ -95,49 +92,54 @@ public class GameUrSimulate extends AbstractState {
 	public void update() {
 		bg.update();
 		
-		// Loop through each game
-		for (GameLogic game : games) {
-			// Check if the game has been won
-			if (game.isWon()) {
+		// Loop through each game in each round
+		for (int r = 0; r < noRounds; r++) {
+			for (int g = 0; g < games[r].length; g++) {
+				GameLogic game = games[r][g];
 				
-				// Check if game has already been processed
-				if (game.isProcessed()) {
-					continue;
-				}
-				
-				// Calculate fitness of agents and set game as processed
-				game.calculatePlayerFitnesses();
-				game.setProcessed(true);
-				
-				gamesCompleted++;
-				if (gamesCompleted >= games.length) {
-					// All games have been completed
+				// Check if the game has been won
+				if (game.isWon()) {
 					
-					currentRound++;
-					if (currentRound >= noRounds) {
-						// All rounds have been completed
-						
-						currentGeneration++;
-						if (currentGeneration >= noGenerations) {
-							// All generations have been completed
-							
-							// Write AI attributes to file and close program
-							writeToFile();
-							System.exit(0);
-						}
-						
-						Log.info("SIM", "New generation");
-						naturalSelection();
-						currentRound = 0;
+					// Check if game has already been processed
+					if (game.isProcessed()) {
+						continue;
 					}
 					
-					Log.info("SIM", "New round");
-					generateNextGames();
-					gamesCompleted = 0;
+					// Calculate fitness of agents and set game as processed
+					game.calculatePlayerFitnesses();
+					game.setProcessed(true);
+					
+					gamesCompleted[r]++;
+					if (gamesCompleted[r] >= games[r].length) {
+						// All games have been completed
+						
+						roundsCompleted++;
+						if (roundsCompleted >= noRounds) {
+							// All rounds have been completed
+							
+							currentGeneration++;
+							if (currentGeneration >= noGenerations) {
+								// All generations have been completed
+								
+								// Write AI attributes to file and close program
+								writeToFile();
+								System.exit(0);
+							}
+							
+							// Log.info("SIM", "New generation");
+							naturalSelection();
+							roundsCompleted = 0;
+							
+							generateNextGames();
+							gamesCompleted = new int[noRounds];
+						}
+						
+						// Log.info("SIM", "New round");
+					}
 				}
+				
+				game.update(Vector2D.ZERO());
 			}
-			
-			game.update(Vector2D.ZERO());
 		}
 	}
 	
@@ -145,20 +147,25 @@ public class GameUrSimulate extends AbstractState {
 	 * Generates a new array of games by rotating the agents and who they are playing against
 	 */
 	private void generateNextGames() {
-		int currentRotationAgent = currentRound % noTeamsRotating;
+		games = new GameLogic[noRounds][noAgents / 2];
 		
-		games = new GameLogic[noAgents / 2];
+		AI[] rotating = new AI[noAgents - 1];
+		System.arraycopy(agents, 1, rotating, 0, rotating.length);
 		
-		games[0] = new GameLogic(false, agents[0], rotating[currentRotationAgent]);
-		Log.info("SIM", "0 vs " + (currentRotationAgent + 1));
-		
-		int halfSize = noAgents / 2;
-		for (int i = 1; i < halfSize; i++) {
-			int agentOne = (currentRound + noTeamsRotating - i) % noTeamsRotating;
-			int agentTwo = (currentRound + i) % noTeamsRotating;
+		for (int r = 0; r < noRounds; r++) {
+			int currentRotationAgent = r % noTeamsRotating;
 			
-			games[i] = new GameLogic(false, rotating[agentOne], rotating[agentTwo]);
-			Log.info("SIM", (agentOne + 1) + " vs " + (agentTwo + 1));
+			games[r][0] = new GameLogic(false, agents[0], rotating[currentRotationAgent]);
+			// Log.info("SIM", "0 vs " + (currentRotationAgent + 1));
+			
+			int halfSize = noAgents / 2;
+			for (int i = 1; i < halfSize; i++) {
+				int agentOne = (r + noTeamsRotating - i) % noTeamsRotating;
+				int agentTwo = (r + i) % noTeamsRotating;
+				
+				games[r][i] = new GameLogic(false, rotating[agentOne], rotating[agentTwo]);
+				// Log.info("SIM", (agentOne + 1) + " vs " + (agentTwo + 1));
+			}
 		}
 	}
 	
@@ -222,11 +229,11 @@ public class GameUrSimulate extends AbstractState {
 		String datetime = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 		try {
 			PrintWriter w = new PrintWriter(""
-				+ "data/GeneticAI_"
-				+ "agents-" + agents.length
+				+ "data/genetic-ai-rr_"
+				+ "_" + datetime
+				+ "_agents-" + agents.length
 				+ "_generations-" + noGenerations
-				+ "_" + datetime +
-				".csv",
+				+ ".csv",
 				"UTF-8"
 			);
 			
@@ -299,12 +306,17 @@ public class GameUrSimulate extends AbstractState {
 			(int) Utility.mapWidth(28, 56)
 		));
 		
+		int completedGames = 0;
+		for (int i : gamesCompleted) {
+			completedGames += i;
+		}
+		
 		g.drawString(
-			"Games completed: " + (gamesCompleted) + " / " + games.length,
+			"Games completed: " + (completedGames) + " / " + ((noRounds) * (noRounds + 1) / 2),
 			100, 100
 		);
 		g.drawString(
-			"Current round: " + (currentRound + 1) + " / " + noRounds,
+			"Rounds completed: " + roundsCompleted + " / " + noRounds,
 			100, 150
 		);
 		g.drawString(

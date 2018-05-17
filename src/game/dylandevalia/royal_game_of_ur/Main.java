@@ -2,13 +2,18 @@ package game.dylandevalia.royal_game_of_ur;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
 import game.dylandevalia.royal_game_of_ur.utility.Log;
+import game.dylandevalia.royal_game_of_ur.utility.Utility;
 import javax.swing.SwingUtilities;
 
 public class Main {
 	
 	public static void main(String[] args) {
 		// roundRobin();
-		// System.exit(0);
+		
+		for (int i = 0; i < 100; i++) {
+			System.out.printf("%1.16f\n", Utility.randBetween(0f, 1f));
+		}
+		System.exit(0);
 		Log.SET_DEBUG();
 		
 		// Start running the gui in its own thread
