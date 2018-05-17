@@ -22,6 +22,7 @@ public class Background {
 	
 	public Background(Color[] colors) {
 		this.colors = colors;
+		this.oldColors = colors;
 		nodes = new Node[(int) Utility.mapWidth(150, 300)];
 		for (int i = 0; i < nodes.length; i++) {
 			nodes[i] = new Node(
@@ -52,49 +53,23 @@ public class Background {
 		GradientPaint gradientPaint;
 		int brightShade = 3;
 		int darkShade = 9;
+		int gradientBoundary = 100;
+		
 		if (fadeRatio < 1) {
-			Color bright = new Color(
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[brightShade].getRed(),
-					oldColors[brightShade].getRed()),
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[brightShade].getGreen(),
-					oldColors[brightShade].getGreen()),
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[brightShade].getBlue(),
-					oldColors[brightShade].getBlue())
-			);
-			
-			Color dark = new Color(
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[darkShade].getRed(),
-					oldColors[darkShade].getRed()
-				),
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[darkShade].getGreen(),
-					oldColors[darkShade].getGreen()),
-				(int) Utility.lerp(
-					fadeRatio,
-					colors[darkShade].getBlue(),
-					oldColors[darkShade].getBlue())
-			);
+			Color bright = lerpColor(fadeRatio, colors[brightShade], oldColors[brightShade]);
+			Color dark = lerpColor(fadeRatio, colors[darkShade], oldColors[darkShade]);
 			
 			gradientPaint = new GradientPaint(
-				-100, -100,
+				-gradientBoundary, -gradientBoundary,
 				bright,
-				Window.WIDTH + 100, Window.HEIGHT + 100,
+				Window.WIDTH + gradientBoundary, Window.HEIGHT + gradientBoundary,
 				dark
 			);
 		} else {
 			gradientPaint = new GradientPaint(
-				-100, -100,
+				-gradientBoundary, -gradientBoundary,
 				colors[brightShade],
-				Window.WIDTH + 100, Window.HEIGHT + 100,
+				Window.WIDTH + gradientBoundary, Window.HEIGHT + gradientBoundary,
 				colors[darkShade]
 			);
 		}
@@ -102,6 +77,26 @@ public class Background {
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		g.setPaint(oldPaint);
+	}
+	
+	private static Color lerpColor(double ratio, Color c1, Color c2) {
+		return new Color(
+			(int) Utility.lerp(
+				ratio,
+				c1.getRed(),
+				c2.getRed()
+			),
+			(int) Utility.lerp(
+				ratio,
+				c1.getGreen(),
+				c2.getGreen()
+			),
+			(int) Utility.lerp(
+				ratio,
+				c1.getBlue(),
+				c2.getBlue()
+			)
+		);
 	}
 	
 	public Node[] getNodes() {
@@ -124,7 +119,7 @@ public class Background {
 	 * A node which draws lines to other nodes in range. Wraps around the screen if it goes off the
 	 * edge
 	 */
-	public static class Node extends BaseEntity {
+	public class Node extends BaseEntity {
 		
 		/** The velocity that the node travels at */
 		private Vector2D vel;
@@ -135,7 +130,7 @@ public class Background {
 		 * @param x The x coordinate of the node's initial position
 		 * @param y The y coordinate of the node's initial position
 		 */
-		public Node(int x, int y) {
+		Node(int x, int y) {
 			super(x, y, Utility.randBetween(0, 5));
 			
 			// Random velocity
