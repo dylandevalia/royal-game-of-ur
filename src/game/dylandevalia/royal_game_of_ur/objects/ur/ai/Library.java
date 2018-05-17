@@ -123,7 +123,7 @@ public class Library {
 				.setValue(3, 0.326816464)       // 3
 				.setValue(4, 0.260962700)       // 4
 				.setValue(5, 0.267113558)       // 5
-				.setValue(6, 0.24937336),      // 6
+				.setValue(6, 0.249373360),      // 6
 			
 			new Chromosome(7)                   // Hostiles
 				.setValue(0, 0.338081555)       // 0
@@ -133,6 +133,55 @@ public class Library {
 				.setValue(4, 0.285118748)       // 4
 				.setValue(5, 0.477385978)       // 5
 				.setValue(6, 0.410467913),      // 6
+		},
+		null // Utility.random(CrossoverMethod.values())
+	);
+	
+	
+	/**
+	 * The most fit agent after 100 generation of genetic round-robin evolution normalised between 0
+	 * and 1
+	 */
+	public static DNA hunderedRRNormalised_1 = new DNA(
+		new Chromosome[]{
+			new Chromosome().setValue(0.892238235),     // Rosette
+			new Chromosome().setValue(0.584272063),     // Capture
+			new Chromosome().setValue(0.285960173),     // Enter board
+			new Chromosome().setValue(0.158573144),     // Enter centre
+			new Chromosome().setValue(0.712564217),     // Enter end
+			new Chromosome().setValue(1.000000000),     // Exit board
+			new Chromosome().setValue(0.312367711),     // Furthest
+			new Chromosome().setValue(0.400860466),     // Closest
+			
+			new Chromosome(4)                   // Spaces pre
+				.setValue(0, 0.748142663)       // 1
+				.setValue(1, 0.412185494)       // 2
+				.setValue(2, 0.500491286)       // 3
+				.setValue(3, 0.451518305),      // 4
+			
+			new Chromosome(4)                   // Spaces post
+				.setValue(0, 0.240703869)       // 1
+				.setValue(1, 0.755234288)       // 2
+				.setValue(2, 0.878605854)       // 3
+				.setValue(3, 0.460049137),      // 4
+			
+			new Chromosome(7)                   // Friendlies
+				.setValue(0, 0.238464713)       // 0
+				.setValue(1, 0.389346030)       // 1
+				.setValue(2, 0.448734455)       // 2
+				.setValue(3, 0.599468695)       // 3
+				.setValue(4, 0.708012831)       // 4
+				.setValue(5, 0.403088686)       // 5
+				.setValue(6, 0.726920562),      // 6
+			
+			new Chromosome(7)                   // Hostiles
+				.setValue(0, 0.400984199)       // 0
+				.setValue(1, 0.000000000)       // 1
+				.setValue(2, 0.362772260)       // 2
+				.setValue(3, 0.512613204)       // 3
+				.setValue(4, 0.427877779)       // 4
+				.setValue(5, 0.232957789)       // 5
+				.setValue(6, 0.177467643),      // 6
 		},
 		null // Utility.random(CrossoverMethod.values())
 	);
