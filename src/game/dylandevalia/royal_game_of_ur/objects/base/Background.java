@@ -9,17 +9,43 @@ import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 
+/**
+ * Draws a gradient background using a set of colours from the {@link ColorMaterial} library with a
+ * lighter shade in the top left and darker in the bottom right. Also has nodes which glide and
+ * connect with each other creating a network-styled effect
+ */
 public class Background {
 	
+	/** The array of nodes */
 	private Node[] nodes;
-	private Color[] colors, oldColors;
+	
+	/** The colour of the background */
+	private Color[] colors;
+	
+	/** The previous colour if changed - used for fade */
+	private Color[] oldColors;
+	
+	/** Controls the fade between colours */
 	private double fadeRatio = 1;
 	
+	/**
+	 * Creates a background with a gradient with the given {@link ColorMaterial} {@link Color} array
+	 * Uses the {@link Node} array given
+	 *
+	 * @param colors The {@link ColorMaterial} colour array
+	 * @param nodes  The array of nodes for the background
+	 */
 	public Background(Color[] colors, Node[] nodes) {
 		this.nodes = nodes;
 		this.colors = colors;
 	}
 	
+	/**
+	 * Creates a background with a gradient with the given {@link ColorMaterial} {@link Color} array
+	 * Generates a new array of nodes
+	 *
+	 * @param colors The {@link ColorMaterial} colour array
+	 */
 	public Background(Color[] colors) {
 		this.colors = colors;
 		this.oldColors = colors;
@@ -32,12 +58,21 @@ public class Background {
 		}
 	}
 	
+	/**
+	 * Updates the nodes. Should be called in the state's update() method
+	 */
 	public void update() {
 		for (Node node : nodes) {
 			node.update();
 		}
 	}
 	
+	/**
+	 * Draws the background. Should be called in the states's draw(Graphics2D, double) method
+	 *
+	 * @param g           The graphics object used to draw to the canvas
+	 * @param interpolate The interpolation value passed in from the game engine
+	 */
 	public void draw(Graphics2D g, double interpolate) {
 		drawGradient(g);
 		
@@ -46,18 +81,30 @@ public class Background {
 		}
 	}
 	
+	/**
+	 * Draws the gradient the size of the window. If the colour has changed, fades to the new
+	 * colours
+	 *
+	 * @param g The graphics object used to draw to the canvas
+	 */
 	private void drawGradient(Graphics2D g) {
+		// Increment and fade ratio
 		fadeRatio = Utility.clamp(fadeRatio += 0.05, 0.0, 1.0);
 		
+		// Set graphics paint type
 		Paint oldPaint = g.getPaint();
 		GradientPaint gradientPaint;
-		int brightShade = 3;
-		int darkShade = 9;
-		int gradientBoundary = 100;
+		
+		// Constants
+		final int brightShade = 3;
+		final int darkShade = 9;
+		final int gradientBoundary = 100;
 		
 		if (fadeRatio < 1) {
-			Color bright = lerpColor(fadeRatio, colors[brightShade], oldColors[brightShade]);
-			Color dark = lerpColor(fadeRatio, colors[darkShade], oldColors[darkShade]);
+			// If currently fading
+			
+			Color bright = Utility.lerp(fadeRatio, colors[brightShade], oldColors[brightShade]);
+			Color dark = Utility.lerp(fadeRatio, colors[darkShade], oldColors[darkShade]);
 			
 			gradientPaint = new GradientPaint(
 				-gradientBoundary, -gradientBoundary,
@@ -66,6 +113,8 @@ public class Background {
 				dark
 			);
 		} else {
+			// Not fading
+			
 			gradientPaint = new GradientPaint(
 				-gradientBoundary, -gradientBoundary,
 				colors[brightShade],
@@ -74,30 +123,14 @@ public class Background {
 			);
 		}
 		
+		// Set paint, draw, and finally set old paint back
 		g.setPaint(gradientPaint);
 		g.fillRect(0, 0, Window.WIDTH, Window.HEIGHT);
 		g.setPaint(oldPaint);
 	}
 	
-	private static Color lerpColor(double ratio, Color c1, Color c2) {
-		return new Color(
-			(int) Utility.lerp(
-				ratio,
-				c1.getRed(),
-				c2.getRed()
-			),
-			(int) Utility.lerp(
-				ratio,
-				c1.getGreen(),
-				c2.getGreen()
-			),
-			(int) Utility.lerp(
-				ratio,
-				c1.getBlue(),
-				c2.getBlue()
-			)
-		);
-	}
+	
+	/* Getter and Setters */
 	
 	public Node[] getNodes() {
 		return nodes;
@@ -110,6 +143,8 @@ public class Background {
 	public void setColors(Color[] colors, boolean fade) {
 		this.oldColors = this.colors;
 		this.colors = colors;
+		
+		// If fading between colours, set ratio to 0
 		if (fade) {
 			fadeRatio = 0;
 		}

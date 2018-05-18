@@ -1,6 +1,7 @@
 package game.dylandevalia.royal_game_of_ur.utility;
 
 import game.dylandevalia.royal_game_of_ur.gui.Window;
+import java.awt.Color;
 import java.util.List;
 
 public class Utility {
@@ -140,5 +141,25 @@ public class Utility {
 	 */
 	public static double lerp(double ratio, double near, double far) {
 		return (int) (Math.abs((ratio * near)) + ((1 - ratio) * far));
+	}
+	
+	public static Color lerp(double ratio, Color c1, Color c2) {
+		return new Color(
+			(int) Utility.lerp(
+				ratio,
+				c1.getRed(),
+				c2.getRed()
+			),
+			(int) Utility.lerp(
+				ratio,
+				c1.getGreen(),
+				c2.getGreen()
+			),
+			(int) Utility.lerp(
+				ratio,
+				c1.getBlue(),
+				c2.getBlue()
+			)
+		);
 	}
 }
